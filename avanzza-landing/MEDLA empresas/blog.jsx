@@ -1,0 +1,383 @@
+// Blog page — editorial magazine layout
+
+const { useState, useMemo } = React;
+
+/* ─────────── Nav ─────────── */
+function BlogNav() {
+  return (
+    <nav className="nav scrolled">
+      <div className="container nav-inner">
+        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <ul className="nav-links">
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blog.html" style={{ color: "var(--gold)" }}>Blog</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <a href="contacto.html" className="btn btn-primary btn-sm">Agendar diagnóstico</a>
+      </div>
+    </nav>
+  );
+}
+
+/* ─────────── Article Cover SVG Patterns ─────────── */
+const coverPatterns = {
+  legal: (
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#F2EDE4" />
+          <stop offset="100%" stopColor="#E2D9C6" />
+        </linearGradient>
+      </defs>
+      <rect width="400" height="250" fill="url(#lg1)" />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={i} x={60 + i * 50} y={40 + i * 6} width={60} height={170 - i * 6} fill="#1A1A2E" opacity={0.08 + i * 0.04} rx="2" />
+      ))}
+      <circle cx="320" cy="80" r="42" fill="none" stroke="#C9A84C" strokeWidth="1" opacity="0.6" />
+      <circle cx="320" cy="80" r="28" fill="#C9A84C" opacity="0.3" />
+    </svg>
+  ),
+  tech: (
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="250" fill="#1A1A2E" />
+      {Array.from({ length: 8 }).map((_, i) => (
+        <line key={i} x1="0" y1={30 * i} x2="400" y2={30 * i} stroke="#C9A84C" strokeWidth="0.5" opacity="0.15" />
+      ))}
+      {Array.from({ length: 13 }).map((_, i) => (
+        <line key={`v${i}`} x1={30 * i} y1="0" x2={30 * i} y2="250" stroke="#C9A84C" strokeWidth="0.5" opacity="0.15" />
+      ))}
+      <circle cx="140" cy="125" r="60" fill="none" stroke="#C9A84C" strokeWidth="1" opacity="0.5" />
+      <circle cx="140" cy="125" r="36" fill="#C9A84C" opacity="0.2" />
+      <circle cx="140" cy="125" r="12" fill="#C9A84C" />
+      <circle cx="260" cy="90" r="5" fill="#C9A84C" />
+      <circle cx="300" cy="160" r="5" fill="#C9A84C" opacity="0.6" />
+      <line x1="140" y1="125" x2="260" y2="90" stroke="#C9A84C" strokeWidth="0.8" opacity="0.5" />
+      <line x1="140" y1="125" x2="300" y2="160" stroke="#C9A84C" strokeWidth="0.8" opacity="0.5" />
+    </svg>
+  ),
+  finance: (
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="250" fill="#F2EDE4" />
+      <path d="M 0 180 L 60 160 L 120 170 L 180 120 L 240 130 L 300 80 L 360 90 L 400 60 L 400 250 L 0 250 Z" fill="#C9A84C" opacity="0.3" />
+      <path d="M 0 180 L 60 160 L 120 170 L 180 120 L 240 130 L 300 80 L 360 90 L 400 60" stroke="#C9A84C" strokeWidth="2.5" fill="none" />
+      {[60, 120, 180, 240, 300, 360].map((x, i) => (
+        <circle key={i} cx={x} cy={[160, 170, 120, 130, 80, 90][i]} r="4" fill="#1A1A2E" />
+      ))}
+    </svg>
+  ),
+  ai: (
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="aig" cx="50%" cy="50%">
+          <stop offset="0%" stopColor="#C9A84C" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#1A1A2E" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="250" fill="#1A1A2E" />
+      <circle cx="200" cy="125" r="120" fill="url(#aig)" />
+      {Array.from({ length: 24 }).map((_, i) => {
+        const angle = (i / 24) * Math.PI * 2;
+        const r1 = 40;
+        const r2 = 90 + (i % 3) * 15;
+        return (
+          <line key={i} x1={200 + Math.cos(angle) * r1} y1={125 + Math.sin(angle) * r1} x2={200 + Math.cos(angle) * r2} y2={125 + Math.sin(angle) * r2} stroke="#C9A84C" strokeWidth="1" opacity={0.3 + (i % 4) * 0.15} />
+        );
+      })}
+      <circle cx="200" cy="125" r="30" fill="#C9A84C" opacity="0.2" />
+      <circle cx="200" cy="125" r="14" fill="#C9A84C" />
+    </svg>
+  ),
+  comms: (
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="250" fill="#F2EDE4" />
+      {[80, 140, 200, 260].map((x, i) => (
+        <rect key={i} x={x} y={60 + i * 8} width={80} height={130 - i * 8} fill="#1A1A2E" opacity={0.1 + i * 0.05} rx="3" />
+      ))}
+      <circle cx="120" cy="100" r="26" fill="#C9A84C" opacity="0.3" />
+      <circle cx="120" cy="100" r="12" fill="#C9A84C" />
+      <path d="M 140 100 Q 180 80 220 100 T 300 100" stroke="#C9A84C" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+    </svg>
+  ),
+  people: (
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="peg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#E2D9C6" />
+          <stop offset="100%" stopColor="#C9A84C" stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      <rect width="400" height="250" fill="url(#peg)" />
+      {[120, 200, 280].map((cx, i) => (
+        <g key={i} opacity={0.75 + i * 0.08}>
+          <circle cx={cx} cy="100" r="28" fill="#1A1A2E" />
+          <path d={`M ${cx - 42} 200 Q ${cx} 145 ${cx + 42} 200 L ${cx + 42} 250 L ${cx - 42} 250 Z`} fill="#1A1A2E" />
+        </g>
+      ))}
+    </svg>
+  ),
+};
+
+/* ─────────── Hero ─────────── */
+function BlogHero({ totalArticles, totalCats }) {
+  return (
+    <section className="blog-hero">
+      <div className="container blog-hero-inner">
+        <div>
+          <span className="eyebrow">— Ideas MEDLA</span>
+          <h1 style={{ marginTop: 20 }}>
+            Lecturas <em>con criterio</em>.
+          </h1>
+        </div>
+        <div className="blog-hero-meta">
+          <p>
+            Análisis, ensayos y notas breves sobre legal, tecnología, inversión y estrategia —
+            publicados por el equipo de MEDLA. Sin clickbait, sin relleno.
+          </p>
+          <div className="blog-hero-count">
+            <div><div className="n">{totalArticles}</div><div className="l">Artículos</div></div>
+            <div><div className="n">{totalCats}</div><div className="l">Categorías</div></div>
+            <div><div className="n"><em>07</em></div><div className="l">Autores</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────── Featured ─────────── */
+function BlogFeatured({ article }) {
+  return (
+    <section className="blog-featured">
+      <div className="container">
+        <a href="#" className="featured-card">
+          <div className="featured-visual">{coverPatterns[article.pattern]}</div>
+          <div className="featured-body">
+            <div>
+              <h2>{article.title}</h2>
+              <p style={{ marginTop: 18 }}>{article.excerpt}</p>
+            </div>
+            <div>
+              <div className="featured-meta">
+                <span>{article.cat}</span>
+                <span className="dot"></span>
+                <span>{article.date}</span>
+                <span className="dot"></span>
+                <span>{article.time}</span>
+              </div>
+              <div className="featured-cta" style={{ marginTop: 20 }}>
+                Leer el análisis completo
+                <span className="featured-cta-arr">→</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────── Filters ─────────── */
+function BlogFilters({ cats, active, onCat, query, onQuery }) {
+  return (
+    <div className="blog-filters-wrap">
+      <div className="container">
+        <div className="blog-filters">
+          <div className="blog-cats">
+            {cats.map((c) => (
+              <button key={c.id} className={`cat-btn ${active === c.id ? "active" : ""}`} onClick={() => onCat(c.id)}>
+                {c.label} <span className="n">{c.n}</span>
+              </button>
+            ))}
+          </div>
+          <div className="blog-search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4-4" strokeLinecap="round" />
+            </svg>
+            <input placeholder="Buscar artículo..." value={query} onChange={(e) => onQuery(e.target.value)} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────── Grid ─────────── */
+function ArticleCard({ a }) {
+  return (
+    <a href="#" className="article-card">
+      <div className="article-cover">
+        {coverPatterns[a.pattern]}
+        <span className="article-cat-pill">{a.cat}</span>
+      </div>
+      <div className="article-body">
+        <div className="article-meta">
+          <span>{a.date}</span>
+          <span className="dot"></span>
+          <span>{a.time}</span>
+        </div>
+        <h3>{a.title}</h3>
+        <p>{a.excerpt}</p>
+        <div className="article-author">
+          <div className="author-dot">{a.authorInit}</div>
+          <span>{a.author}</span>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function BlogGrid({ articles }) {
+  return (
+    <section className="blog-grid-wrap">
+      <div className="container">
+        {articles.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "80px 0", color: "var(--text-mute)" }}>
+            Sin resultados. Prueba con otra búsqueda.
+          </div>
+        ) : (
+          <div className="blog-grid">
+            {articles.map((a, i) => (<ArticleCard a={a} key={i} />))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ─────────── Newsletter ─────────── */
+function BlogNewsletter() {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  return (
+    <section className="blog-newsletter">
+      <div className="container">
+        <div className="newsletter-card">
+          <div className="newsletter-inner">
+            <span className="eyebrow" style={{ justifyContent: "center" }}>— Newsletter</span>
+            <h2 style={{ marginTop: 16 }}>Un análisis <em>cada jueves</em>, al correo.</h2>
+            <p>Sin relleno: una pieza original del equipo MEDLA sobre legal, tecnología e inversión. Cancela cuando quieras.</p>
+            {sent ? (
+              <div style={{ fontFamily: "var(--f-display)", fontSize: 22, color: "var(--gold-hover)", fontStyle: "italic" }}>
+                ✓ Suscrito — nos vemos el próximo jueves.
+              </div>
+            ) : (
+              <form className="newsletter-form" onSubmit={(e) => { e.preventDefault(); if (email) setSent(true); }}>
+                <input type="email" placeholder="tu@empresa.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <button type="submit" className="btn btn-primary">Suscribirme <span className="arr">→</span></button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────── Footer ─────────── */
+function BlogFooter() {
+  return (
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <div className="logo"><span className="logo-mark" style={{ borderColor: "#C9A84C" }}></span>MEDLA<span className="light">&nbsp;empresas</span></div>
+            <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
+          </div>
+          <div>
+            <h4>Servicios</h4>
+            <ul>
+              <li><a href="../asesoria-legal.html">Asesoría legal</a></li>
+              <li><a href="../constitucion.html">Constitución</a></li>
+              <li><a href="../inversiones.html">Inversiones</a></li>
+              <li><a href="../automatizacion.html">Automatización</a></li>
+              <li><a href="../agentes.html">IA aplicada</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Empresa</h4>
+            <ul>
+              <li><a href="nosotros.html">Nosotros</a></li>
+              <li><a href="blog.html">Blog</a></li>
+              <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Contacto</h4>
+            <ul>
+              <li>contacto@medlaempresas.com</li>
+              <li>+34 910 00 00 00</li>
+              <li>Madrid, España</li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2025 MEDLA empresas. Todos los derechos reservados.</span>
+          <div>
+            <a href="#">Aviso legal</a>
+            <a href="#">Política de privacidad</a>
+            <a href="#">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ─────────── App ─────────── */
+const ARTICLES = [
+  { title: "El contrato que no firmaste: cláusulas ocultas en SaaS B2B", cat: "Legal", pattern: "legal", date: "18 Mar 2025", time: "9 min", excerpt: "Cinco cláusulas que aparecen en los SaaS que usa tu empresa y que pueden comprometer propiedad intelectual, jurisdicción y continuidad operativa.", author: "Mateo Delgado", authorInit: "MD" },
+  { title: "Cómo modelamos una ronda pre-seed sin perder el control", cat: "Inversión", pattern: "finance", date: "12 Mar 2025", time: "12 min", excerpt: "Un framework práctico para founders que levantan su primer millón — con SAFEs, discount caps y qué negociar primero.", author: "Lucía Almada", authorInit: "LA" },
+  { title: "IA que sí sirve: tres casos reales en operaciones internas", cat: "Tecnología", pattern: "ai", date: "05 Mar 2025", time: "7 min", excerpt: "Historias de clientes que implementaron IA sin hype: qué funcionó, qué no, y cuánto tiempo libera realmente cada caso.", author: "Daniel Herrera", authorInit: "DH" },
+  { title: "El compliance no es un formulario — es una arquitectura", cat: "Legal", pattern: "legal", date: "28 Feb 2025", time: "8 min", excerpt: "Por qué las empresas que tratan el compliance como documento pierden cuando llega la auditoría. Cómo convertirlo en proceso.", author: "Rafael Ortiz", authorInit: "RO" },
+  { title: "Rediseñar una operación: cuándo digitalizar y cuándo no", cat: "Tecnología", pattern: "tech", date: "20 Feb 2025", time: "10 min", excerpt: "No todo proceso merece un software. Una guía para decidir qué automatizar primero y qué conservar manual — con criterio.", author: "Elena Cortés", authorInit: "EC" },
+  { title: "Narrativa de marca para empresas B2B que venden criterio", cat: "Comunicación", pattern: "comms", date: "14 Feb 2025", time: "6 min", excerpt: "Cómo construir una voz de marca que comunique solidez sin caer en corporativismo vacío. Ejemplos y anti-ejemplos.", author: "Sofía Medina", authorInit: "SM" },
+  { title: "M&A en pymes: el playbook que nadie te da", cat: "Legal", pattern: "legal", date: "07 Feb 2025", time: "14 min", excerpt: "Desde la carta de intención hasta el closing. Diez años de negociar compras de empresas medianas, en un solo documento.", author: "Mateo Delgado", authorInit: "MD" },
+  { title: "Los tres roles que toda startup subcontrata mal", cat: "Equipo", pattern: "people", date: "31 Ene 2025", time: "5 min", excerpt: "CFO fraccional, contador y legal. Por qué uno de estos tres siempre está mal contratado en fase temprana — y cómo detectarlo.", author: "Lucía Almada", authorInit: "LA" },
+  { title: "Due diligence técnica: la checklist real", cat: "Inversión", pattern: "tech", date: "24 Ene 2025", time: "11 min", excerpt: "Lo que miramos cuando auditamos tecnológicamente una empresa antes de una inversión. No es lo que los founders creen.", author: "Elena Cortés", authorInit: "EC" },
+];
+
+const CATS = [
+  { id: "all", label: "Todos" },
+  { id: "Legal", label: "Legal" },
+  { id: "Tecnología", label: "Tecnología" },
+  { id: "Inversión", label: "Inversión" },
+  { id: "Comunicación", label: "Comunicación" },
+  { id: "Equipo", label: "Equipo" },
+];
+
+function BlogApp() {
+  const [activeCat, setActiveCat] = useState("all");
+  const [query, setQuery] = useState("");
+
+  const featured = ARTICLES[0];
+  const rest = ARTICLES.slice(1);
+
+  const catsWithCounts = CATS.map((c) => ({
+    ...c,
+    n: c.id === "all" ? rest.length : rest.filter((a) => a.cat === c.id).length,
+  }));
+
+  const filtered = useMemo(() => {
+    return rest.filter((a) => {
+      if (activeCat !== "all" && a.cat !== activeCat) return false;
+      if (query && !(`${a.title} ${a.excerpt} ${a.author}`).toLowerCase().includes(query.toLowerCase())) return false;
+      return true;
+    });
+  }, [activeCat, query]);
+
+  return (
+    <div className="blog-page">
+      <BlogNav />
+      <BlogHero totalArticles={String(ARTICLES.length).padStart(2, "0")} totalCats={String(CATS.length - 1).padStart(2, "0")} />
+      <BlogFeatured article={featured} />
+      <BlogFilters cats={catsWithCounts} active={activeCat} onCat={setActiveCat} query={query} onQuery={setQuery} />
+      <BlogGrid articles={filtered} />
+      <BlogNewsletter />
+      <BlogFooter />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<BlogApp />);
