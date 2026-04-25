@@ -331,7 +331,7 @@ footer{padding:2.5rem 0;background:var(--dark);border-top:1px solid var(--border
   .pt-step:nth-child(odd) .pt-content,.pt-step:nth-child(even) .pt-content{grid-column:2;text-align:left;padding:0}
   .pt-step:nth-child(odd) .pt-dot-wrap,.pt-step:nth-child(even) .pt-dot-wrap{grid-column:1;grid-row:1}
   .pt-step:nth-child(odd) .pt-visual,.pt-step:nth-child(even) .pt-visual{display:none}
-  .packages-grid{grid-template-columns:1fr}
+  .packages-grid{grid-template-columns:1fr; gap: 32px;}
 }
 @media(max-width:768px){
   .nav-links{display:none}
@@ -876,7 +876,7 @@ window.addEventListener('scroll',()=>{
       <li><a href="nosotros.html">Nosotros</a></li>
       <li><a href="blog.html">Blog</a></li>
       <li style="margin-top: 20px"><a href="contacto.html" class="btn btn-gold nav-cta" style="text-align: center; justify-content: center; width: 100%">Contactar</a>
-      <button class="nav-toggle" onclick="document.getElementById(\'mobileMenu\').style.display=\'flex\'"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></li>
+      <button class="nav-toggle" onclick="document.getElementById('mobileMenu').style.display='flex'"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></li>
     </ul>
   </div>
 </div>
