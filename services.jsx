@@ -164,14 +164,14 @@ function SvcNav() {
   return (
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{ height: 64 }} /></a>
+        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{ height: 64 }} /></a>
         <ul className="nav-links">
           <li><a href="servicios.html" style={{ color: "var(--gold)" }}>Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
           <li><a href="blog.html">Blog</a></li>
           <li><a href="contacto.html">Contacto</a></li>
         </ul>
-        <a href="MEDLA empresas.html#contacto" className="btn btn-primary btn-sm">Agendar diagnóstico</a>
+        <a href="index.html#contacto" className="btn btn-primary btn-sm">Agendar diagnóstico</a>
       </div>
     </nav>
   );
@@ -190,7 +190,7 @@ function SvcHero() {
           </p>
           <div className="hero-ctas" style={{ marginTop: 32 }}>
             <a href="#explorer" className="btn btn-primary">Explorar servicios <span className="arr">↓</span></a>
-            <a href="MEDLA empresas.html#contacto" className="btn btn-ghost">Diagnóstico gratuito</a>
+            <a href="index.html#contacto" className="btn btn-ghost">Diagnóstico gratuito</a>
           </div>
         </div>
         <div className="svc-stats">
@@ -273,16 +273,16 @@ function SvcExplorer() {
 
               <div className="svc-detail-ctas">
                 <a href={
-                  current.id === "legal" ? "../asesoria-legal.html" :
-                    current.id === "constitucion" ? "../constitucion.html" :
-                      current.id === "inversiones" ? "../inversiones.html" :
-                        current.id === "automatizacion" ? "../automatizacion.html" :
-                          current.id === "digitalizacion" ? "../index.html" :
-                            current.id === "ia" ? "../agentes.html" :
-                              current.id === "social" ? "../redes-sociales.html" :
-                                "MEDLA empresas.html#contacto"
+                  current.id === "legal" ? "asesoria-legal.html" :
+                    current.id === "constitucion" ? "constitucion.html" :
+                      current.id === "inversiones" ? "inversiones.html" :
+                        current.id === "automatizacion" ? "automatizacion.html" :
+                          current.id === "digitalizacion" ? "digitalizacion.html" :
+                            current.id === "ia" ? "agentes.html" :
+                              current.id === "social" ? "redes-sociales.html" :
+                                "index.html#contacto"
                 } className="btn btn-primary">Ver todos los detalles <span className="arr">→</span></a>
-                <a href="MEDLA empresas.html#contacto" className="btn btn-ghost">Agendar diagnóstico</a>
+                <a href="index.html#contacto" className="btn btn-ghost">Agendar diagnóstico</a>
               </div>
             </div>
 
@@ -331,7 +331,7 @@ function SvcCross() {
             <p>Los siete servicios integrados. Una sola arquitectura operando como un solo equipo.</p>
           </div>
         </div>
-        <a href="MEDLA empresas.html#paquetes" className="btn btn-dark" style={{ marginTop: 48 }}>Ver paquetes y precios <span className="arr">→</span></a>
+        <a href="index.html#paquetes" className="btn btn-dark" style={{ marginTop: 48 }}>Ver paquetes y precios <span className="arr">→</span></a>
       </div>
     </section>
   );

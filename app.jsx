@@ -17,7 +17,7 @@ function Nav() {
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <div className="container nav-inner">
-        <a href="#" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
