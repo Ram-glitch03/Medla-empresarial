@@ -161,7 +161,9 @@ const SERVICES_DATA = [
 ];
 
 function SvcNav() {
+  const [mobileOpen, setMobileOpen] = useState(false);
   return (
+    <>
     <nav className="nav scrolled">
       <div className="container nav-inner">
         <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{ height: 64 }} /></a>
@@ -171,9 +173,35 @@ function SvcNav() {
           <li><a href="blog.html">Blog</a></li>
           <li><a href="contacto.html">Contacto</a></li>
         </ul>
-        <a href="index.html#contacto" className="btn btn-primary btn-sm">Agendar diagnóstico</a>
+        <div style={{display: "flex", alignItems: "center"}}>
+          <a href="index.html#contacto" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
+          <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
       </div>
     </nav>
+    {mobileOpen && (
+      <div className="mobile-menu">
+        <div className="mobile-menu-overlay" onClick={() => setMobileOpen(false)}></div>
+        <div className="mobile-menu-content">
+          <div className="mobile-menu-head">
+            <img src="logo.png" alt="MEDLA" style={{height: 40}} />
+            <button className="nav-toggle" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <ul className="mobile-links" onClick={() => setMobileOpen(false)}>
+            <li><a href="servicios.html" style={{ color: "var(--gold)" }}>Servicios</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li style={{marginTop: 20}}><a href="index.html#contacto" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
+          </ul>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
 

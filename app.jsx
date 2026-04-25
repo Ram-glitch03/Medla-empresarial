@@ -9,12 +9,14 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   return (
+    <>
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <div className="container nav-inner">
         <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
@@ -24,9 +26,35 @@ function Nav() {
           <li><a href="blog.html">Blog</a></li>
           <li><a href="#proceso">Proceso</a></li>
         </ul>
-        <a href="contacto.html" className="nav-cta">Contactar</a>
+        <div style={{display: "flex", alignItems: "center"}}>
+          <a href="contacto.html" className="nav-cta">Contactar</a>
+          <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
       </div>
     </nav>
+    {mobileOpen && (
+      <div className="mobile-menu">
+        <div className="mobile-menu-overlay" onClick={() => setMobileOpen(false)}></div>
+        <div className="mobile-menu-content">
+          <div className="mobile-menu-head">
+            <img src="logo.png" alt="MEDLA" style={{height: 40}} />
+            <button className="nav-toggle" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <ul className="mobile-links" onClick={() => setMobileOpen(false)}>
+            <li><a href="servicios.html">Servicios</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="#proceso">Proceso</a></li>
+            <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Contactar</a></li>
+          </ul>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
 
