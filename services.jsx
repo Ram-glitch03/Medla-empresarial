@@ -183,10 +183,9 @@ function SvcHero() {
       <div className="container svc-hero-inner">
         <div>
           <span className="eyebrow">— Servicios</span>
-          <h1 style={{ marginTop: 16 }}>Siete líneas, una <em>sola estructura</em>.</h1>
+          <h1 style={{ marginTop: 16 }}>Soluciones integrales para escalar tu <em>negocio</em>.</h1>
           <p className="lead" style={{ marginTop: 24, maxWidth: "52ch" }}>
-            No somos un bufete, ni una consultora, ni una agencia. Somos la capa operativa
-            que integra lo jurídico, lo tecnológico y lo estratégico bajo un mismo criterio.
+            Elimina la fricción de tratar con múltiples agencias y despachos. En MEDLA unificamos la asesoría corporativa, la automatización y el marketing para que tu empresa crezca sin límites.
           </p>
           <div className="hero-ctas" style={{ marginTop: 32 }}>
             <a href="#explorer" className="btn btn-primary">Explorar servicios <span className="arr">↓</span></a>
@@ -195,16 +194,16 @@ function SvcHero() {
         </div>
         <div className="svc-stats">
           <div className="svc-stat">
-            <div className="svc-stat-num">07</div>
-            <div className="svc-stat-lbl">Líneas de servicio articuladas bajo un único gobierno operativo.</div>
+            <div className="svc-stat-num">360°</div>
+            <div className="svc-stat-lbl">Estrategia integral. Legal, tech y marketing en un solo equipo.</div>
           </div>
           <div className="svc-stat">
-            <div className="svc-stat-num">01</div>
-            <div className="svc-stat-lbl">Interlocutor estratégico único. Sin relevos, sin traspasos.</div>
+            <div className="svc-stat-num">100%</div>
+            <div className="svc-stat-lbl">Enfocados en resultados medibles y escalabilidad operativa.</div>
           </div>
           <div className="svc-stat">
-            <div className="svc-stat-num">24h</div>
-            <div className="svc-stat-lbl">Tiempo medio de respuesta en asuntos de cliente recurrente.</div>
+            <div className="svc-stat-num">24/7</div>
+            <div className="svc-stat-lbl">Acompañamiento continuo y soporte prioritario para tu empresa.</div>
           </div>
         </div>
       </div>
