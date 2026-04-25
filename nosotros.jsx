@@ -7,7 +7,7 @@ function NosNav() {
   return (
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html" style={{ color: "var(--gold)" }}>Nosotros</a></li>
@@ -356,11 +356,11 @@ function NosFooter() {
           <div>
             <h4>Servicios</h4>
             <ul>
-              <li><a href="../asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="../constitucion.html">Constitución</a></li>
-              <li><a href="../inversiones.html">Inversiones</a></li>
-              <li><a href="../automatizacion.html">Automatización</a></li>
-              <li><a href="../agentes.html">IA aplicada</a></li>
+              <li><a href="asesoria-legal.html">Asesoría legal</a></li>
+              <li><a href="constitucion.html">Constitución</a></li>
+              <li><a href="inversiones.html">Inversiones</a></li>
+              <li><a href="automatizacion.html">Automatización</a></li>
+              <li><a href="agentes.html">IA aplicada</a></li>
             </ul>
           </div>
           <div>

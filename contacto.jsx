@@ -47,7 +47,7 @@ function CtNav() {
   return (
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
@@ -377,7 +377,7 @@ function CtForm({ pathId }) {
                 <p>Recibirás un email de confirmación en los próximos minutos. Alguien del equipo responde, como tarde, en 24 horas hábiles.</p>
                 <div className="hero-ctas">
                   <a href="servicios.html" className="btn btn-primary">Explorar servicios <span className="arr">→</span></a>
-                  <a href="MEDLA empresas.html" className="btn btn-ghost">Volver al inicio</a>
+                  <a href="index.html" className="btn btn-ghost">Volver al inicio</a>
                 </div>
               </div>
             )}
@@ -567,11 +567,11 @@ function CtFooter() {
           <div>
             <h4>Servicios</h4>
             <ul>
-              <li><a href="../asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="../constitucion.html">Constitución</a></li>
-              <li><a href="../inversiones.html">Inversiones</a></li>
-              <li><a href="../automatizacion.html">Automatización</a></li>
-              <li><a href="../agentes.html">IA aplicada</a></li>
+              <li><a href="asesoria-legal.html">Asesoría legal</a></li>
+              <li><a href="constitucion.html">Constitución</a></li>
+              <li><a href="inversiones.html">Inversiones</a></li>
+              <li><a href="automatizacion.html">Automatización</a></li>
+              <li><a href="agentes.html">IA aplicada</a></li>
             </ul>
           </div>
           <div>

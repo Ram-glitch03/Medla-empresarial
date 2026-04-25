@@ -164,7 +164,7 @@ function SvcNav() {
   return (
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{ height: 64 }} /></a>
         <ul className="nav-links">
           <li><a href="servicios.html" style={{ color: "var(--gold)" }}>Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
@@ -274,13 +274,13 @@ function SvcExplorer() {
               <div className="svc-detail-ctas">
                 <a href={
                   current.id === "legal" ? "../asesoria-legal.html" :
-                  current.id === "constitucion" ? "../constitucion.html" :
-                  current.id === "inversiones" ? "../inversiones.html" :
-                  current.id === "automatizacion" ? "../automatizacion.html" :
-                  current.id === "digitalizacion" ? "../index.html" :
-                  current.id === "ia" ? "../agentes.html" :
-                  current.id === "social" ? "../redes-sociales.html" :
-                  "MEDLA empresas.html#contacto"
+                    current.id === "constitucion" ? "../constitucion.html" :
+                      current.id === "inversiones" ? "../inversiones.html" :
+                        current.id === "automatizacion" ? "../automatizacion.html" :
+                          current.id === "digitalizacion" ? "../index.html" :
+                            current.id === "ia" ? "../agentes.html" :
+                              current.id === "social" ? "../redes-sociales.html" :
+                                "MEDLA empresas.html#contacto"
                 } className="btn btn-primary">Ver todos los detalles <span className="arr">→</span></a>
                 <a href="MEDLA empresas.html#contacto" className="btn btn-ghost">Agendar diagnóstico</a>
               </div>
