@@ -81,7 +81,7 @@ function Hero() {
             <div><span className="num">7</span><span className="lbl">Líneas de servicio</span></div>
           </div>
         </div>
-        <div className="hero-visual"><HeroVisual /></div>
+        <div className="hero-visual-wrap"><HeroVisual /></div>
       </div>
     </section>
   );
@@ -103,7 +103,6 @@ function LogosSection() {
   const doubled = [...logos, ...logos];
   return (
     <section className="logos-section">
-      <ParticleField />
       <div className="container">
         <div className="logos-head">Empresas que confían en MEDLA</div>
       </div>
