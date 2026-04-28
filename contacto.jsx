@@ -57,7 +57,7 @@ function CtNav() {
           <li><a href="contacto.html" style={{ color: "var(--gold)" }}>Contacto</a></li>
         </ul>
         <div style={{display: "flex", alignItems: "center"}}>
-          <a href="#form" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
+          <a href="contacto.html" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
           <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
@@ -79,7 +79,7 @@ function CtNav() {
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="blog.html">Blog</a></li>
             <li><a href="contacto.html" style={{ color: "var(--gold)" }}>Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="#form" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
+            <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
           </ul>
         </div>
       </div>
@@ -404,8 +404,8 @@ function CtForm({ pathId }) {
                 <h3>Mensaje enviado, {data.nombre.split(" ")[0] || "gracias"}.</h3>
                 <p>Recibirás un email de confirmación en los próximos minutos. Alguien del equipo responde, como tarde, en 24 horas hábiles.</p>
                 <div className="hero-ctas">
-                  <a href="servicios.html" className="btn btn-primary">Explorar servicios <span className="arr">→</span></a>
-                  <a href="index.html" className="btn btn-ghost">Volver al inicio</a>
+                  <a href="contacto.html" className="btn btn-primary">Explorar servicios <span className="arr">→</span></a>
+                  <a href="contacto.html" className="btn btn-ghost">Volver al inicio</a>
                 </div>
               </div>
             )}

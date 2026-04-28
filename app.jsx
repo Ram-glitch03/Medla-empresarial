@@ -72,7 +72,7 @@ function Hero() {
             Acompañamos a empresas en expansión con asesoría legal, automatización e inteligencia artificial aplicada — todo bajo una misma estructura.
           </p>
           <div className="hero-ctas">
-            <a href="#contacto" className="btn btn-primary">Agendar diagnóstico <span className="arr">→</span></a>
+            <a href="contacto.html" className="btn btn-primary">Agendar diagnóstico <span className="arr">→</span></a>
             <a href="#servicios" className="btn btn-ghost">Ver servicios</a>
           </div>
           <div className="hero-meta">
@@ -221,99 +221,6 @@ function ProcessSection() {
   );
 }
 
-function PackagesSection() {
-  const pkgs = [
-    {
-      name: "Essential",
-      label: "Para empresas en crecimiento",
-      desc: "Lo fundamental para operar con estructura sólida.",
-      price: "490",
-      per: "/ mes",
-      features: [
-        "Asesoría legal continua",
-        "Revisión contractual (hasta 10 / mes)",
-        "Compliance básico",
-        "1 reunión estratégica mensual",
-      ],
-      featured: false,
-    },
-    {
-      name: "Pro",
-      label: "La elección más popular",
-      desc: "Cobertura integral + capa tecnológica.",
-      price: "890",
-      per: "/ mes",
-      features: [
-        "Todo lo de Essential",
-        "Contratos ilimitados",
-        "Automatización de procesos clave",
-        "IA aplicada (módulo dedicado)",
-        "Soporte prioritario 24/48h",
-        "Comité estratégico quincenal",
-      ],
-      featured: true,
-      tag: "Recomendado",
-    },
-    {
-      name: "Elite",
-      label: "Para operaciones complejas",
-      desc: "Equipo dedicado y acompañamiento ejecutivo.",
-      price: "1.490",
-      per: "/ mes",
-      features: [
-        "Todo lo de Pro",
-        "Equipo legal + tech dedicado",
-        "Manejo de inversiones",
-        "Manejo comercial & redes",
-        "Litigio estratégico incluido",
-        "Disponibilidad 24/7",
-      ],
-      featured: false,
-    },
-  ];
-  return (
-    <section className="pkg-section">
-      <div className="container">
-        <div className="section-head centered">
-          <span className="eyebrow">Paquetes</span>
-          <h2>Estructuras claras,<br />alcance escalable.</h2>
-          <p className="lead" style={{ textAlign: "center" }}>
-            Elige la modalidad que corresponde al momento de tu empresa. Todas incluyen acceso a nuestro ecosistema.
-          </p>
-        </div>
-        <div className="pkg-grid">
-          {pkgs.map(p => (
-            <div className={`pkg ${p.featured ? "featured" : ""}`} key={p.name}>
-              {p.tag && <span className="pkg-tag">{p.tag}</span>}
-              <div className="pkg-label">{p.label}</div>
-              <h3>{p.name}</h3>
-              <div className="pkg-desc">{p.desc}</div>
-              <div className="pkg-price">
-                <span className="price-num">{p.price}</span>
-                <span className="price-curr">€</span>
-                <span className="price-per">{p.per}</span>
-              </div>
-              <ul className="pkg-features">
-                {p.features.map(f => <li key={f}>{f}</li>)}
-              </ul>
-              <a href="#contacto" className={`btn ${p.featured ? "btn-primary" : "btn-ghost"}`}>
-                Elegir {p.name} <span className="arr">→</span>
-              </a>
-            </div>
-          ))}
-        </div>
-        <div className="pkg-custom">
-          <div className="pkg-custom-text">
-            <h3>¿Buscas algo a la medida?</h3>
-            <p>Construimos paquetes específicos para grupos, holdings y operaciones internacionales. Conversemos sobre el alcance exacto que tu empresa necesita.</p>
-          </div>
-          <a href="#contacto" className="btn btn-dark">Solicitar propuesta <span className="arr">→</span></a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function TestimonialsSection() {
   const items = [
     { q: "MEDLA simplificó una operación que llevaba años fragmentada. En seis meses pasamos de tres despachos a un solo interlocutor.", name: "Lucía Ortega", role: "CEO · Monteverde Holdings", ini: "LO" },
@@ -368,8 +275,8 @@ function CTASection() {
             </h2>
             <p>Una llamada de 30 minutos para entender tu operación y dibujar, sin compromiso, cómo sería trabajar juntos.</p>
             <div className="hero-ctas">
-              <a href="#" className="btn btn-dark">Agendar diagnóstico <span className="arr">→</span></a>
-              <a href="#" className="btn btn-ghost">Escribir por WhatsApp</a>
+              <a href="contacto.html" className="btn btn-dark">Agendar diagnóstico <span className="arr">→</span></a>
+              <a href="contacto.html" className="btn btn-ghost">Escribir por WhatsApp</a>
             </div>
           </div>
         </div>
@@ -472,7 +379,7 @@ function App() {
       <LogosSection />
       <ServicesSection />
       <ProcessSection />
-      <PackagesSection />
+      
       <TestimonialsSection />
       <CTASection />
       <Footer />

@@ -174,7 +174,7 @@ function SvcNav() {
           <li><a href="contacto.html">Contacto</a></li>
         </ul>
         <div style={{display: "flex", alignItems: "center"}}>
-          <a href="index.html#contacto" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
+          <a href="contacto.html" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
           <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
@@ -196,7 +196,7 @@ function SvcNav() {
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="blog.html">Blog</a></li>
             <li><a href="contacto.html">Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="index.html#contacto" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
+            <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
           </ul>
         </div>
       </div>
@@ -216,8 +216,8 @@ function SvcHero() {
             Elimina la fricción de tratar con múltiples agencias y despachos. En MEDLA unificamos la asesoría corporativa, la automatización y el marketing para que tu empresa crezca sin límites.
           </p>
           <div className="hero-ctas" style={{ marginTop: 32 }}>
-            <a href="#explorer" className="btn btn-primary">Explorar servicios <span className="arr">↓</span></a>
-            <a href="index.html#contacto" className="btn btn-ghost">Diagnóstico gratuito</a>
+            <a href="contacto.html" className="btn btn-primary">Explorar servicios <span className="arr">↓</span></a>
+            <a href="contacto.html" className="btn btn-ghost">Diagnóstico gratuito</a>
           </div>
         </div>
         <div className="svc-stats">
@@ -309,7 +309,7 @@ function SvcExplorer() {
                               current.id === "social" ? "redes-sociales.html" :
                                 "index.html#contacto"
                 } className="btn btn-primary">Ver todos los detalles <span className="arr">→</span></a>
-                <a href="index.html#contacto" className="btn btn-ghost">Agendar diagnóstico</a>
+                <a href="contacto.html" className="btn btn-ghost">Agendar diagnóstico</a>
               </div>
             </div>
 
@@ -358,7 +358,7 @@ function SvcCross() {
             <p>Los siete servicios integrados. Una sola arquitectura operando como un solo equipo.</p>
           </div>
         </div>
-        <a href="index.html#paquetes" className="btn btn-dark" style={{ marginTop: 48 }}>Ver paquetes y precios <span className="arr">→</span></a>
+        <a href="contacto.html" className="btn btn-dark" style={{ marginTop: 48 }}>Ver paquetes y precios <span className="arr">→</span></a>
       </div>
     </section>
   );

@@ -364,7 +364,7 @@ function NosCTA() {
         <p>Si llegaste hasta aquí es porque algo resuena. Conversemos: 30 minutos, sin compromiso, para entender si tiene sentido seguir adelante.</p>
         <div className="hero-ctas" style={{ justifyContent: "center" }}>
           <a href="contacto.html" className="btn btn-primary">Agendar diagnóstico <span className="arr">→</span></a>
-          <a href="servicios.html" className="btn btn-ghost" style={{ color: "var(--white)", borderColor: "rgba(255,255,255,0.3)" }}>Ver servicios</a>
+          <a href="contacto.html" className="btn btn-ghost" style={{ color: "var(--white)", borderColor: "rgba(255,255,255,0.3)" }}>Ver servicios</a>
         </div>
       </div>
     </section>
