@@ -331,7 +331,7 @@ footer{padding:2.5rem 0;background:var(--dark);border-top:1px solid var(--border
   .pt-step:nth-child(odd) .pt-content,.pt-step:nth-child(even) .pt-content{grid-column:2;text-align:left;padding:0}
   .pt-step:nth-child(odd) .pt-dot-wrap,.pt-step:nth-child(even) .pt-dot-wrap{grid-column:1;grid-row:1}
   .pt-step:nth-child(odd) .pt-visual,.pt-step:nth-child(even) .pt-visual{display:none}
-  .packages-grid{grid-template-columns:1fr}
+  .packages-grid{grid-template-columns:1fr; gap: 32px;}
 }
 @media(max-width:768px){
   .nav-links{display:none}
@@ -341,22 +341,36 @@ footer{padding:2.5rem 0;background:var(--dark);border-top:1px solid var(--border
   .cta-perks{gap:1.5rem}
   .footer-inner{flex-direction:column;text-align:center}
 }
-  </style>
+  
+  /* MOBILE MENU */
+  .nav-toggle { display: none; background: transparent; border: none; color: inherit; padding: 8px; cursor: pointer; margin-left: 12px; }
+  @media (max-width: 960px) {
+    .nav-links, .nav-cta { display: none !important; }
+    .nav-toggle { display: block; }
+  }
+  .mobile-menu { position: fixed; inset: 0; z-index: 999; display: flex; justify-content: flex-end; }
+  .mobile-menu-overlay { position: absolute; inset: 0; background: rgba(26,26,46,0.5); backdrop-filter: blur(4px); }
+  .mobile-menu-content { position: relative; width: 80%; max-width: 320px; background: #faf8f5; height: 100%; padding: 24px; display: flex; flex-direction: column; animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: -10px 0 40px rgba(0,0,0,0.1); }
+  @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  .mobile-menu-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(174,158,113,.22); padding-bottom: 20px; margin-bottom: 24px; }
+  .mobile-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 20px; }
+  .mobile-links a { font-size: 18px; font-weight: 500; color: #1c1914; text-decoration: none; }
+  .mobile-links a.btn { font-size: 15px; margin-top: 10px; }
+</style>
 </head>
 <body>
 
 <!-- ═══════════════════ NAV ══════════════════════════════ -->
 <nav id="nav">
   <div class="nav-brand">
-    <a href="MEDLA empresas/MEDLA empresas.html" class="nav-logo"><img src="logo.png" alt="MEDLA" style="height:64px" /></a>
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="MEDLA" style="height:64px" /></a>
   </div>
   <ul class="nav-links">
     <li><a href="#services">Servicios</a></li>
     <li><a href="#results">Resultados</a></li>
     <li><a href="#process">Proceso</a></li>
-    <li><a href="#packages">Planes</a></li>
-  </ul>
-  <a href="#cta" class="btn btn-gold" style="padding:.7rem 1.6rem;font-size:.72rem">
+      </ul>
+  <a href="contacto.html" class="btn btn-gold" style="padding:.7rem 1.6rem;font-size:.72rem">
     Empezar ahora
     <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </a>
@@ -376,7 +390,7 @@ footer{padding:2.5rem 0;background:var(--dark);border-top:1px solid var(--border
         </h1>
         <p class="hero-sub r d2">Contenido estratégico, campañas optimizadas, embudos de conversión y crecimiento orgánico real. Tu marca domina las redes — nosotros hacemos que venda.</p>
         <div class="hero-acts r d3">
-          <a href="#cta" class="btn btn-gold">
+          <a href="contacto.html" class="btn btn-gold">
             Quiero crecer
             <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
@@ -633,87 +647,6 @@ footer{padding:2.5rem 0;background:var(--dark);border-top:1px solid var(--border
 <div class="gold-rule"></div>
 
 <!-- ═══════════════════ PACKAGES ═════════════════════════ -->
-<section id="packages">
-  <div class="con">
-    <div class="packages-header">
-      <div class="eyebrow center r">Planes</div>
-      <h2 class="s-title r d1" style="text-align:center">Elige tu nivel de<br/><em>crecimiento</em></h2>
-      <p class="s-sub r d2">Tres planes diseñados para cada etapa de tu marca. Sin contratos largos, con resultados garantizados.</p>
-    </div>
-
-    <div class="packages-grid">
-      <div class="pkg r">
-        <div class="pkg-shine"></div>
-        <div class="pkg-tier">Starter</div>
-        <div class="pkg-name">Presencia</div>
-        <div class="pkg-desc">Para marcas que inician su presencia digital con contenido profesional y estrategia.</div>
-        <div class="pkg-price">
-          <span class="pkg-amount">6.900</span>
-          <span class="pkg-currency">€</span>
-          <span class="pkg-period">/ mes</span>
-        </div>
-        <ul class="pkg-features">
-          <li>12 publicaciones / mes</li>
-          <li>4 reels / mes</li>
-          <li>Stories diarias (templates)</li>
-          <li>Calendario editorial</li>
-          <li>Community Management básico</li>
-          <li>Reporte mensual</li>
-        </ul>
-        <a href="#cta" class="btn btn-outline pkg-cta">Comenzar<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
-
-      <div class="pkg featured r d2">
-        <div class="pkg-shine"></div>
-        <div class="pkg-badge">Más popular</div>
-        <div class="pkg-tier">Growth</div>
-        <div class="pkg-name">Domina</div>
-        <div class="pkg-desc">Estrategia completa con campañas, embudos y crecimiento acelerado para marcas en expansión.</div>
-        <div class="pkg-price">
-          <span class="pkg-amount">14.900</span>
-          <span class="pkg-currency">€</span>
-          <span class="pkg-period">/ mes</span>
-        </div>
-        <ul class="pkg-features">
-          <li>Todo lo de Presencia, más:</li>
-          <li>30 publicaciones / mes</li>
-          <li>12 reels / mes con producción</li>
-          <li>Campañas Meta Ads (gestión incluida)</li>
-          <li>Embudo de conversión WhatsApp</li>
-          <li>Community Management activo</li>
-          <li>Reporte semanal + reunión mensual</li>
-        </ul>
-        <a href="#cta" class="btn btn-gold pkg-cta">Comenzar<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
-
-      <div class="pkg r d4">
-        <div class="pkg-shine"></div>
-        <div class="pkg-tier">Enterprise</div>
-        <div class="pkg-name">Escala</div>
-        <div class="pkg-desc">Dirección creativa completa y growth team dedicado para marcas que buscan escala masiva.</div>
-        <div class="pkg-price">
-          <span class="pkg-currency"></span>
-          <span class="pkg-amount" style="font-size:2rem">A medida</span>
-        </div>
-        <ul class="pkg-features">
-          <li>Todo lo de Domina, más:</li>
-          <li>Director creativo dedicado</li>
-          <li>Producción audiovisual completa</li>
-          <li>Multi-plataforma (5+ redes)</li>
-          <li>Influencer marketing</li>
-          <li>Google Ads + TikTok Ads</li>
-          <li>Embudos avanzados multi-canal</li>
-          <li>Dashboard en vivo 24/7</li>
-        </ul>
-        <a href="#cta" class="btn btn-outline pkg-cta">Hablar con estratega<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="gold-rule"></div>
-
-<!-- ═══════════════════ CTA ══════════════════════════════ -->
 <section id="cta">
   <div class="cta-glow"></div>
   <div class="con">
@@ -747,11 +680,11 @@ footer{padding:2.5rem 0;background:var(--dark);border-top:1px solid var(--border
     <div class="footer-inner">
       <div class="f-brand">Social<span>ix</span> por MEDLA empresas</div>
       <nav class="f-links">
-        <a href="MEDLA empresas/MEDLA empresas.html">Volver a MEDLA empresas</a>
+        <a href="index.html">Volver a MEDLA empresas</a>
         <a href="#services">Servicios</a>
         <a href="#packages">Planes</a>
         <a href="#results">Resultados</a>
-        <a href="#cta">Contacto</a>
+        <a href="contacto.html">Contacto</a>
       </nav>
       <div class="f-copy">© 2026 MEDLA. Gestión comercial de redes sociales.</div>
     </div>
@@ -846,5 +779,25 @@ window.addEventListener('scroll',()=>{
   if(deco)deco.style.transform=`translateY(${scrollY*.12}px)`;
 });
 </script>
+
+<div id="mobileMenu" class="mobile-menu" style="display: none;">
+  <div class="mobile-menu-overlay" onclick="document.getElementById('mobileMenu').style.display='none'"></div>
+  <div class="mobile-menu-content">
+    <div class="mobile-menu-head">
+      <img src="logo.png" alt="MEDLA" style="height: 40px" />
+      <button class="nav-toggle" style="display: block" onclick="document.getElementById('mobileMenu').style.display='none'">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <ul class="mobile-links" onclick="document.getElementById('mobileMenu').style.display='none'">
+      <li><a href="servicios.html">Servicios</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li style="margin-top: 20px"><a href="contacto.html" class="btn btn-gold nav-cta" style="text-align: center; justify-content: center; width: 100%">Contactar</a>
+      <button class="nav-toggle" onclick="document.getElementById('mobileMenu').style.display='flex'"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></li>
+    </ul>
+  </div>
+</div>
+
 </body>
 </html>
