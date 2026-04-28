@@ -204,6 +204,10 @@ function CtForm({ pathId }) {
     notas: "",
   });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(null);
+
+  const WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/vg8CkhnTjUIDbxcw3b9h/webhook-trigger/3f21a9eb-a6de-4110-b0a6-ef2e9ffac8cc";
 
   const totalSteps = 4;
   const toggleAlcance = (opt) =>
@@ -221,9 +225,39 @@ function CtForm({ pathId }) {
     step === 2 ||
     (step === 3 && data.nombre && data.email);
 
+  const submitToWebhook = async () => {
+    setSending(true);
+    setSendError(null);
+    const presupuesto = PRESUPUESTO_LABELS[data.presupuestoIdx].label;
+    const payload = {
+      tipo_contacto: pathId,
+      nombre: data.nombre,
+      empresa: data.empresa,
+      email: data.email,
+      telefono: data.telefono,
+      alcance: data.alcance.join(", "),
+      etapa_empresa: data.etapa,
+      presupuesto_mensual: presupuesto,
+      notas: data.notas,
+      fecha: new Date().toISOString(),
+    };
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      setSent(true);
+    } catch (err) {
+      setSendError("No se pudo enviar. Por favor inténtalo de nuevo.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   const next = () => {
     if (step < totalSteps - 1 && canAdvance) setStep(step + 1);
-    else if (step === totalSteps - 1 && canAdvance) setSent(true);
+    else if (step === totalSteps - 1 && canAdvance) submitToWebhook();
   };
   const back = () => step > 0 && setStep(step - 1);
 
@@ -412,15 +446,20 @@ function CtForm({ pathId }) {
 
             {!sent && (
               <div className="form-nav">
-                <button className="btn-link" onClick={back} disabled={step === 0}>← Anterior</button>
-                <button
-                  className="btn btn-primary"
-                  onClick={next}
-                  disabled={!canAdvance}
-                  style={{ opacity: canAdvance ? 1 : 0.4, cursor: canAdvance ? "pointer" : "default" }}
-                >
-                  {step === totalSteps - 1 ? "Enviar mensaje" : "Siguiente"} <span className="arr">→</span>
-                </button>
+                <button className="btn-link" onClick={back} disabled={step === 0 || sending}>← Anterior</button>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
+                  {sendError && (
+                    <span style={{ fontSize: 13, color: "#c0392b" }}>{sendError}</span>
+                  )}
+                  <button
+                    className="btn btn-primary"
+                    onClick={next}
+                    disabled={!canAdvance || sending}
+                    style={{ opacity: canAdvance && !sending ? 1 : 0.4, cursor: canAdvance && !sending ? "pointer" : "default" }}
+                  >
+                    {sending ? "Enviando…" : step === totalSteps - 1 ? "Enviar mensaje" : "Siguiente"} <span className="arr">→</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
