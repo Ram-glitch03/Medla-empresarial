@@ -291,7 +291,7 @@ function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 72, display: "block", marginBottom: 16}} /></a>
+            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 160, display: "block", marginBottom: 16, filter: "invert(1)"}} /></a>
             <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
           </div>
           <div>
