@@ -24,7 +24,7 @@ function Nav() {
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
           <li><a href="blog.html">Blog</a></li>
-          <li><a href="#proceso">Proceso</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
         </ul>
         <div style={{display: "flex", alignItems: "center"}}>
           <a href="contacto.html" className="nav-cta">Contactar</a>
@@ -48,7 +48,7 @@ function Nav() {
             <li><a href="servicios.html">Servicios</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="blog.html">Blog</a></li>
-            <li><a href="#proceso">Proceso</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
             <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Contactar</a></li>
           </ul>
         </div>
@@ -108,7 +108,7 @@ function LogosSection() {
         <div className="marquee-track">
           {doubled.map((src, i) => (
             <div className="logo-item" key={i} style={{ display: 'flex', alignItems: 'center', padding: '0 30px' }}>
-              <img src={src} alt="logo" style={{ maxHeight: '40px', maxWidth: '140px', objectFit: 'contain' }} />
+              <img src={src} alt="logo" style={{ maxHeight: '60px', maxWidth: '180px', objectFit: 'contain' }} />
             </div>
           ))}
         </div>
