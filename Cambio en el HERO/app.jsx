@@ -17,7 +17,7 @@ function Nav() {
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <div className="container nav-inner">
-        <a href="#" className="logo"><img src="../logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="#" className="logo"><span className="logo-mark"></span>MEDLA<span className="light">&nbsp;empresas</span></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
@@ -53,7 +53,7 @@ function Hero() {
             <div><span className="num">7</span><span className="lbl">Líneas de servicio</span></div>
           </div>
         </div>
-        <div className="hero-visual"><HeroVisual /></div>
+        <div className="hero-visual-wrap"><HeroVisual /></div>
       </div>
     </section>
   );
@@ -75,7 +75,6 @@ function LogosSection() {
   const doubled = [...logos, ...logos];
   return (
     <section className="logos-section">
-      <ParticleField />
       <div className="container">
         <div className="logos-head">Empresas que confían en MEDLA</div>
       </div>
@@ -200,7 +199,7 @@ function PackagesSection() {
       name: "Essential",
       label: "Para empresas en crecimiento",
       desc: "Lo fundamental para operar con estructura sólida.",
-      price: "490",
+      price: "18,500",
       per: "/ mes",
       features: [
         "Asesoría legal continua",
@@ -214,7 +213,7 @@ function PackagesSection() {
       name: "Pro",
       label: "La elección más popular",
       desc: "Cobertura integral + capa tecnológica.",
-      price: "890",
+      price: "42,000",
       per: "/ mes",
       features: [
         "Todo lo de Essential",
@@ -231,7 +230,7 @@ function PackagesSection() {
       name: "Elite",
       label: "Para operaciones complejas",
       desc: "Equipo dedicado y acompañamiento ejecutivo.",
-      price: "1.490",
+      price: "85,000",
       per: "/ mes",
       features: [
         "Todo lo de Pro",
@@ -262,8 +261,8 @@ function PackagesSection() {
               <h3>{p.name}</h3>
               <div className="pkg-desc">{p.desc}</div>
               <div className="pkg-price">
-                <span className="price-num">{p.price}</span>
-                <span className="price-curr">€</span>
+                <span className="price-curr">MXN</span>
+                <span className="price-num">${p.price}</span>
                 <span className="price-per">{p.per}</span>
               </div>
               <ul className="pkg-features">
@@ -363,11 +362,11 @@ function Footer() {
           <div>
             <h4>Servicios</h4>
             <ul>
-              <li><a href="../asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="../constitucion.html">Constitución</a></li>
-              <li><a href="../inversiones.html">Inversiones</a></li>
-              <li><a href="../agentes.html">IA aplicada</a></li>
-              <li><a href="../redes-sociales.html">Comercial & redes</a></li>
+              <li><a href="#">Asesoría legal</a></li>
+              <li><a href="#">Constitución</a></li>
+              <li><a href="#">Inversiones</a></li>
+              <li><a href="#">IA aplicada</a></li>
+              <li><a href="#">Comercial & redes</a></li>
             </ul>
           </div>
           <div>
@@ -382,9 +381,9 @@ function Footer() {
           <div>
             <h4>Contacto</h4>
             <ul>
-              <li><a href="#">contacto@medlaempresas.com</a></li>
-              <li><a href="#">+34 910 00 00 00</a></li>
-              <li><a href="#">Madrid, España</a></li>
+              <li><a href="#">empresas@medla.mx</a></li>
+              <li><a href="#">+52 55 0000 0000</a></li>
+              <li><a href="#">Polanco, CDMX</a></li>
             </ul>
           </div>
         </div>

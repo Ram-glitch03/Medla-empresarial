@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open /Users/Sebastian/awesome-design-md/avanzza-landing/index.html)",
+      "Bash(open /Users/Sebastian/awesome-design-md/avanzza-landing/agentes.html)",
+      "Bash(open /Users/Sebastian/awesome-design-md/avanzza-landing/automatizacion.html)"
+    ]
+  }
+}

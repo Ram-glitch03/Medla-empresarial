@@ -170,7 +170,7 @@ function NosStats() {
         </div>
         <div className="nos-stats-grid">
           <StatCard value={67} label="Clientes activos" sub="Pymes, startups, holdings y family offices operando con MEDLA." />
-          <StatCard value={8} label="Años de operación" sub="Desde 2017, sirviendo a empresas que deciden crecer con criterio." />
+          <StatCard value={6} label="Años de operación" sub="Desde 2020, sirviendo a empresas que deciden crecer con criterio." />
           <StatCard value={14} label="Profesionales" sub="Abogados, ingenieros, consultores y especialistas bajo un mismo techo." />
           <StatCard value={24} suffix="h" label="Respuesta media" sub="Tiempo máximo para que recibas una primera respuesta con contexto." />
         </div>
@@ -182,18 +182,18 @@ function NosStats() {
 /* ─────────── Timeline ─────────── */
 function NosTimeline() {
   const events = [
-    { y: "2017", t: "El punto de partida", d: "MEDLA nace como una firma pequeña de asesoría legal corporativa, especializada en pymes en crecimiento. Tres abogados, una oficina compartida, una convicción clara: el cliente merece criterio, no procesos." },
-    { y: "2019", t: "Incorporamos tecnología", d: "Tras ver una y otra vez los mismos cuellos de botella operativos en nuestros clientes, sumamos un equipo de ingenieros para digitalizar procesos internos. Nace la segunda línea." },
-    { y: "2021", t: "Especialización en inversión", d: "Acompañamos la primera ronda serie A de un cliente histórico. La operación fuerza a construir un área propia de inversiones y levantamiento de capital, con equipo dedicado." },
-    { y: "2023", t: "IA aplicada en producción", d: "Lanzamos la línea de IA aplicada tras un año de I+D. Primeros asistentes internos de clientes, análisis documental masivo y compliance automatizado." },
-    { y: "2025", t: "MEDLA Empresas consolidado", d: "Cerramos el año con 67 clientes activos en 4 países. Integramos comunicación estratégica como séptima línea: un único gobierno operativo con siete capas coordinadas.", current: true },
+    { y: "2020", t: "El punto de partida", d: "MEDLA nace como una firma pequeña de asesoría legal corporativa, especializada en pymes en crecimiento. Tres abogados, una oficina compartida, una convicción clara: el cliente merece criterio, no procesos." },
+    { y: "2022", t: "Incorporamos tecnología", d: "Tras ver una y otra vez los mismos cuellos de botella operativos en nuestros clientes, sumamos un equipo de ingenieros para digitalizar procesos internos. Nace la segunda línea." },
+    { y: "2023", t: "Especialización en inversión", d: "Acompañamos la primera ronda serie A de un cliente histórico. La operación fuerza a construir un área propia de inversiones y levantamiento de capital, con equipo dedicado." },
+    { y: "2024", t: "IA aplicada en producción", d: "Lanzamos la línea de IA aplicada tras un año de I+D. Primeros asistentes internos de clientes, análisis documental masivo y compliance automatizado." },
+    { y: "2026", t: "MEDLA Empresas consolidado", d: "Cerramos el año con 67 clientes activos en 4 países. Integramos comunicación estratégica como séptima línea: un único gobierno operativo con siete capas coordinadas.", current: true },
   ];
   return (
     <section className="nos-timeline">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">— Trayectoria</span>
-          <h2>Ocho años <em>construyendo</em> criterio.</h2>
+          <h2>Seis años <em>construyendo</em> criterio.</h2>
           <p className="lead">No improvisamos la integración. La construimos año a año, siguiendo las necesidades reales de nuestros clientes.</p>
         </div>
         <div className="tl-wrap">
@@ -242,12 +242,8 @@ const AvatarPattern = ({ seed, initials }) => {
 
 function NosTeam() {
   const people = [
-    { n: "Mateo Delgado", r: "Socio fundador · Director", b: "Abogado corporativo. 15 años negociando M&A y rondas de inversión antes de apostar por construir algo propio.", seed: 3, i: "MD" },
-    { n: "Elena Cortés", r: "Socia · Tecnología", b: "Ingeniera y ex-CTO. Diseña arquitecturas operativas que hablan tanto con auditores como con equipos de producto.", seed: 17, i: "EC" },
-    { n: "Lucía Almada", r: "Socia · Inversiones", b: "VC durante 10 años en Madrid y CDMX. Sabe leer un cap table al derecho y al revés, y negociar lo que nadie firma.", seed: 31, i: "LA" },
-    { n: "Daniel Herrera", r: "Director · IA aplicada", b: "Data scientist con formación jurídica. Lidera los productos de IA internos y los proyectos de implementación con clientes.", seed: 43, i: "DH" },
-    { n: "Sofía Medina", r: "Directora · Comercial", b: "Periodista reconvertida en estratega de comunicación. Construye la narrativa de marca de founders y empresas del portfolio.", seed: 61, i: "SM" },
-    { n: "Rafael Ortiz", r: "Director · Compliance", b: "Ex-regulador. Diseña programas de cumplimiento normativo en sectores financiero, salud y tecnológico.", seed: 79, i: "RO" },
+    { n: "Massimiliano N", r: "Socio fundador · Director", b: "Abogado corporativo. 15 años negociando M&A y rondas de inversión antes de apostar por construir algo propio.", seed: 3, i: "MN" },
+    { n: "Sebastian G", r: "Socio fundador · Tecnología", b: "Ingeniero y ex-CTO. Diseña arquitecturas operativas que hablan tanto con auditores como con equipos de producto.", seed: 17, i: "SG" },
   ];
   return (
     <section className="nos-team" id="equipo">
@@ -374,11 +370,11 @@ function NosCTA() {
 /* ─────────── Footer ─────────── */
 function NosFooter() {
   return (
-    <footer className="footer">
+    <footer className="footer" id="blog">
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <div className="logo"><span className="logo-mark" style={{ borderColor: "#C9A84C" }}></span>MEDLA<span className="light">&nbsp;empresas</span></div>
+            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 160, display: "block", marginBottom: 16, filter: "invert(1)"}} /></a>
             <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
           </div>
           <div>
@@ -387,34 +383,41 @@ function NosFooter() {
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
               <li><a href="constitucion.html">Constitución</a></li>
               <li><a href="inversiones.html">Inversiones</a></li>
-              <li><a href="automatizacion.html">Automatización</a></li>
               <li><a href="agentes.html">IA aplicada</a></li>
+              <li><a href="redes-sociales.html">Comercial & redes</a></li>
             </ul>
           </div>
           <div>
-            <h4>Empresa</h4>
+            <h4>Compañía</h4>
             <ul>
               <li><a href="nosotros.html">Nosotros</a></li>
               <li><a href="blog.html">Blog</a></li>
-              <li><a href="contacto.html">Contacto</a></li>
+              <li><a href="#">Casos</a></li>
+              <li><a href="#">Carreras</a></li>
             </ul>
           </div>
           <div>
             <h4>Contacto</h4>
             <ul>
-              <li>contacto@medlaempresas.com</li>
-              <li>+34 910 00 00 00</li>
-              <li>Madrid, España</li>
+              <li><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></li>
+              <li><a href="tel:+34641576772">+34 641 576 772</a></li>
+              <li><a href="#">Madrid, España</a></li>
             </ul>
+            <a
+              href="https://api.whatsapp.com/send/?phone=34641576772&text=Hola%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n&type=phone_number&app_absent=0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+              style={{marginTop: 20, display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.85rem", padding: "10px 20px"}}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Contactar por WhatsApp
+            </a>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2025 MEDLA empresas. Todos los derechos reservados.</span>
-          <div>
-            <a href="#">Aviso legal</a>
-            <a href="#">Política de privacidad</a>
-            <a href="#">Cookies</a>
-          </div>
+          <span>© 2026 MEDLA Empresas. Todos los derechos reservados.</span>
+          <span>Aviso de privacidad · Términos</span>
         </div>
       </div>
     </footer>

@@ -34,43 +34,62 @@ function TileCanvas({ kind }) {
       const ay = 60;
 
       if (kind === "legal") {
-        // Legal document with stamp
-        const cx = W - 60, cy = H / 2;
+        // BIG animated scales of justice + signature trail
+        const cx = W - 100, cy = H / 2;
+        const tilt = Math.sin(t * 0.8) * 0.08;
         ctx.save();
         ctx.translate(cx, cy);
-        
-        // document body
+        ctx.rotate(tilt);
+        // stem
         ctx.strokeStyle = navy;
         ctx.globalAlpha = 0.4;
         ctx.lineWidth = 1.2;
         ctx.beginPath();
-        ctx.roundRect(-25, -35, 50, 70, 4);
+        ctx.moveTo(0, -70); ctx.lineTo(0, 70);
+        ctx.moveTo(-30, 70); ctx.lineTo(30, 70);
         ctx.stroke();
-        
-        // text lines
+        // beam
         ctx.strokeStyle = gold;
-        ctx.globalAlpha = 0.6;
-        ctx.lineWidth = 1.5;
-        for(let i=0; i<4; i++) {
-          ctx.beginPath();
-          ctx.moveTo(-15, -15 + i*10);
-          ctx.lineTo(i === 3 ? 0 : 15, -15 + i*10);
-          ctx.stroke();
-        }
-        
-        // animated stamp
-        const pulse = Math.sin(t * 1.5) * 0.1 + 1;
-        ctx.globalAlpha = 0.8;
-        ctx.fillStyle = gold;
+        ctx.globalAlpha = 0.7;
+        ctx.lineWidth = 1.4;
         ctx.beginPath();
-        ctx.arc(10, 15, 8 * pulse, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(10, 15, 12 * pulse, 0, Math.PI * 2);
-        ctx.lineWidth = 0.5;
+        ctx.moveTo(-60, -60); ctx.lineTo(60, -60);
         ctx.stroke();
-
+        // pans
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.55;
+        [-60, 60].forEach(x => {
+          ctx.beginPath();
+          ctx.moveTo(x, -60); ctx.lineTo(x, -40);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(x, -28, 14, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(x, -28, 9, 0, Math.PI * 2);
+          ctx.globalAlpha = 0.2;
+          ctx.fillStyle = gold;
+          ctx.fill();
+          ctx.globalAlpha = 0.55;
+        });
+        // pivot
+        ctx.fillStyle = gold;
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(0, -60, 3.5, 0, Math.PI * 2);
+        ctx.fill();
         ctx.restore();
+        // signature line underneath
+        ctx.beginPath();
+        ctx.strokeStyle = gold;
+        ctx.globalAlpha = 0.4;
+        ctx.lineWidth = 1;
+        for (let x = 0; x <= 120; x += 2) {
+          const y = H - 40 + Math.sin((x + t * 25) * 0.1) * 5;
+          if (x === 0) ctx.moveTo(40 + x, y);
+          else ctx.lineTo(40 + x, y);
+        }
+        ctx.stroke();
 
       } else if (kind === "const") {
         // Building blocks stacking + crane

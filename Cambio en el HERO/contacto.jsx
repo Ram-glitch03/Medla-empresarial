@@ -47,7 +47,7 @@ function CtNav() {
   return (
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="MEDLA empresas.html" className="logo"><span className="logo-mark"></span>MEDLA<span className="light">&nbsp;empresas</span></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
@@ -236,8 +236,8 @@ function CtForm({ pathId }) {
             </div>
 
             <div className="form-side-channels">
-              <a className="form-side-channel" href="mailto:contacto@medlaempresas.com"><IconMail /> contacto@medlaempresas.com</a>
-              <a className="form-side-channel" href="tel:+34910000000"><IconPhone /> +34 910 00 00 00</a>
+              <a className="form-side-channel" href="mailto:empresas@medla.mx"><IconMail /> empresas@medla.mx</a>
+              <a className="form-side-channel" href="tel:+525500000000"><IconPhone /> +52 55 0000 0000</a>
               <a className="form-side-channel" href="https://wa.me/525500000000"><IconWa /> WhatsApp directo</a>
             </div>
           </aside>
@@ -416,23 +416,23 @@ function CtInfo() {
             </p>
 
             <div className="info-channels">
-              <a className="info-channel" href="mailto:contacto@medlaempresas.com">
+              <a className="info-channel" href="mailto:empresas@medla.mx">
                 <div className="info-channel-icon"><IconMail /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">Email</div>
-                  <div className="info-channel-val">contacto@medlaempresas.com</div>
+                  <div className="info-channel-val">empresas@medla.mx</div>
                 </div>
                 <span className="info-channel-arr">→</span>
               </a>
-              <a className="info-channel" href="tel:+34910000000">
+              <a className="info-channel" href="tel:+525500000000">
                 <div className="info-channel-icon"><IconPhone /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">Teléfono</div>
-                  <div className="info-channel-val">+34 910 00 00 00</div>
+                  <div className="info-channel-val">+52 55 0000 0000</div>
                 </div>
                 <span className="info-channel-arr">→</span>
               </a>
-              <a className="info-channel" href="https://wa.me/34910000000">
+              <a className="info-channel" href="https://wa.me/525500000000">
                 <div className="info-channel-icon"><IconWa /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">WhatsApp</div>
@@ -492,8 +492,8 @@ function CtInfo() {
             </div>
             <div className="map-card-body">
               <span className="lbl">Oficina</span>
-              <span className="addr">Madrid, España</span>
-              <span className="hours">Lun – Vie · 9:00 – 19:00 (CET)</span>
+              <span className="addr">Polanco · Ciudad de México</span>
+              <span className="hours">Lun – Vie · 9:00 – 19:00 (GMT-6)</span>
             </div>
           </div>
         </div>
@@ -567,11 +567,11 @@ function CtFooter() {
           <div>
             <h4>Servicios</h4>
             <ul>
-              <li><a href="../asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="../constitucion.html">Constitución</a></li>
-              <li><a href="../inversiones.html">Inversiones</a></li>
-              <li><a href="../automatizacion.html">Automatización</a></li>
-              <li><a href="../agentes.html">IA aplicada</a></li>
+              <li><a href="servicios.html">Asesoría legal</a></li>
+              <li><a href="servicios.html">Constitución</a></li>
+              <li><a href="servicios.html">Inversiones</a></li>
+              <li><a href="servicios.html">Digitalización</a></li>
+              <li><a href="servicios.html">IA aplicada</a></li>
             </ul>
           </div>
           <div>
@@ -585,9 +585,9 @@ function CtFooter() {
           <div>
             <h4>Contacto</h4>
             <ul>
-              <li>contacto@medlaempresas.com</li>
-              <li>+34 910 00 00 00</li>
-              <li>Madrid, España</li>
+              <li>empresas@medla.mx</li>
+              <li>+52 55 0000 0000</li>
+              <li>Polanco, CDMX</li>
             </ul>
           </div>
         </div>

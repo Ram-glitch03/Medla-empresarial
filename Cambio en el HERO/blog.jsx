@@ -7,7 +7,7 @@ function BlogNav() {
   return (
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="MEDLA empresas.html" className="logo"><img src="../logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="MEDLA empresas.html" className="logo"><span className="logo-mark"></span>MEDLA<span className="light">&nbsp;empresas</span></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
@@ -288,11 +288,11 @@ function BlogFooter() {
           <div>
             <h4>Servicios</h4>
             <ul>
-              <li><a href="../asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="../constitucion.html">Constitución</a></li>
-              <li><a href="../inversiones.html">Inversiones</a></li>
-              <li><a href="../automatizacion.html">Automatización</a></li>
-              <li><a href="../agentes.html">IA aplicada</a></li>
+              <li><a href="servicios.html">Asesoría legal</a></li>
+              <li><a href="servicios.html">Constitución</a></li>
+              <li><a href="servicios.html">Inversiones</a></li>
+              <li><a href="servicios.html">Digitalización</a></li>
+              <li><a href="servicios.html">IA aplicada</a></li>
             </ul>
           </div>
           <div>
@@ -306,9 +306,9 @@ function BlogFooter() {
           <div>
             <h4>Contacto</h4>
             <ul>
-              <li>contacto@medlaempresas.com</li>
-              <li>+34 910 00 00 00</li>
-              <li>Madrid, España</li>
+              <li>empresas@medla.mx</li>
+              <li>+52 55 0000 0000</li>
+              <li>Polanco, CDMX</li>
             </ul>
           </div>
         </div>

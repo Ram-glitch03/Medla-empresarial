@@ -76,9 +76,9 @@ function Hero() {
             <a href="#servicios" className="btn btn-ghost">Ver servicios</a>
           </div>
           <div className="hero-meta">
-            <div><span className="num">+120</span><span className="lbl">Empresas atendidas</span></div>
-            <div><span className="num">15</span><span className="lbl">Años de experiencia</span></div>
-            <div><span className="num">7</span><span className="lbl">Líneas de servicio</span></div>
+            <div><span className="num">+6</span><span className="lbl">Años de experiencia</span></div>
+            <div><span className="num">+20</span><span className="lbl">Empresas atendidas</span></div>
+            <div><span className="num">24/7</span><span className="lbl">Soporte personalizado</span></div>
           </div>
         </div>
         <div className="hero-visual-wrap"><HeroVisual /></div>
@@ -89,16 +89,14 @@ function Hero() {
 
 function LogosSection() {
   const logos = [
-    { name: "Vanterra", tag: "Group" },
-    { name: "Nórdica", tag: "Capital" },
-    { name: "Atelier", tag: "&Co." },
-    { name: "Lumière", tag: "Tech" },
-    { name: "Monteverde", tag: "Holdings" },
-    { name: "Aetheris", tag: "Ventures" },
-    { name: "Solstice", tag: "Labs" },
-    { name: "Kerning", tag: "Studio" },
-    { name: "Orion Fiscal", tag: "Advisors" },
-    { name: "Praxis", tag: "Legal" },
+    "assets/logos/ce.png",
+    "assets/logos/gv_seguros.png",
+    "assets/logos/obv.png",
+    "assets/logos/acredicam.png",
+    "assets/logos/asociacion_espanola.png",
+    "assets/logos/avannzza.png",
+    "assets/logos/grupo_aranda.png",
+    "assets/logos/jotform.png"
   ];
   const doubled = [...logos, ...logos];
   return (
@@ -108,9 +106,9 @@ function LogosSection() {
       </div>
       <div className="marquee">
         <div className="marquee-track">
-          {doubled.map((l, i) => (
-            <div className="logo-item" key={i}>
-              {l.name}<small>{l.tag}</small>
+          {doubled.map((src, i) => (
+            <div className="logo-item" key={i} style={{ display: 'flex', alignItems: 'center', padding: '0 30px' }}>
+              <img src={src} alt="logo" style={{ maxHeight: '40px', maxWidth: '140px', objectFit: 'contain' }} />
             </div>
           ))}
         </div>

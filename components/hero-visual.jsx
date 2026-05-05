@@ -74,6 +74,47 @@ const HV_CONTINENTS = {
   ],
 };
 
+const HV_ICONS = {
+  "Legal": `<g transform="translate(-12, -12)" fill="none" stroke="#1A1A2E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4 L12 20" />
+      <path d="M5 20 L19 20" />
+      <path d="M5 7 L19 7" />
+      <circle cx="5" cy="7" r="1" fill="#1A1A2E" />
+      <circle cx="19" cy="7" r="1" fill="#1A1A2E" />
+      <path d="M2 13 L5 7 L8 13 Q5 15 2 13" />
+      <path d="M16 13 L19 7 L22 13 Q19 15 16 13" />
+    </g>`,
+  "Auto.": `<g transform="translate(-12, -12)" fill="none" stroke="#1A1A2E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3.5" />
+      <path d="M12 4 L12 6 M12 18 L12 20 M4 12 L6 12 M18 12 L20 12" />
+      <path d="M6.3 6.3 L7.7 7.7 M16.3 16.3 L17.7 17.7 M6.3 17.7 L7.7 16.3 M16.3 7.7 L17.7 6.3" />
+    </g>`,
+  "Digital": `<g transform="translate(-12, -12)" fill="none" stroke="#1A1A2E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="5" width="16" height="12" rx="1.5" />
+      <path d="M8 20 L16 20" />
+      <path d="M12 17 L12 20" />
+      <path d="M8 10 L10 12 L8 14 M13 14 L16 14" />
+    </g>`,
+  "IA": `<g transform="translate(-12, -12)" fill="none" stroke="#1A1A2E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="12" cy="12" r="1.3" fill="#1A1A2E" />
+      <path d="M12 4 L12 8 M12 16 L12 20 M4 12 L8 12 M16 12 L20 12" />
+      <circle cx="12" cy="4" r="1" fill="#1A1A2E" />
+      <circle cx="12" cy="20" r="1" fill="#1A1A2E" />
+      <circle cx="4" cy="12" r="1" fill="#1A1A2E" />
+      <circle cx="20" cy="12" r="1" fill="#1A1A2E" />
+    </g>`,
+  "Const.": `<g transform="translate(-12, -12)" fill="none" stroke="#1A1A2E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20 L20 20" />
+      <path d="M4 10 L20 10 L12 4 Z" />
+      <path d="M7 10 L7 20 M11 10 L11 20 M13 10 L13 20 M17 10 L17 20" />
+    </g>`,
+  "Comercial": `<g transform="translate(-12, -12)" fill="none" stroke="#1A1A2E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 18 L4 10 M9 18 L9 7 M14 18 L14 12 M19 18 L19 5" />
+      <path d="M3 20 L20 20" />
+    </g>`
+};
+
 function HeroVisual() {
   const globeRef = React.useRef(null); // inside clipPath (grid + continents)
   const outerRef = React.useRef(null); // outside clipPath (arcs + cities + orbits)
@@ -213,7 +254,7 @@ function HeroVisual() {
         o += `<g transform="translate(${ox} ${oy})" opacity="${op}">
           <circle cx="0" cy="0" r="${rh}" fill="none" stroke="#C9A84C" stroke-width="0.4" opacity="0.35"/>
           <circle cx="0" cy="0" r="${r}" fill="#FFF" stroke="#C9A84C" stroke-width="0.9"/>
-          <text text-anchor="middle" y="4" font-size="9" fill="#1A1A2E" font-family="Inter,sans-serif" font-weight="700">${s.lbl[0]}</text>
+          ${HV_ICONS[s.lbl] || ""}
           <g transform="translate(0,${rl})">
             <rect x="${lx}" y="-7" width="${lw}" height="14" rx="7" fill="#FFF" stroke="#E2D9C6" stroke-width="0.5"/>
             <text text-anchor="middle" y="3" font-size="8.5" fill="#1A1A2E" opacity="0.9" font-family="Inter,sans-serif" letter-spacing="0.14em" font-weight="500">${s.lbl}</text>
