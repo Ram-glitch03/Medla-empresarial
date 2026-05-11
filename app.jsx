@@ -90,12 +90,8 @@ function Hero() {
 function LogosSection() {
   const logos = [
     "assets/logos/ce.png",
-    "assets/logos/gv_seguros.png",
-    "assets/logos/obv.png",
-    "assets/logos/acredicam.png",
     "assets/logos/asociacion_espanola.png",
     "assets/logos/avannzza.png",
-    "assets/logos/grupo_aranda.png",
     "assets/logos/jotform.png"
   ];
   const doubled = [...logos, ...logos];
