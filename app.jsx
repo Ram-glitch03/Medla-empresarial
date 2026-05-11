@@ -94,7 +94,7 @@ function LogosSection() {
     "assets/logos/avannzza.png",
     "assets/logos/jotform.png"
   ];
-  const doubled = [...logos, ...logos];
+  const doubled = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
   return (
     <section className="logos-section">
       <div className="container">
@@ -104,7 +104,7 @@ function LogosSection() {
         <div className="marquee-track">
           {doubled.map((src, i) => (
             <div className="logo-item" key={i} style={{ display: 'flex', alignItems: 'center', padding: '0 30px' }}>
-              <img src={src} alt="logo" style={{ maxHeight: '60px', maxWidth: '180px', objectFit: 'contain' }} />
+              <img src={src} alt="logo" style={{ maxHeight: '80px', maxWidth: '240px', objectFit: 'contain' }} />
             </div>
           ))}
         </div>
