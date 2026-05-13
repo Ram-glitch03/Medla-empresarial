@@ -314,18 +314,7 @@ function HeroVisual() {
         {/* Dynamic outer content — arcs, cities, orbit badges */}
         <g ref={outerRef} />
 
-        {/* Live badge */}
-        <g transform={`translate(0 ${-HV_ORBIT - 110})`}>
-          <rect x="-62" y="-13" width="124" height="26" rx="13" fill="#1A1A2E" />
-          <circle cx="-46" cy="0" r="3" fill="#C9A84C">
-            <animate attributeName="opacity" values="1;0.3;1" dur="1.6s" repeatCount="indefinite" />
-          </circle>
-          <text x="8" y="3.5" textAnchor="middle" fontSize="9" fill="#FFFFFF"
-            fontFamily="Inter, sans-serif" letterSpacing="0.18em" fontWeight="500"
-            style={{ textTransform: "uppercase" }}>
-            En vivo · global
-          </text>
-        </g>
+        {/* Live badge removed as requested */}
       </svg>
     </div>
   );
