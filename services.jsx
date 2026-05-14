@@ -158,6 +158,28 @@ const SERVICES_DATA = [
       { l: "Ideal para", v: "Founders y C-level" },
     ],
   },
+  {
+    id: "jotform",
+    icon: "digitalizacion",
+    num: "08",
+    label: "Forms",
+    category: "Soluciones Jotform",
+    title: "Implementación de Jotform Enterprise",
+    lead: "Diseño y desarrollo de formularios avanzados y portales corporativos para agilizar la recopilación de datos y automatizar procesos empresariales.",
+    features: [
+      { t: "Formularios avanzados", d: "Lógica condicional, cálculos y prellenado." },
+      { t: "Portales de clientes", d: "Espacios seguros para compartir y gestionar datos." },
+      { t: "Integraciones CRM/ERP", d: "Conexión directa con tu ecosistema actual." },
+      { t: "Firmas electrónicas", d: "Jotform Sign integrado en flujos de trabajo." },
+      { t: "Aprobaciones complejas", d: "Flujos de revisión y aprobación multinivel." },
+      { t: "Cumplimiento normativo", d: "Seguridad de nivel corporativo y cifrado." },
+    ],
+    meta: [
+      { l: "Modalidad", v: "Proyecto a medida" },
+      { l: "Plazo típico", v: "2–4 semanas" },
+      { l: "Ideal para", v: "Empresas con alto volumen de datos" },
+    ],
+  },
 ];
 
 function SvcNav() {
@@ -307,7 +329,8 @@ function SvcExplorer() {
                           current.id === "digitalizacion" ? "digitalizacion.html" :
                             current.id === "ia" ? "agentes.html" :
                               current.id === "social" ? "redes-sociales.html" :
-                                "index.html#contacto"
+                                current.id === "jotform" ? "jotform-landing.html" :
+                                  "index.html#contacto"
                 } className="btn btn-primary">Ver todos los detalles <span className="arr">→</span></a>
                 <a href="contacto.html" className="btn btn-ghost">Agendar diagnóstico</a>
               </div>
