@@ -382,7 +382,7 @@ function NosFooter() {
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
               <li><a href="redes-sociales.html">Comunicación</a></li>
-              <li><a href="jotform-landing.html">Soluciones Jotform</a></li>
+              <li><a href="Langin_MEDLA_Jotform/index.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>

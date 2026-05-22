@@ -219,7 +219,7 @@ function SvcExplorer() {
                           current.id === "digitalizacion" ? "digitalizacion.html" :
                             current.id === "ia" ? "agentes.html" :
                               current.id === "social" ? "redes-sociales.html" :
-                                current.id === "jotform" ? "jotform-landing.html" :
+                                current.id === "jotform" ? "Langin_MEDLA_Jotform/index.html" :
                                   "index.html#contacto"
                 } className="btn btn-primary">Ver todos los detalles <span className="arr">→</span></a>
                 <a href="contacto.html" className="btn btn-ghost">Agendar diagnóstico</a>
@@ -291,7 +291,7 @@ function SvcFooter() {
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
               <li><a href="redes-sociales.html">Comunicación</a></li>
-              <li><a href="jotform-landing.html">Soluciones Jotform</a></li>
+              <li><a href="Langin_MEDLA_Jotform/index.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>
