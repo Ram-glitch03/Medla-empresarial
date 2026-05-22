@@ -299,8 +299,8 @@ function SvcFooter() {
             <ul>
               <li><a href="nosotros.html">Nosotros</a></li>
               <li><a href="blog.html">Blog</a></li>
-              <li><a href="#">Casos</a></li>
-              <li><a href="#">Carreras</a></li>
+              <li><a href="contacto.html">Casos</a></li>
+              <li><a href="contacto.html">Carreras</a></li>
             </ul>
           </div>
           <div>

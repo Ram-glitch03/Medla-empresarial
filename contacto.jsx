@@ -49,7 +49,7 @@ function CtNav() {
     <>
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
+        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 96}} /></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
@@ -298,9 +298,9 @@ function CtForm({ pathId }) {
             </div>
 
             <div className="form-side-channels">
-              <a className="form-side-channel" href="mailto:contacto@medlaempresas.com"><IconMail /> contacto@medlaempresas.com</a>
-              <a className="form-side-channel" href="tel:+34910000000"><IconPhone /> +34 910 00 00 00</a>
-              <a className="form-side-channel" href="https://wa.me/525500000000"><IconWa /> WhatsApp directo</a>
+              <a className="form-side-channel" href="mailto:info@medla-empresas.com"><IconMail /> info@medla-empresas.com</a>
+              <a className="form-side-channel" href="tel:+34641576772"><IconPhone /> +34 641 576 772</a>
+              <a className="form-side-channel" href="https://wa.me/34641576772"><IconWa /> WhatsApp directo</a>
             </div>
           </aside>
 
@@ -483,23 +483,23 @@ function CtInfo() {
             </p>
 
             <div className="info-channels">
-              <a className="info-channel" href="mailto:contacto@medlaempresas.com">
+              <a className="info-channel" href="mailto:info@medla-empresas.com">
                 <div className="info-channel-icon"><IconMail /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">Email</div>
-                  <div className="info-channel-val">contacto@medlaempresas.com</div>
+                  <div className="info-channel-val">info@medla-empresas.com</div>
                 </div>
                 <span className="info-channel-arr">→</span>
               </a>
-              <a className="info-channel" href="tel:+34910000000">
+              <a className="info-channel" href="tel:+34641576772">
                 <div className="info-channel-icon"><IconPhone /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">Teléfono</div>
-                  <div className="info-channel-val">+34 910 00 00 00</div>
+                  <div className="info-channel-val">+34 641 576 772</div>
                 </div>
                 <span className="info-channel-arr">→</span>
               </a>
-              <a className="info-channel" href="https://wa.me/34910000000">
+              <a className="info-channel" href="https://wa.me/34641576772">
                 <div className="info-channel-icon"><IconWa /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">WhatsApp</div>
@@ -624,30 +624,27 @@ function CtFAQ() {
 /* ─────────── Footer (reused) ─────────── */
 function CtFooter() {
   return (
-    <footer className="footer" id="blog">
+    <footer className="footer">
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 160, display: "block", marginBottom: 16, filter: "invert(1)"}} /></a>
+            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 72, display: "block", marginBottom: 16}} /></a>
             <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
           </div>
           <div>
             <h4>Servicios</h4>
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="constitucion.html">Constitución</a></li>
-              <li><a href="inversiones.html">Inversiones</a></li>
-              <li><a href="agentes.html">IA aplicada</a></li>
-              <li><a href="redes-sociales.html">Comercial & redes</a></li>
+              <li><a href="redes-sociales.html">Comunicación</a></li>
+              <li><a href="jotform-landing.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>
-            <h4>Compañía</h4>
+            <h4>Empresa</h4>
             <ul>
               <li><a href="nosotros.html">Nosotros</a></li>
               <li><a href="blog.html">Blog</a></li>
-              <li><a href="#">Casos</a></li>
-              <li><a href="#">Carreras</a></li>
+              <li><a href="contacto.html">Contacto</a></li>
             </ul>
           </div>
           <div>
@@ -655,7 +652,7 @@ function CtFooter() {
             <ul>
               <li><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></li>
               <li><a href="tel:+34641576772">+34 641 576 772</a></li>
-              <li><a href="#">Madrid, España</a></li>
+              <li>Madrid, España</li>
             </ul>
             <a
               href="https://api.whatsapp.com/send/?phone=34641576772&text=Hola%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n&type=phone_number&app_absent=0"
@@ -670,8 +667,12 @@ function CtFooter() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2026 MEDLA Empresas. Todos los derechos reservados.</span>
-          <span>Aviso de privacidad · Términos</span>
+          <span>© 2025 MEDLA empresas. Todos los derechos reservados.</span>
+          <div>
+            <a href="#">Aviso legal</a>
+            <a href="#">Política de privacidad</a>
+            <a href="#">Cookies</a>
+          </div>
         </div>
       </div>
     </footer>

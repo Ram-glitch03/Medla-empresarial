@@ -298,9 +298,9 @@ function CtForm({ pathId }) {
             </div>
 
             <div className="form-side-channels">
-              <a className="form-side-channel" href="mailto:contacto@medlaempresas.com"><IconMail /> contacto@medlaempresas.com</a>
-              <a className="form-side-channel" href="tel:+34910000000"><IconPhone /> +34 910 00 00 00</a>
-              <a className="form-side-channel" href="https://wa.me/525500000000"><IconWa /> WhatsApp directo</a>
+              <a className="form-side-channel" href="mailto:info@medla-empresas.com"><IconMail /> info@medla-empresas.com</a>
+              <a className="form-side-channel" href="tel:+34641576772"><IconPhone /> +34 641 576 772</a>
+              <a className="form-side-channel" href="https://wa.me/34641576772"><IconWa /> WhatsApp directo</a>
             </div>
           </aside>
 
@@ -483,23 +483,23 @@ function CtInfo() {
             </p>
 
             <div className="info-channels">
-              <a className="info-channel" href="mailto:contacto@medlaempresas.com">
+              <a className="info-channel" href="mailto:info@medla-empresas.com">
                 <div className="info-channel-icon"><IconMail /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">Email</div>
-                  <div className="info-channel-val">contacto@medlaempresas.com</div>
+                  <div className="info-channel-val">info@medla-empresas.com</div>
                 </div>
                 <span className="info-channel-arr">→</span>
               </a>
-              <a className="info-channel" href="tel:+34910000000">
+              <a className="info-channel" href="tel:+34641576772">
                 <div className="info-channel-icon"><IconPhone /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">Teléfono</div>
-                  <div className="info-channel-val">+34 910 00 00 00</div>
+                  <div className="info-channel-val">+34 641 576 772</div>
                 </div>
                 <span className="info-channel-arr">→</span>
               </a>
-              <a className="info-channel" href="https://wa.me/34910000000">
+              <a className="info-channel" href="https://wa.me/34641576772">
                 <div className="info-channel-icon"><IconWa /></div>
                 <div className="info-channel-body">
                   <div className="info-channel-label">WhatsApp</div>
@@ -635,10 +635,8 @@ function CtFooter() {
             <h4>Servicios</h4>
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="constitucion.html">Constitución</a></li>
-              <li><a href="inversiones.html">Inversiones</a></li>
-              <li><a href="automatizacion.html">Automatización</a></li>
-              <li><a href="agentes.html">IA aplicada</a></li>
+              <li><a href="redes-sociales.html">Comunicación</a></li>
+              <li><a href="jotform-landing.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>
@@ -652,8 +650,8 @@ function CtFooter() {
           <div>
             <h4>Contacto</h4>
             <ul>
-              <li>contacto@medlaempresas.com</li>
-              <li>+34 641 57 67 72</li>
+              <li><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></li>
+              <li><a href="tel:+34641576772">+34 641 576 772</a></li>
               <li>Madrid, España</li>
             </ul>
             <a

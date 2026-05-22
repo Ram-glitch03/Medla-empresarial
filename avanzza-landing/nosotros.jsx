@@ -385,10 +385,8 @@ function NosFooter() {
             <h4>Servicios</h4>
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="constitucion.html">Constitución</a></li>
-              <li><a href="inversiones.html">Inversiones</a></li>
-              <li><a href="automatizacion.html">Automatización</a></li>
-              <li><a href="agentes.html">IA aplicada</a></li>
+              <li><a href="redes-sociales.html">Comunicación</a></li>
+              <li><a href="jotform-landing.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>
@@ -402,7 +400,7 @@ function NosFooter() {
           <div>
             <h4>Contacto</h4>
             <ul>
-              <li>contacto@medlaempresas.com</li>
+              <li>info@medla-empresas.com</li>
               <li>+34 641 57 67 72</li>
               <li>Madrid, España</li>
             </ul>

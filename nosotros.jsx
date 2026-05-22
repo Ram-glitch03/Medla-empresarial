@@ -381,10 +381,8 @@ function NosFooter() {
             <h4>Servicios</h4>
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="constitucion.html">Constitución</a></li>
-              <li><a href="inversiones.html">Inversiones</a></li>
-              <li><a href="agentes.html">IA aplicada</a></li>
-              <li><a href="redes-sociales.html">Comercial & redes</a></li>
+              <li><a href="redes-sociales.html">Comunicación</a></li>
+              <li><a href="jotform-landing.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>
@@ -392,8 +390,8 @@ function NosFooter() {
             <ul>
               <li><a href="nosotros.html">Nosotros</a></li>
               <li><a href="blog.html">Blog</a></li>
-              <li><a href="#">Casos</a></li>
-              <li><a href="#">Carreras</a></li>
+              <li><a href="contacto.html">Casos</a></li>
+              <li><a href="contacto.html">Carreras</a></li>
             </ul>
           </div>
           <div>
