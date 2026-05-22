@@ -886,13 +886,11 @@ export default function App() {
             </span>
             <div className="flex flex-wrap justify-center gap-4">
               <a 
-                href="https://wa.me/34600000000" 
-                target="_blank" 
-                rel="referrer noopener"
+                href="../../contacto.html" 
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gold text-gold font-sans font-bold text-xs uppercase tracking-wider rounded-full transition-all hover:bg-gold-light/25 shadow-sm"
               >
                 <MessageSquare className="w-4 h-4 text-gold-dark" />
-                <span>WhatsApp</span>
+                <span>Contacto</span>
               </a>
               <button 
                 onClick={() => scrollToSection('contact-form')}
