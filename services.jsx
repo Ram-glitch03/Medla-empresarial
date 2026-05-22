@@ -27,119 +27,9 @@ const SERVICES_DATA = [
     ],
   },
   {
-    id: "constitucion",
-    icon: "constitucion",
-    num: "02",
-    label: "Setup",
-    category: "Sociedades",
-    title: "Constitución y reestructuración de sociedades",
-    lead: "Arquitectura jurídica diseñada para crecer. Desde la primera SL hasta holdings, fusiones, escisiones y operaciones transfronterizas.",
-    features: [
-      { t: "Constitución SL/SA", d: "Trámite completo en < 10 días hábiles." },
-      { t: "Holdings", d: "Estructuras de tenencia fiscalmente óptimas." },
-      { t: "Fusiones y escisiones", d: "Operaciones complejas con asesoría integral." },
-      { t: "Reestructuración", d: "Rediseño societario para eficiencia operativa." },
-      { t: "Pactos de socios", d: "Cláusulas de entrada, salida y bloqueo." },
-      { t: "Sucursales", d: "Apertura en UE, LATAM y EE.UU." },
-    ],
-    meta: [
-      { l: "Modalidad", v: "Proyecto cerrado" },
-      { l: "Plazo típico", v: "2–6 semanas" },
-      { l: "Ideal para", v: "Grupos en expansión" },
-    ],
-  },
-  {
-    id: "inversiones",
-    icon: "inversiones",
-    num: "03",
-    label: "Growth",
-    category: "Inversión",
-    title: "Inversiones y levantamiento de capital",
-    lead: "Acompañamiento técnico y estratégico en rondas, term sheets, due diligence y negociación con inversores institucionales.",
-    features: [
-      { t: "Term sheet", d: "Redacción y negociación en favor del founder." },
-      { t: "Due diligence", d: "Preparación y gestión del proceso." },
-      { t: "SAFE / Notas convertibles", d: "Instrumentos ágiles para rondas semilla." },
-      { t: "Pacto de accionistas", d: "Cláusulas de protección y control." },
-      { t: "Valuación", d: "Modelo financiero y defensa ante inversores." },
-      { t: "Cap table", d: "Gestión profesional de la tabla de capitalización." },
-    ],
-    meta: [
-      { l: "Modalidad", v: "Success fee + fija" },
-      { l: "Rango ronda", v: "€250K – €10M" },
-      { l: "Ideal para", v: "Startups en ronda" },
-    ],
-  },
-  {
-    id: "digitalizacion",
-    icon: "digitalizacion",
-    num: "04",
-    label: "Tech",
-    category: "Digitalización",
-    title: "Digitalización de procesos operativos",
-    lead: "Convertimos procesos manuales en flujos digitales auditables. ERP, CRM, firma electrónica y plataformas internas medibles.",
-    features: [
-      { t: "ERP ligeros", d: "Odoo, Holded, Sage configurados a medida." },
-      { t: "CRM comercial", d: "HubSpot, Pipedrive, Zoho con automatizaciones." },
-      { t: "Firma electrónica", d: "Integración de eIDAS en flujos contractuales." },
-      { t: "Portales internos", d: "Intranets y dashboards de gestión." },
-      { t: "Onboarding digital", d: "KYC y alta de clientes automatizada." },
-      { t: "Migración documental", d: "Hacia sistemas con trazabilidad legal." },
-    ],
-    meta: [
-      { l: "Modalidad", v: "Proyecto + mantenimiento" },
-      { l: "Plazo típico", v: "6–12 semanas" },
-      { l: "Ideal para", v: "Empresas 10–200 emp." },
-    ],
-  },
-  {
-    id: "automatizacion",
-    icon: "automatizacion",
-    num: "05",
-    label: "Scale",
-    category: "Automatización",
-    title: "Automatización e integración de sistemas",
-    lead: "Conectamos tus herramientas para que hablen entre sí. Menos tareas repetitivas, más decisiones basadas en datos.",
-    features: [
-      { t: "Integraciones API", d: "Entre ERP, CRM, contabilidad y bancos." },
-      { t: "No-code / low-code", d: "Make, n8n, Zapier con lógica robusta." },
-      { t: "Reportería", d: "Dashboards en Power BI / Looker Studio." },
-      { t: "Flujos aprobación", d: "Workflow digital para órdenes y pagos." },
-      { t: "Alertas inteligentes", d: "Monitorización de KPIs y desviaciones." },
-      { t: "RPA", d: "Automatización de tareas repetitivas de escritorio." },
-    ],
-    meta: [
-      { l: "Modalidad", v: "Sprints 2 semanas" },
-      { l: "Ahorro medio", v: "30–60% tiempo" },
-      { l: "Ideal para", v: "Equipos administrativos" },
-    ],
-  },
-  {
-    id: "ia",
-    icon: "ia",
-    num: "06",
-    label: "Edge",
-    category: "Inteligencia Artificial",
-    title: "Inteligencia Artificial aplicada",
-    lead: "IA con criterio: no tecnología por moda, sino casos concretos donde automatizar, analizar o decidir con modelos genera ROI medible.",
-    features: [
-      { t: "Asistentes internos", d: "GPTs corporativos con tu documentación." },
-      { t: "Análisis documental", d: "Extracción estructurada de contratos y facturas." },
-      { t: "Atención cliente IA", d: "Agentes conversacionales con handoff humano." },
-      { t: "Predicción comercial", d: "Modelos de scoring y churn." },
-      { t: "Generación contenido", d: "Pipelines para marketing y comunicación." },
-      { t: "Compliance IA", d: "Monitoreo regulatorio automatizado." },
-    ],
-    meta: [
-      { l: "Modalidad", v: "PoC → producción" },
-      { l: "Plazo PoC", v: "3–6 semanas" },
-      { l: "Ideal para", v: "Pymes con datos" },
-    ],
-  },
-  {
     id: "social",
     icon: "social",
-    num: "07",
+    num: "02",
     label: "Brand",
     category: "Comunicación",
     title: "Presencia estratégica en redes sociales",
@@ -161,7 +51,7 @@ const SERVICES_DATA = [
   {
     id: "jotform",
     icon: "digitalizacion",
-    num: "08",
+    num: "03",
     label: "Forms",
     category: "Soluciones Jotform",
     title: "Implementación de Jotform Enterprise",
@@ -400,10 +290,8 @@ function SvcFooter() {
             <h4>Servicios</h4>
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="constitucion.html">Constitución</a></li>
-              <li><a href="inversiones.html">Inversiones</a></li>
-              <li><a href="agentes.html">IA aplicada</a></li>
-              <li><a href="redes-sociales.html">Comercial & redes</a></li>
+              <li><a href="redes-sociales.html">Comunicación</a></li>
+              <li><a href="jotform-landing.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>
