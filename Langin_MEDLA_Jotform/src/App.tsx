@@ -886,7 +886,7 @@ export default function App() {
             </span>
             <div className="flex flex-wrap justify-center gap-4">
               <a 
-                href="https://wa.me/34641576772?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n" 
+                href="https://wa.me/34600000000" 
                 target="_blank" 
                 rel="referrer noopener"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gold text-gold font-sans font-bold text-xs uppercase tracking-wider rounded-full transition-all hover:bg-gold-light/25 shadow-sm"
@@ -979,7 +979,7 @@ export default function App() {
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-gold flex-shrink-0" />
-                <span>Madrid | CDMX | Remoto</span>
+                <span>CDMX | Madrid | Remoto</span>
               </li>
               <li className="flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-gold flex-shrink-0" />
