@@ -663,7 +663,7 @@ export default function App() {
               Conecta con tu stack actual
             </h2>
             <p className="font-sans text-gray-med text-base mt-4 leading-relaxed">
-              MEDLA AI sincroniza Jotform con tus CRMs, herramientas contables, bases de datos o soluciones de mensajería preferidas.
+              MEDLA sincroniza Jotform con tus CRMs, herramientas contables, bases de datos o soluciones de mensajería preferidas.
             </p>
           </div>
 
@@ -995,7 +995,7 @@ export default function App() {
         {/* Divider line in footer */}
         <div className="border-t border-[#6B6B6B]/40 max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center">
           <p className="font-sans text-[11px] text-gray-med">
-            &copy; 2026 MEDLA AI. Todos los derechos reservados.
+            &copy; 2026 MEDLA. Todos los derechos reservados.
           </p>
           <div className="flex gap-4 font-sans text-[10px] text-gray-med">
             <a href="#privacy" className="hover:text-gold transition-colors">Aviso de Privacidad</a>

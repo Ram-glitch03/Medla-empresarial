@@ -50,7 +50,7 @@ export default function DataJourneyAnimation() {
           <span className="font-sans text-[10px] text-gray-med text-center mt-0.5">Captura de datos</span>
         </div>
 
-        {/* Step 2: MEDLA AI (The Engine) */}
+        {/* Step 2: Avanzza AI (The Engine) */}
         <div 
           onClick={() => setActiveStep(1)}
           className={`flex flex-col items-center p-4 rounded-xl transition-all duration-500 cursor-pointer ${
@@ -72,7 +72,7 @@ export default function DataJourneyAnimation() {
           </div>
           <span className={`font-sans font-semibold text-xs mt-2 text-center transition-colors ${
             activeStep === 1 || activeStep === 2 ? 'text-gold-light' : 'text-charcoal'
-          }`}>MEDLA Engine</span>
+          }`}>Avanzza Engine</span>
           <span className={`font-sans text-[10px] text-center mt-0.5 ${
             activeStep === 1 || activeStep === 2 ? 'text-gray-light' : 'text-gray-med'
           }`}>AI & Automatización</span>
@@ -155,7 +155,7 @@ export default function DataJourneyAnimation() {
         </div>
         <p className="font-sans text-xs text-charcoal leading-relaxed">
           {activeStep === 0 && "El usuario llena el formulario de Jotform. Los datos son capturados con encriptación segura y validados al instante."}
-          {activeStep === 1 && "MEDLA automatiza el webhook. Los datos son extraídos y enviados al hub central sin un solo script manual."}
+          {activeStep === 1 && "Avanzza automatiza el webhook. Los datos son extraídos y enviados al hub central sin un solo script manual."}
           {activeStep === 2 && "Nuestra IA analiza el tamaño de la PyME y la intención de compra para autoasignar el lead al asesor comercial idóneo."}
           {activeStep === 3 && "¡Éxito! El CRM se actualiza, la base de datos se guarda y se dispara un WhatsApp personalizado al cliente en menos de 5 segundos."}
         </p>

@@ -83,7 +83,7 @@ const CASES: Case[] = [
     subtitle: 'Jotform → Validación → Routing IA → CRM',
     nodes: ['jotform', 'validacion', 'routing', 'crm'],
     path: 'M 400 230 L 280 138 L 520 138 L 110 230',
-    desc: 'El prospecto llena el formulario. MEDLA valida los datos, los clasifica con IA y los envía al CRM con tags y embudo asignado automáticamente.',
+    desc: 'El prospecto llena el formulario. Avanzza valida los datos, los clasifica con IA y los envía al CRM con tags y embudo asignado automáticamente.',
   },
   {
     id: 'onboarding',
@@ -331,7 +331,7 @@ export default function InteractiveDiagram() {
                 ? `Módulo: ${hoveredData.label}`
                 : activeCase
                 ? activeCase.label
-                : 'Ecosistema MEDLA × Jotform'}
+                : 'Ecosistema Avanzza × Jotform'}
             </p>
             <p className="font-sans text-xs text-gray-med leading-relaxed">
               {hoveredData

@@ -110,7 +110,7 @@ export default function IntegracionVisual() {
         ))}
         <path id="pathEmail" d={pathCenterEmail} fill="none" />
 
-        {/* Center — MEDLA Engine */}
+        {/* Center — Avanzza Engine */}
         {/* Gold ring */}
         <circle cx={250} cy={180} r={50} fill="none" stroke="#D4AF37" strokeWidth={2} strokeDasharray="8 4" opacity={0.5}>
           <animateTransform
@@ -182,7 +182,7 @@ export default function IntegracionVisual() {
           fontSize={8}
           letterSpacing={1.5}
         >
-          MEDLA ENGINE
+          AVANZZA ENGINE
         </text>
 
         {/* Right outputs */}

@@ -6,7 +6,7 @@ export default function TestimonialsSection() {
       company: "Medla Asesores",
       stars: 5,
       quote:
-        "MEDLA transformó completamente nuestro proceso de captación. Antes perdíamos leads en hojas de Excel; ahora cada prospecto entra directamente a nuestro CRM en segundos. El ROI fue visible desde la primera semana.",
+        "Avanzza transformó completamente nuestro proceso de captación. Antes perdíamos leads en hojas de Excel; ahora cada prospecto entra directamente a nuestro CRM en segundos. El ROI fue visible desde la primera semana.",
     },
     {
       initial: "R",

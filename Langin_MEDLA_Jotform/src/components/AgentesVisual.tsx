@@ -80,7 +80,7 @@ export default function AgentesVisual() {
           />
         </div>
         <div>
-          <p className="text-[11px] font-bold text-[#2C2C2C]">Agente MEDLA</p>
+          <p className="text-[11px] font-bold text-[#2C2C2C]">Agente Avanzza</p>
           <p className="text-[9px] text-[#10B981] font-semibold">● En línea · 24/7</p>
         </div>
         {/* Badge top-right */}
@@ -116,7 +116,7 @@ export default function AgentesVisual() {
             className="max-w-[72%] px-3 py-2 rounded-2xl rounded-tr-sm text-[11px] leading-snug"
             style={{ background: '#FAF8F3', border: '1px solid #F4E4C1', color: '#2C2C2C' }}
           >
-            Hola, me gustaría agendar una demo de MEDLA.
+            Hola, me gustaría agendar una demo de Avanzza.
           </div>
           <div className="w-7 h-7 rounded-full bg-[#E8E8E8] flex items-center justify-center ml-2 flex-shrink-0 self-end text-gray-500">
             <User className="w-4 h-4" />
