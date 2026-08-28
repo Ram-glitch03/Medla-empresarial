@@ -1,5 +1,5 @@
 // Contacto page — interactive multi-step form + info + FAQ
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 /* ─────────── Icons local ─────────── */
 const IconCal = () => (
@@ -45,41 +45,86 @@ const IconLinkedIn = () => (
 /* ─────────── Nav ─────────── */
 function CtNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef(null);
+  const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    const pageSections = [...document.querySelectorAll(".contacto-page > :not(.nav):not(.mobile-menu)")];
+    document.body.style.overflow = "hidden";
+    pageSections.forEach((section) => section.setAttribute("inert", ""));
+    closeButtonRef.current?.focus();
+    const panel = closeButtonRef.current?.closest(".mobile-menu-content");
+    const focusables = panel ? [...panel.querySelectorAll('a[href], button:not([disabled])')] : [];
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      pageSections.forEach((section) => section.removeAttribute("inert"));
+      document.removeEventListener("keydown", handleKeyDown);
+      menuButtonRef.current?.focus();
+    };
+  }, [mobileOpen]);
+
   return (
     <>
     <nav className="nav scrolled">
       <div className="container nav-inner">
-        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 96}} /></a>
+        <a href="index.html" className="logo"><img className="contact-logo-image" src="logo.png" alt="MEDLA" /></a>
         <ul className="nav-links">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="contacto.html" style={{ color: "var(--gold)" }}>Contacto</a></li>
+          <li><a href="blog.html">Cuadernos</a></li>
+          <li><a href="#contenido" style={{ color: "var(--gold)" }} aria-current="page">Contacto</a></li>
         </ul>
         <div style={{display: "flex", alignItems: "center"}}>
-          <a href="contacto.html" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
-          <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
+          <a href="#form" className="btn btn-primary btn-sm nav-cta">Solicitar diagnóstico</a>
+          <button
+            ref={menuButtonRef}
+            className="nav-toggle"
+            type="button"
+            aria-label="Abrir navegación"
+            aria-expanded={mobileOpen}
+            aria-controls="contact-mobile-menu"
+            onClick={() => setMobileOpen(true)}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
         </div>
       </div>
     </nav>
     {mobileOpen && (
-      <div className="mobile-menu">
-        <div className="mobile-menu-overlay" onClick={() => setMobileOpen(false)}></div>
+      <div className="mobile-menu" id="contact-mobile-menu" role="dialog" aria-modal="true" aria-label="Navegación">
+        <div className="mobile-menu-overlay" aria-hidden="true" onClick={() => setMobileOpen(false)}></div>
         <div className="mobile-menu-content">
           <div className="mobile-menu-head">
             <img src="logo.png" alt="MEDLA" style={{height: 40}} />
-            <button className="nav-toggle" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
+            <button ref={closeButtonRef} className="nav-toggle" type="button" aria-label="Cerrar navegación" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
           </div>
           <ul className="mobile-links" onClick={() => setMobileOpen(false)}>
             <li><a href="servicios.html">Servicios</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="contacto.html" style={{ color: "var(--gold)" }}>Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
+            <li><a href="blog.html">Cuadernos</a></li>
+            <li><a href="#contenido" style={{ color: "var(--gold)" }} aria-current="page">Contacto</a></li>
+            <li style={{marginTop: 20}}><a href="#form" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Solicitar diagnóstico</a></li>
           </ul>
         </div>
       </div>
@@ -94,15 +139,12 @@ function CtHero() {
     <section className="contacto-hero">
       <div className="container contacto-hero-inner">
         <span className="eyebrow" style={{ justifyContent: "center" }}>— Contacto</span>
-        <h1 style={{ marginTop: 20 }}>
-          Escríbenos y<br /><em>empecemos a trabajar</em>.
-        </h1>
+        <h1 style={{ marginTop: 20 }}>Qué decisión necesitas tomar, <em>qué proceso mejorar o qué contrato revisar.</em></h1>
         <p className="lead">
-          No atendemos desde un buzón automático. Cada mensaje lo lee
-          alguien del equipo y la primera respuesta llega en menos de 24 horas hábiles.
+          Lo revisa una persona del equipo para responder con contexto y proponer un siguiente paso concreto.
         </p>
         <div className="contacto-pulse">
-          <span className="dot"></span> Aceptando nuevos clientes · Abril 2026
+          <span className="dot"></span> Revisión humana · Contexto estructurado
         </div>
       </div>
     </section>
@@ -115,15 +157,15 @@ const PATHS = [
     id: "diagnostico",
     icon: <IconCal />,
     title: "Diagnóstico inicial",
-    desc: "30 min en videollamada. Entendemos tu operación y proponemos el alcance exacto.",
-    meta: "Gratuito · 30 min",
+    desc: "Una primera conversación para entender el problema y acotar el siguiente paso.",
+    meta: "Primera conversación",
   },
   {
     id: "propuesta",
     icon: <IconMsg />,
     title: "Propuesta a medida",
-    desc: "Para equipos que ya tienen claro el alcance y necesitan un cotización detallada.",
-    meta: "Respuesta · 48h",
+    desc: "Para equipos que ya tienen claro el alcance y necesitan una cotización detallada.",
+    meta: "Alcance a medida",
   },
   {
     id: "alianza",
@@ -132,9 +174,9 @@ const PATHS = [
         <path d="M12 3L4 8v6a8 8 0 0 0 8 7 8 8 0 0 0 8-7V8z" /><path d="M9 12l2 2 4-4" />
       </svg>
     ),
-    title: "Alianza estratégica",
-    desc: "Despachos, firmas o fondos que quieren co-crear o integrar servicios MEDLA.",
-    meta: "Partnerships",
+    title: "Colaboración profesional",
+    desc: "Despachos, firmas o fondos que quieren coordinar una oferta conjunta o integrar capacidades MEDLA.",
+    meta: "Oferta conjunta",
   },
 ];
 
@@ -146,7 +188,9 @@ function CtPaths({ active, onPick }) {
           {PATHS.map((p) => (
             <button
               key={p.id}
+              type="button"
               className={`path-card ${active === p.id ? "active" : ""}`}
+              aria-pressed={active === p.id}
               onClick={() => onPick(p.id)}
             >
               <div className="path-icon">{p.icon}</div>
@@ -169,13 +213,38 @@ const ALCANCE_OPTIONS = [
   "Digitalización de procesos",
   "Automatización e integración",
   "IA aplicada",
-  "Presencia en redes",
+  "Posicionamiento, captación y CRM",
   "Aún no lo tengo claro",
 ];
 
+const CONTEXT_PRESETS = {
+  operacion: {
+    alcance: ["Digitalización de procesos", "Automatización e integración"],
+    notas: "Punto de partida: un proceso de aprobaciones manuales sin un estado ni un responsable claros.",
+  },
+  legal: {
+    alcance: ["Asesoría legal corporativa"],
+    notas: "Punto de partida: una decisión bloqueada por contratos, obligaciones o versiones dispersas.",
+  },
+  ia: {
+    alcance: ["IA aplicada"],
+    notas: "Punto de partida: un caso de IA que aún no opera con fuentes, permisos y controles definidos.",
+  },
+  growth: {
+    alcance: ["Posicionamiento, captación y CRM"],
+    notas: "Punto de partida: oportunidades comerciales sin responsable o próxima acción.",
+  },
+  cuadernos: {
+    alcance: ["Aún no lo tengo claro"],
+    notas: "Punto de partida: quiero aplicar una guía de Cuadernos MEDLA a un caso concreto.",
+  },
+};
+
+const selectedContext = CONTEXT_PRESETS[new URLSearchParams(window.location.search).get("context")] || null;
+
 const ETAPA_OPTIONS = [
   "Pre-constitución",
-  "Startup en ronda",
+  "Empresa emergente en ronda",
   "Pyme en crecimiento",
   "Empresa establecida",
   "Grupo o holding",
@@ -184,30 +253,38 @@ const ETAPA_OPTIONS = [
 
 const PRESUPUESTO_LABELS = [
   { min: 0, max: 0, label: "A definir" },
-  { min: 1, max: 3, label: "1K – 3K / mes" },
-  { min: 3, max: 8, label: "3K – 8K / mes" },
-  { min: 8, max: 15, label: "8K – 15K / mes" },
-  { min: 15, max: 30, label: "15K – 30K / mes" },
-  { min: 30, max: 999, label: "30K+ / mes" },
+  { min: 1, max: 3, label: "1K – 3K" },
+  { min: 3, max: 8, label: "3K – 8K" },
+  { min: 8, max: 15, label: "8K – 15K" },
+  { min: 15, max: 30, label: "15K – 30K" },
+  { min: 30, max: 999, label: "30K+" },
 ];
 
 function CtForm({ pathId }) {
   const [step, setStep] = useState(0);
-  const [data, setData] = useState({
-    alcance: [],
+  const questionRef = useRef(null);
+  const previousStepRef = useRef(0);
+  const [data, setData] = useState(() => ({
+    alcance: selectedContext?.alcance || [],
     etapa: null,
     presupuestoIdx: 0,
     nombre: "",
     empresa: "",
     email: "",
     telefono: "",
-    notas: "",
-  });
+    notas: selectedContext?.notas || "",
+    website: "",
+  }));
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
-  const WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/vg8CkhnTjUIDbxcw3b9h/webhook-trigger/3f21a9eb-a6de-4110-b0a6-ef2e9ffac8cc";
+  useEffect(() => {
+    if (previousStepRef.current === step) return;
+    previousStepRef.current = step;
+    questionRef.current?.focus();
+  }, [step]);
 
   const totalSteps = 4;
   const toggleAlcance = (opt) =>
@@ -222,44 +299,60 @@ function CtForm({ pathId }) {
   const canAdvance =
     (step === 0 && data.alcance.length > 0) ||
     (step === 1 && !!data.etapa) ||
-    step === 2 ||
-    (step === 3 && data.nombre && data.email);
+    step >= 2;
 
   const submitToWebhook = async () => {
+    if (!privacyAccepted) {
+      setSendError("Necesitamos que aceptes la política de privacidad antes de enviar.");
+      return;
+    }
     setSending(true);
     setSendError(null);
-    const presupuesto = PRESUPUESTO_LABELS[data.presupuestoIdx].label;
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 12000);
+    const rangoPresupuesto = PRESUPUESTO_LABELS[data.presupuestoIdx].label;
     const payload = {
       tipo_contacto: pathId,
       nombre: data.nombre,
       empresa: data.empresa,
       email: data.email,
       telefono: data.telefono,
-      alcance: data.alcance.join(", "),
+      alcance: data.alcance,
       etapa_empresa: data.etapa,
-      presupuesto_mensual: presupuesto,
+      rango_presupuesto: rangoPresupuesto,
       notas: data.notas,
-      fecha: new Date().toISOString(),
+      consentimiento_privacidad: true,
+      version_privacidad: "2026-08-28",
+      website: data.website,
     };
     try {
-      await fetch(WEBHOOK_URL, {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal: controller.signal,
       });
+      if (!response.ok) throw new Error(`Webhook error ${response.status}`);
       setSent(true);
     } catch (err) {
-      setSendError("No se pudo enviar. Por favor inténtalo de nuevo.");
+      setSendError(err.name === "AbortError"
+        ? "El envío tardó demasiado. Comprueba tu conexión e inténtalo de nuevo."
+        : "No se pudo enviar. Por favor inténtalo de nuevo.");
     } finally {
+      window.clearTimeout(timeoutId);
       setSending(false);
     }
   };
 
   const next = () => {
     if (step < totalSteps - 1 && canAdvance) setStep(step + 1);
-    else if (step === totalSteps - 1 && canAdvance) submitToWebhook();
   };
   const back = () => step > 0 && setStep(step - 1);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (step !== totalSteps - 1 || sending) return;
+    submitToWebhook();
+  };
 
   const stepTitle = {
     diagnostico: "Diagnóstico inicial",
@@ -270,19 +363,19 @@ function CtForm({ pathId }) {
   const stepHints = [
     "Qué necesitas",
     "Dónde estás",
-    "Rango de inversión",
+    "Rango de presupuesto",
     "Tus datos",
   ];
 
   return (
     <section className="contacto-form-wrap" id="form">
       <div className="container">
-        <div className="form-card">
+        <form className="form-card" onSubmit={handleSubmit}>
           <aside className="form-side">
             <div className="form-side-top">
               <span className="eyebrow">— {stepTitle}</span>
-              <h3>Construyamos la conversación antes de hablar.</h3>
-              <p>4 pasos. Menos de 90 segundos. La información nos permite llegar a la llamada con una propuesta real, no un pitch genérico.</p>
+              <h3>Danos la información necesaria antes de responderte.</h3>
+              <p>Cuatro pasos breves para que podamos revisar el problema, el momento de la empresa y el alcance antes de responder.</p>
 
               <div className="form-side-steps">
                 {stepHints.map((h, i) => (
@@ -320,16 +413,17 @@ function CtForm({ pathId }) {
               <div className="form-step">
                 <div>
                   <div className="step-label">Paso 1 · {stepHints[0]}</div>
-                  <h4>¿En qué necesitas que te acompañemos?</h4>
-                  <p style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>
+                  <h4 ref={questionRef} tabIndex="-1" id="contact-scope-question">¿En qué necesitas que te acompañemos? <span aria-hidden="true">*</span><span className="sr-only"> Selección obligatoria.</span></h4>
+                  <p id="contact-scope-hint" style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>
                     Selecciona todas las líneas relevantes. Si aún no lo tienes claro, no pasa nada.
                   </p>
                 </div>
-                <div className="options-grid">
+                <div className="options-grid" role="group" aria-labelledby="contact-scope-question" aria-describedby="contact-scope-hint">
                   {ALCANCE_OPTIONS.map((o) => (
                     <button
                       key={o}
                       className={`opt-card ${data.alcance.includes(o) ? "selected" : ""}`}
+                      aria-pressed={data.alcance.includes(o)}
                       onClick={() => toggleAlcance(o)}
                       type="button"
                     >
@@ -345,13 +439,15 @@ function CtForm({ pathId }) {
               <div className="form-step">
                 <div>
                   <div className="step-label">Paso 2 · {stepHints[1]}</div>
-                  <h4>¿En qué etapa está tu empresa?</h4>
+                  <h4 ref={questionRef} tabIndex="-1" id="contact-stage-question">¿En qué etapa está tu empresa? <span aria-hidden="true">*</span><span className="sr-only"> Selección obligatoria.</span></h4>
+                  <p id="contact-stage-hint" style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>Selecciona una opción para continuar.</p>
                 </div>
-                <div className="options-grid">
+                <div className="options-grid" role="group" aria-labelledby="contact-stage-question" aria-describedby="contact-stage-hint">
                   {ETAPA_OPTIONS.map((o) => (
                     <button
                       key={o}
                       className={`opt-card ${data.etapa === o ? "selected" : ""}`}
+                      aria-pressed={data.etapa === o}
                       onClick={() => setEtapa(o)}
                       type="button"
                     >
@@ -367,17 +463,19 @@ function CtForm({ pathId }) {
               <div className="form-step">
                 <div>
                   <div className="step-label">Paso 3 · {stepHints[2]}</div>
-                  <h4>¿Rango de inversión mensual?</h4>
+                  <h4 ref={questionRef} tabIndex="-1">¿Qué rango de presupuesto contemplas?</h4>
                   <p style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>
-                    Esto nos ayuda a dimensionar la propuesta. Siempre podemos ajustarla.
+                    Nos ayuda a orientar el alcance. Si aún no está definido, puedes indicarlo.
                   </p>
                 </div>
                 <div className="slider-wrap">
                   <div className="slider-value">
-                    <em>€</em> {PRESUPUESTO_LABELS[data.presupuestoIdx].label}
+                    {data.presupuestoIdx > 0 && <em>€</em>} {PRESUPUESTO_LABELS[data.presupuestoIdx].label}
                   </div>
                   <input
                     type="range"
+                    aria-label="Rango de presupuesto"
+                    aria-valuetext={PRESUPUESTO_LABELS[data.presupuestoIdx].label}
                     min="0"
                     max={PRESUPUESTO_LABELS.length - 1}
                     step="1"
@@ -386,10 +484,15 @@ function CtForm({ pathId }) {
                   />
                   <div className="slider-ticks">
                     <span>A definir</span>
-                    <span>Mínimo</span>
-                    <span>Medio</span>
-                    <span>Avanzado</span>
-                    <span>Enterprise</span>
+                    <span>1–3K</span>
+                    <span>3–8K</span>
+                    <span>8–15K</span>
+                    <span>15–30K</span>
+                    <span>30K+</span>
+                  </div>
+                  <div className="slider-note">
+                    <p><span>Referencia inicial</span> No es una cotización ni compromete un alcance.</p>
+                    <p><span>Antes de empezar</span> Entregables, calendario y condiciones quedan por escrito.</p>
                   </div>
                 </div>
               </div>
@@ -399,63 +502,83 @@ function CtForm({ pathId }) {
               <div className="form-step">
                 <div>
                   <div className="step-label">Paso 4 · {stepHints[3]}</div>
-                  <h4>¿Cómo te contactamos?</h4>
+                  <h4 ref={questionRef} tabIndex="-1">¿Cómo te contactamos?</h4>
                 </div>
                 <div className="fields-row">
                   <div className="field">
-                    <label>Nombre</label>
-                    <input type="text" value={data.nombre} onChange={(e) => setField("nombre", e.target.value)} placeholder="Nombre y apellidos" />
+                    <label htmlFor="contact-name">Nombre *</label>
+                    <input id="contact-name" type="text" required autoComplete="name" value={data.nombre} onChange={(e) => setField("nombre", e.target.value)} placeholder="Nombre y apellidos" />
                   </div>
                   <div className="field">
-                    <label>Empresa</label>
-                    <input type="text" value={data.empresa} onChange={(e) => setField("empresa", e.target.value)} placeholder="Nombre comercial" />
+                    <label htmlFor="contact-company">Empresa</label>
+                    <input id="contact-company" type="text" autoComplete="organization" value={data.empresa} onChange={(e) => setField("empresa", e.target.value)} placeholder="Nombre comercial" />
                   </div>
                 </div>
                 <div className="fields-row">
                   <div className="field">
-                    <label>Email *</label>
-                    <input type="email" value={data.email} onChange={(e) => setField("email", e.target.value)} placeholder="tu@empresa.com" />
+                    <label htmlFor="contact-email">Email *</label>
+                    <input id="contact-email" type="email" required autoComplete="email" value={data.email} onChange={(e) => setField("email", e.target.value)} placeholder="tu@empresa.com" />
                   </div>
                   <div className="field">
-                    <label>Teléfono</label>
-                    <input type="tel" value={data.telefono} onChange={(e) => setField("telefono", e.target.value)} placeholder="+52..." />
+                    <label htmlFor="contact-phone">Teléfono</label>
+                    <input id="contact-phone" type="tel" autoComplete="tel" value={data.telefono} onChange={(e) => setField("telefono", e.target.value)} placeholder="+34…" />
                   </div>
                 </div>
                 <div className="field">
-                  <label>Notas (opcional)</label>
-                  <textarea value={data.notas} onChange={(e) => setField("notas", e.target.value)} placeholder="Cuéntanos el contexto: objetivo, urgencia, cualquier detalle útil…" />
+                  <label htmlFor="contact-notes">Notas (opcional)</label>
+                  <textarea id="contact-notes" value={data.notas} onChange={(e) => setField("notas", e.target.value)} placeholder="Cuéntanos el contexto: objetivo, urgencia, cualquier detalle útil…" />
+                </div>
+                <div className="contact-honeypot" aria-hidden="true">
+                  <label htmlFor="contact-website">Tu web</label>
+                  <input id="contact-website" type="text" tabIndex="-1" autoComplete="off" value={data.website} onChange={(event) => setField("website", event.target.value)} />
+                </div>
+                <div className="privacy-consent">
+                  <input
+                    id="contact-privacy"
+                    type="checkbox"
+                    required
+                    checked={privacyAccepted}
+                    onChange={(event) => setPrivacyAccepted(event.target.checked)}
+                  />
+                  <label htmlFor="contact-privacy">
+                    He leído y acepto la <a href="privacidad.html" target="_blank" rel="noopener noreferrer">política de privacidad</a> y consiento el tratamiento de mis datos para responder a esta solicitud.
+                  </label>
                 </div>
               </div>
             )}
 
             {sent && (
-              <div className="form-success">
+              <div className="form-success" role="status" aria-live="polite">
                 <div className="success-ring">
                   <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
                     <path className="success-check" d="M 12 26 L 22 35 L 38 17" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <h3>Mensaje enviado, {data.nombre.split(" ")[0] || "gracias"}.</h3>
-                <p>Recibirás un email de confirmación en los próximos minutos. Alguien del equipo responde, como tarde, en 24 horas hábiles.</p>
+                <p>Hemos recibido el contexto. Una persona del equipo lo revisará antes de responder.</p>
                 <div className="hero-ctas">
-                  <a href="contacto.html" className="btn btn-primary">Explorar servicios <span className="arr">→</span></a>
-                  <a href="contacto.html" className="btn btn-ghost">Volver al inicio</a>
+                  <a href="servicios.html" className="btn btn-primary">Explorar servicios <span className="arr">→</span></a>
+                  <a href="index.html" className="btn btn-ghost">Volver al inicio</a>
                 </div>
               </div>
             )}
 
             {!sent && (
               <div className="form-nav">
-                <button className="btn-link" onClick={back} disabled={step === 0 || sending}>← Anterior</button>
+                <button type="button" className="btn-link" onClick={back} disabled={step === 0 || sending}>← Anterior</button>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
                   {sendError && (
-                    <span style={{ fontSize: 13, color: "#c0392b" }}>{sendError}</span>
+                    <span role="alert" style={{ fontSize: 13, color: "#c0392b" }}>{sendError}</span>
                   )}
                   <button
+                    type={step === totalSteps - 1 ? "submit" : "button"}
                     className="btn btn-primary"
-                    onClick={next}
-                    disabled={!canAdvance || sending}
-                    style={{ opacity: canAdvance && !sending ? 1 : 0.4, cursor: canAdvance && !sending ? "pointer" : "default" }}
+                    onClick={step === totalSteps - 1 ? undefined : next}
+                    disabled={sending || (step < totalSteps - 1 && !canAdvance)}
+                    style={{
+                      opacity: !sending && (step === totalSteps - 1 || canAdvance) ? 1 : 0.4,
+                      cursor: !sending && (step === totalSteps - 1 || canAdvance) ? "pointer" : "default"
+                    }}
                   >
                     {sending ? "Enviando…" : step === totalSteps - 1 ? "Enviar mensaje" : "Siguiente"} <span className="arr">→</span>
                   </button>
@@ -463,7 +586,7 @@ function CtForm({ pathId }) {
               </div>
             )}
           </div>
-        </div>
+        </form>
       </div>
     </section>
   );
@@ -477,9 +600,9 @@ function CtInfo() {
         <div className="info-grid">
           <div className="info-text">
             <span className="eyebrow">— Canales directos</span>
-            <h2 style={{ marginTop: 16 }}>También <em>hablamos en corto</em>, si prefieres.</h2>
+            <h2 style={{ marginTop: 16 }}>También puedes <em>escribirnos directamente.</em></h2>
             <p className="lead" style={{ maxWidth: "44ch" }}>
-              Para consultas puntuales, segundas opiniones o una pregunta rápida antes de formalizar cualquier colaboración.
+              Para una pregunta concreta o para valorar si el caso encaja antes de formalizar una colaboración.
             </p>
 
             <div className="info-channels">
@@ -504,14 +627,6 @@ function CtInfo() {
                 <div className="info-channel-body">
                   <div className="info-channel-label">WhatsApp</div>
                   <div className="info-channel-val">Mensaje directo</div>
-                </div>
-                <span className="info-channel-arr">→</span>
-              </a>
-              <a className="info-channel" href="#">
-                <div className="info-channel-icon"><IconLinkedIn /></div>
-                <div className="info-channel-body">
-                  <div className="info-channel-label">LinkedIn</div>
-                  <div className="info-channel-val">MEDLA Empresas</div>
                 </div>
                 <span className="info-channel-arr">→</span>
               </a>
@@ -545,10 +660,7 @@ function CtInfo() {
                 <rect x="280" y="100" width="40" height="60" fill="#1A1A2E" opacity="0.06" />
                 {/* pin */}
                 <g transform="translate(200, 175)">
-                  <circle r="26" fill="#C9A84C" opacity="0.15">
-                    <animate attributeName="r" values="24;36;24" dur="3s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite" />
-                  </circle>
+                  <circle className="map-pin-pulse" r="26" fill="#C9A84C" opacity="0.15" />
                   <circle r="14" fill="#C9A84C" opacity="0.3" />
                   <g transform="translate(0, -6)">
                     <path d="M 0 -14 C -8 -14 -12 -8 -12 -2 C -12 6 0 18 0 18 C 0 18 12 6 12 -2 C 12 -8 8 -14 0 -14 Z" fill="#1A1A2E" />
@@ -558,9 +670,9 @@ function CtInfo() {
               </svg>
             </div>
             <div className="map-card-body">
-              <span className="lbl">Oficina</span>
+              <span className="lbl">Base operativa</span>
               <span className="addr">Madrid, España</span>
-              <span className="hours">Lun – Vie · 9:00 – 19:00 (CET)</span>
+              <span className="hours">Trabajo remoto · reuniones coordinadas</span>
             </div>
           </div>
         </div>
@@ -572,28 +684,28 @@ function CtInfo() {
 /* ─────────── FAQ ─────────── */
 const FAQS = [
   {
-    q: "¿Cuánto tarda una primera respuesta?",
-    a: "Menos de 24 horas hábiles. En la mayoría de casos, responde alguien del equipo el mismo día, con contexto real, no una plantilla.",
+    q: "¿Cómo funciona la primera respuesta?",
+    a: "Una persona del equipo revisa la información enviada y responde con contexto, preguntas concretas y un siguiente paso.",
   },
   {
-    q: "¿El diagnóstico inicial tiene coste?",
-    a: "No. La primera videollamada de 30 minutos es gratuita. Salimos de ahí con un alcance propuesto, tiempos y rango de inversión. Luego decides.",
+    q: "¿Cómo se define el alcance?",
+    a: "Partimos del contexto enviado, hacemos las preguntas necesarias y delimitamos el trabajo, los responsables y el siguiente paso antes de comenzar.",
   },
   {
-    q: "¿Atienden fuera de México?",
-    a: "Sí. Trabajamos con empresas en España, LATAM y Estados Unidos, de forma totalmente remota. Para operaciones transfronterizas articulamos con corresponsales locales.",
+    q: "¿Trabajan con equipos fuera de España?",
+    a: "El trabajo puede coordinarse de forma remota. La disponibilidad y, cuando aplique, la jurisdicción y los responsables locales se confirman durante la revisión inicial.",
   },
   {
-    q: "¿Puedo contratar solo uno de los siete servicios?",
-    a: "Sí. Cada servicio es autónomo. La ventaja de contratar más de uno es que se articulan sin solapes y compartes un único interlocutor.",
+    q: "¿Puedo activar una sola capacidad?",
+    a: "Sí. Cada capacidad puede abordarse por separado. Cuando el problema cruza varias disciplinas, proponemos cómo coordinarlas y quién responde por cada parte.",
   },
   {
-    q: "¿Cómo es la facturación?",
-    a: "La mayoría de líneas funcionan como retainer mensual con alcance claro. Proyectos puntuales se cotizan cerrados. Sin letra pequeña ni minutos facturados.",
+    q: "¿Cómo se acuerdan las condiciones?",
+    a: "Antes de iniciar cualquier trabajo se presenta un alcance con entregables, responsables, calendario y condiciones económicas. La modalidad depende del tipo de intervención.",
   },
   {
-    q: "¿Firman acuerdos de confidencialidad?",
-    a: "Sí, antes de cualquier conversación sensible. Envíanos el NDA de tu empresa o facilitamos el nuestro.",
+    q: "¿Cómo comparto información sensible?",
+    a: "No la incluyas en el primer formulario. Indica que existe documentación sensible y acordaremos el canal y las condiciones de intercambio antes de recibirla.",
   },
 ];
 
@@ -609,10 +721,26 @@ function CtFAQ() {
         <div className="faq-grid">
           {FAQS.map((f, i) => (
             <div key={i} className={`faq-item ${open === i ? "open" : ""}`}>
-              <button className="faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
-                {f.q} <span className="faq-plus">+</span>
+              <button
+                className="faq-q"
+                type="button"
+                id={`faq-question-${i}`}
+                aria-expanded={open === i}
+                aria-controls={`faq-answer-${i}`}
+                onClick={() => setOpen(open === i ? -1 : i)}
+              >
+                {f.q} <span className="faq-plus" aria-hidden="true">+</span>
               </button>
-              <div className="faq-a">{f.a}</div>
+              <div
+                className="faq-a"
+                id={`faq-answer-${i}`}
+                role="region"
+                aria-labelledby={`faq-question-${i}`}
+                aria-hidden={open !== i}
+                hidden={open !== i}
+              >
+                {f.a}
+              </div>
             </div>
           ))}
         </div>
@@ -629,21 +757,21 @@ function CtFooter() {
         <div className="footer-grid">
           <div className="footer-brand">
             <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 72, display: "block", marginBottom: 16}} /></a>
-            <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
+            <p>Contratos, procesos y herramientas con responsables y próximos pasos claros.</p>
           </div>
           <div>
             <h4>Servicios</h4>
             <ul>
               <li><a href="asesoria-legal.html">Asesoría legal</a></li>
               <li><a href="redes-sociales.html">Comunicación</a></li>
-              <li><a href="Langin_MEDLA_Jotform/dist/index.html">Soluciones Jotform</a></li>
+              <li><a href="jotform.html">Soluciones Jotform</a></li>
             </ul>
           </div>
           <div>
             <h4>Empresa</h4>
             <ul>
               <li><a href="nosotros.html">Nosotros</a></li>
-              <li><a href="blog.html">Blog</a></li>
+              <li><a href="blog.html">Cuadernos</a></li>
               <li><a href="contacto.html">Contacto</a></li>
             </ul>
           </div>
@@ -667,12 +795,8 @@ function CtFooter() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2025 MEDLA empresas. Todos los derechos reservados.</span>
-          <div>
-            <a href="#">Aviso legal</a>
-            <a href="#">Política de privacidad</a>
-            <a href="#">Cookies</a>
-          </div>
+          <span>© 2026 MEDLA empresas. Todos los derechos reservados.</span>
+          <span><a href="privacidad.html">Privacidad</a> · Madrid, España</span>
         </div>
       </div>
     </footer>
@@ -685,11 +809,13 @@ function ContactoApp() {
   return (
     <div className="contacto-page">
       <CtNav />
-      <CtHero />
-      <CtPaths active={path} onPick={setPath} />
-      <CtForm pathId={path} />
-      <CtInfo />
-      <CtFAQ />
+      <main id="contenido">
+        <CtHero />
+        <CtPaths active={path} onPick={setPath} />
+        <CtForm pathId={path} />
+        <CtInfo />
+        <CtFAQ />
+      </main>
       <CtFooter />
     </div>
   );

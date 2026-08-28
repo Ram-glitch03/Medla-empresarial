@@ -1,441 +1,332 @@
-// Nosotros page — manifesto + principles + stats + timeline + team + values + CTA
+// MEDLA Empresas — Nosotros / operating model
+const { useEffect, useRef, useState } = React;
 
-const { useState, useEffect, useRef } = React;
+const Arrow = () => <span className="nos-arrow" aria-hidden="true">↗</span>;
 
-/* ─────────── Nav ─────────── */
 function NosNav() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const triggerRef = useRef(null);
+  const panelRef = useRef(null);
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 24);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const panel = panelRef.current;
+    const page = document.getElementById("main-content");
+    const footer = document.querySelector(".nos-footer");
+    const focusable = panel?.querySelectorAll('a[href], button:not([disabled])') || [];
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    page?.setAttribute("inert", "");
+    footer?.setAttribute("inert", "");
+    first?.focus();
+
+    const onKey = (event) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || focusable.length === 0) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+      page?.removeAttribute("inert");
+      footer?.removeAttribute("inert");
+      triggerRef.current?.focus();
+    };
+  }, [open]);
+
   return (
     <>
-    <nav className="nav scrolled">
-      <div className="container nav-inner">
-        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
-        <ul className="nav-links">
-          <li><a href="servicios.html">Servicios</a></li>
-          <li><a href="nosotros.html" style={{ color: "var(--gold)" }}>Nosotros</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="contacto.html">Contacto</a></li>
-        </ul>
-        <div style={{display: "flex", alignItems: "center"}}>
-          <a href="contacto.html" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
-          <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <nav className={`nos-nav ${scrolled ? "is-scrolled" : ""}`} aria-label="Navegación principal">
+        <div className="nos-shell nos-nav__inner">
+          <a className="nos-brand" href="index.html" aria-label="MEDLA Empresas, inicio">
+            <img src="logo.png" alt="" />
+            <span>Consultoría<br />empresarial</span>
+          </a>
+          <div className="nos-nav__links" aria-label="Secciones">
+            <a href="servicios.html">Servicios</a>
+            <a href="nosotros.html" aria-current="page">Nosotros</a>
+            <a href="blog.html">Cuadernos</a>
+            <a href="contacto.html">Contacto</a>
+          </div>
+          <a className="nos-nav__cta" href="contacto.html">Plantear un proyecto <Arrow /></a>
+          <button className="nos-nav__toggle" type="button" ref={triggerRef} aria-label="Abrir menú" aria-expanded={open} aria-controls="nos-mobile-menu" onClick={() => setOpen(true)}>
+            <span /><span />
           </button>
         </div>
-      </div>
-    </nav>
-    {mobileOpen && (
-      <div className="mobile-menu">
-        <div className="mobile-menu-overlay" onClick={() => setMobileOpen(false)}></div>
-        <div className="mobile-menu-content">
-          <div className="mobile-menu-head">
-            <img src="logo.png" alt="MEDLA" style={{height: 40}} />
-            <button className="nav-toggle" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
+      </nav>
+
+      {open && (
+        <div className="nos-menu" id="nos-mobile-menu" role="dialog" aria-modal="true" aria-label="Menú de navegación" ref={panelRef}>
+          <div className="nos-menu__head">
+            <a className="nos-brand" href="index.html" aria-label="MEDLA Empresas, inicio" onClick={() => setOpen(false)}><img src="logo.png" alt="" /></a>
+            <button className="nos-menu__close" type="button" aria-label="Cerrar menú" onClick={() => setOpen(false)}>Cerrar <span aria-hidden="true">×</span></button>
           </div>
-          <ul className="mobile-links" onClick={() => setMobileOpen(false)}>
-            <li><a href="servicios.html">Servicios</a></li>
-            <li><a href="nosotros.html" style={{ color: "var(--gold)" }}>Nosotros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
-          </ul>
+          <div className="nos-menu__body">
+            <span className="nos-kicker">Navegación</span>
+            <a href="servicios.html" onClick={() => setOpen(false)}><span>01</span> Servicios</a>
+            <a href="nosotros.html" aria-current="page" onClick={() => setOpen(false)}><span>02</span> Nosotros</a>
+            <a href="blog.html" onClick={() => setOpen(false)}><span>03</span> Cuadernos</a>
+            <a href="contacto.html" onClick={() => setOpen(false)}><span>04</span> Contacto</a>
+          </div>
+          <div className="nos-menu__foot">
+            <a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a>
+            <a href="contacto.html" onClick={() => setOpen(false)}>Plantear un proyecto <Arrow /></a>
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </>
   );
 }
 
-/* ─────────── Hero ─────────── */
-function NosHero() {
+function Hero() {
   return (
-    <section className="nos-hero">
-      <div className="nos-hero-marquee">criterio · criterio · criterio · criterio · criterio · criterio · criterio ·</div>
-      <div className="container nos-hero-inner">
-        <span className="eyebrow" style={{ justifyContent: "center" }}>— Nosotros</span>
-        <h1 style={{ marginTop: 24 }}>
-          No somos<br />consultores.<br /><em>Somos socios</em>.
-        </h1>
-        <p className="nos-hero-sub">
-          MEDLA nació para resolver un vacío claro: las empresas en crecimiento necesitan
-          una capa estratégica que piense en términos legales, tecnológicos y comerciales
-          al mismo tiempo — bajo un único criterio.
-        </p>
+    <section className="nos-hero" aria-labelledby="nos-title">
+      <div className="nos-hero__field" aria-hidden="true">
+        <span className="nos-field__ring nos-field__ring--one" />
+        <span className="nos-field__ring nos-field__ring--two" />
+        <span className="nos-field__axis nos-field__axis--x" />
+        <span className="nos-field__axis nos-field__axis--y" />
+        <span className="nos-field__node nos-field__node--one">Legal</span>
+        <span className="nos-field__node nos-field__node--two">Tecnología</span>
+        <span className="nos-field__node nos-field__node--three">Negocio</span>
+        <span className="nos-field__core">MEDLA</span>
       </div>
-    </section>
-  );
-}
-
-/* ─────────── Manifiesto ─────────── */
-function NosManifest() {
-  const principles = [
-    {
-      num: "01",
-      t: "Criterio sobre volumen",
-      d: "No queremos ser el despacho más grande. Queremos ser el que mejor entiende a tu empresa. Por eso trabajamos con un número limitado de clientes al año.",
-    },
-    {
-      num: "02",
-      t: "Integración real, no coordinación",
-      d: "Legal, tech y comercial operan bajo el mismo criterio. No somos tres equipos que se pasan tickets: somos un solo equipo que piensa transversalmente.",
-    },
-    {
-      num: "03",
-      t: "Arquitectura antes que parche",
-      d: "Resolvemos la causa estructural, no el síntoma visible. Si tu problema es de flujo operativo, no vamos a darte un contrato: vamos a rediseñar el flujo.",
-    },
-    {
-      num: "04",
-      t: "Transparencia como producto",
-      d: "Sin letra pequeña, sin minutos facturados, sin sorpresas. Cada alcance se acuerda, se escribe y se cumple. Si algo cambia, se conversa antes, no después.",
-    },
-  ];
-
-  return (
-    <section className="nos-manifest">
-      <div className="container nos-manifest-inner">
-        <span className="eyebrow" style={{ color: "var(--gold)" }}>— Manifiesto</span>
-        <h2 style={{ marginTop: 16 }}>
-          Creemos que <em>operar con criterio</em> ya no es opcional para una empresa seria.
-        </h2>
-        <p className="nos-manifest-lead">
-          En un mercado saturado de proveedores funcionales, MEDLA apuesta por lo contrario:
-          menos interlocutores, más pensamiento transversal. Cuatro principios sostienen todo
-          lo que hacemos.
-        </p>
-
-        <div className="nos-manifest-grid">
-          {principles.map((p) => (
-            <div className="nos-principle" key={p.num}>
-              <div className="nos-principle-num">{p.num}</div>
-              <div className="nos-principle-body">
-                <h3>{p.t}</h3>
-                <p>{p.d}</p>
-              </div>
-            </div>
-          ))}
+      <div className="nos-shell nos-hero__inner">
+        <div className="nos-hero__meta">
+          <span className="nos-kicker">Nosotros / Modelo de trabajo</span>
+          <span>Madrid · España</span>
+        </div>
+        <h1 id="nos-title">El trabajo complejo<br />necesita <em>una dirección clara.</em></h1>
+        <div className="nos-hero__bottom">
+          <p>Una decisión rara vez es solo legal, técnica o comercial. Coordinamos las disciplinas necesarias con prioridades, responsables y plazos compartidos.</p>
+          <a href="servicios.html">Ver ámbitos de trabajo <Arrow /></a>
         </div>
       </div>
+      <div className="nos-hero__ticker" aria-hidden="true">
+        <div><span>REVISIÓN</span><i /> <span>DECISIÓN</span><i /> <span>EJECUCIÓN</span><i /> <span>TRASPASO</span><i /> <span>REVISIÓN</span><i /> <span>DECISIÓN</span><i /> <span>EJECUCIÓN</span><i /> <span>TRASPASO</span><i /></div>
+      </div>
     </section>
   );
 }
 
-/* ─────────── Stats ─────────── */
-function useCountUp(target, ms = 1500) {
-  const [val, setVal] = useState(0);
-  const ref = useRef(null);
-  const started = useRef(false);
+function OpeningStatement() {
+  return (
+    <section className="nos-opening">
+      <div className="nos-shell nos-opening__inner">
+        <span className="nos-section-code">01 / Punto de partida</span>
+        <p className="nos-opening__lead">Empezamos por la decisión.</p>
+        <p className="nos-opening__statement">Aclaramos <em>qué está bloqueado</em>, quién interviene y qué debe quedar resuelto antes de asignar disciplinas o herramientas.</p>
+        <div className="nos-opening__note"><span aria-hidden="true">→</span><p>El catálogo viene después: primero se delimitan el problema, la autoridad y las condiciones de cierre.</p></div>
+      </div>
+    </section>
+  );
+}
+
+const disciplines = [
+  { id: "direccion", name: "Dirección", code: "01", title: "Convierte una preocupación difusa en una decisión abordable.", copy: "Define la pregunta, separa lo urgente de lo importante y alinea alcance, responsables y criterio de éxito.", output: "Marco de decisión" },
+  { id: "legal", name: "Legal", code: "02", title: "Traduce el riesgo en condiciones que el negocio puede aplicar.", copy: "Revisa obligaciones, límites y dependencias para que la solución funcione también fuera del documento.", output: "Condiciones y controles" },
+  { id: "tecnologia", name: "Tecnología", code: "03", title: "Da forma operativa a procesos, datos e integraciones.", copy: "Diseña el flujo, construye los componentes necesarios y prueba los puntos donde una operación suele romperse.", output: "Sistema probado" },
+  { id: "negocio", name: "Negocio", code: "04", title: "Conecta la solución con clientes, equipo y resultados.", copy: "Ajusta mensajes, seguimiento y métricas para que la mejora tenga un uso claro en el día a día.", output: "Adopción y seguimiento" }
+];
+
+function Coordination() {
+  const [active, setActive] = useState(0);
+  const [horizontalTabs, setHorizontalTabs] = useState(() => window.matchMedia("(max-width: 820px)").matches);
+  const tabRefs = useRef([]);
+  const selected = disciplines[active];
+
   useEffect(() => {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const loop = (t) => {
-            const p = Math.min(1, (t - start) / ms);
-            const eased = 1 - Math.pow(1 - p, 3);
-            setVal(Math.round(target * eased));
-            if (p < 1) requestAnimationFrame(loop);
-          };
-          requestAnimationFrame(loop);
-        }
-      });
-    }, { threshold: 0.3 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [target, ms]);
-  return [val, ref];
-}
+    const media = window.matchMedia("(max-width: 820px)");
+    const sync = (event) => setHorizontalTabs(event.matches);
+    setHorizontalTabs(media.matches);
+    media.addEventListener?.("change", sync);
+    return () => media.removeEventListener?.("change", sync);
+  }, []);
 
-function StatCard({ value, suffix, label, sub }) {
-  const [v, ref] = useCountUp(value);
-  return (
-    <div className="nos-stat" ref={ref}>
-      <div className="nos-stat-val">{v}{suffix && <em>{suffix}</em>}</div>
-      <div className="nos-stat-lbl">{label}</div>
-      <div className="nos-stat-sub">{sub}</div>
-    </div>
-  );
-}
+  const onKeyDown = (event, index) => {
+    let next = index;
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") next = (index + 1) % disciplines.length;
+    else if (event.key === "ArrowUp" || event.key === "ArrowLeft") next = (index - 1 + disciplines.length) % disciplines.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = disciplines.length - 1;
+    else return;
+    event.preventDefault();
+    setActive(next);
+    tabRefs.current[next]?.focus();
+  };
 
-function NosStats() {
   return (
-    <section className="nos-stats">
-      <div className="container">
-        <div className="section-head" style={{ marginBottom: 56 }}>
-          <span className="eyebrow">— Por dentro</span>
-          <h2>Lo que <em>sí</em> somos, en números.</h2>
+    <section className="nos-coordination" aria-labelledby="coordination-title">
+      <div className="nos-shell">
+        <div className="nos-coordination__head">
+          <span className="nos-section-code nos-section-code--light">02 / Coordinación</span>
+          <h2 id="coordination-title">Especialidades distintas.<br /><em>Una misma mesa.</em></h2>
+          <p>Cada proyecto activa solo las disciplinas que necesita. La coordinación mantiene decisiones, dependencias y cambios en un único hilo de trabajo.</p>
         </div>
-        <div className="nos-stats-grid">
-          <StatCard value={67} label="Clientes activos" sub="Pymes, startups, holdings y family offices operando con MEDLA." />
-          <StatCard value={6} label="Años de operación" sub="Desde 2020, sirviendo a empresas que deciden crecer con criterio." />
-          <StatCard value={14} label="Profesionales" sub="Abogados, ingenieros, consultores y especialistas bajo un mismo techo." />
-          <StatCard value={24} suffix="h" label="Respuesta media" sub="Tiempo máximo para que recibas una primera respuesta con contexto." />
+        <div className="nos-discipline">
+          <div className="nos-discipline__tabs" role="tablist" aria-label="Disciplinas coordinadas" aria-orientation={horizontalTabs ? "horizontal" : "vertical"}>
+            {disciplines.map((item, index) => (
+              <button key={item.id} id={`discipline-tab-${item.id}`} type="button" role="tab" aria-selected={active === index} aria-controls="discipline-panel" tabIndex={active === index ? 0 : -1} ref={(node) => { tabRefs.current[index] = node; }} onClick={() => setActive(index)} onKeyDown={(event) => onKeyDown(event, index)}>
+                <span>{item.code}</span>{item.name}<i aria-hidden="true">↗</i>
+              </button>
+            ))}
+          </div>
+          <div className="nos-discipline__panel" id="discipline-panel" role="tabpanel" aria-labelledby={`discipline-tab-${selected.id}`}>
+            <div className="nos-discipline__signal" aria-hidden="true"><span /><span /><span /><span /><b>{selected.code}</b></div>
+            <div className="nos-discipline__copy" key={selected.id}>
+              <span className="nos-kicker">{selected.name} / Función</span>
+              <h3>{selected.title}</h3>
+              <p>{selected.copy}</p>
+              <div><span>Salida de trabajo</span><strong>{selected.output}</strong></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─────────── Timeline ─────────── */
-function NosTimeline() {
-  const events = [
-    { y: "2020", t: "El punto de partida", d: "MEDLA nace como una firma pequeña de asesoría legal corporativa, especializada en pymes en crecimiento. Tres abogados, una oficina compartida, una convicción clara: el cliente merece criterio, no procesos." },
-    { y: "2022", t: "Incorporamos tecnología", d: "Tras ver una y otra vez los mismos cuellos de botella operativos en nuestros clientes, sumamos un equipo de ingenieros para digitalizar procesos internos. Nace la segunda línea." },
-    { y: "2023", t: "Especialización en inversión", d: "Acompañamos la primera ronda serie A de un cliente histórico. La operación fuerza a construir un área propia de inversiones y levantamiento de capital, con equipo dedicado." },
-    { y: "2024", t: "IA aplicada en producción", d: "Lanzamos la línea de IA aplicada tras un año de I+D. Primeros asistentes internos de clientes, análisis documental masivo y compliance automatizado." },
-    { y: "2026", t: "MEDLA Empresas consolidado", d: "Cerramos el año con 67 clientes activos en 4 países. Integramos comunicación estratégica como séptima línea: un único gobierno operativo con siete capas coordinadas.", current: true },
+const stages = [
+  { code: "01", name: "Revisión", title: "Entender antes de prescribir.", copy: "Reunimos las conversaciones, documentos y datos que condicionan la decisión. También hacemos visible lo que aún falta por saber.", output: "Diagnóstico y preguntas abiertas", signal: "ENTENDER" },
+  { code: "02", name: "Decisión", title: "Definir qué debe resolverse y con qué límites.", copy: "Acordamos prioridades, alcance, responsables y condiciones de validación. Así cada disciplina trabaja sobre la misma decisión.", output: "Mapa de decisión y plan", signal: "DECIDIR" },
+  { code: "03", name: "Ejecución", title: "Construir, contrastar y corregir.", copy: "Desarrollamos la solución por tramos, probamos los casos críticos y registramos los cambios que afectan al conjunto.", output: "Solución validada", signal: "HACER" },
+  { code: "04", name: "Transferencia", title: "Traspaso documentado.", copy: "Entregamos documentación, responsables, criterios de mantenimiento y una sesión de traspaso para que el equipo pueda continuar el trabajo.", output: "Operación documentada", signal: "TRANSFERIR" }
+];
+
+function Protocol() {
+  const [active, setActive] = useState(0);
+  const tabRefs = useRef([]);
+  const selected = stages[active];
+  return (
+    <section className="nos-protocol" aria-labelledby="protocol-title">
+      <div className="nos-shell">
+        <div className="nos-protocol__intro">
+          <span className="nos-section-code">03 / Protocolo</span>
+          <h2 id="protocol-title">Del problema<br />a una entrega <em>que el equipo puede continuar.</em></h2>
+          <p>El recorrido cambia según el proyecto. El principio no: cada fase debe producir una salida que permita tomar la siguiente decisión.</p>
+        </div>
+        <div className="nos-protocol__workbench">
+          <div className="nos-protocol__rail" role="tablist" aria-label="Fases del protocolo">
+            {stages.map((stage, index) => (
+              <button key={stage.code} type="button" role="tab" aria-selected={active === index} aria-controls="protocol-panel" id={`protocol-tab-${stage.code}`} tabIndex={active === index ? 0 : -1} ref={(node) => { tabRefs.current[index] = node; }} onClick={() => setActive(index)} onKeyDown={(event) => {
+                if (event.key !== "ArrowLeft" && event.key !== "ArrowRight" && event.key !== "Home" && event.key !== "End") return;
+                event.preventDefault();
+                const next = event.key === "Home" ? 0 : event.key === "End" ? stages.length - 1 : event.key === "ArrowRight" ? (index + 1) % stages.length : (index - 1 + stages.length) % stages.length;
+                setActive(next);
+                tabRefs.current[next]?.focus();
+              }}><span>{stage.code}</span>{stage.name}</button>
+            ))}
+          </div>
+          <div className="nos-protocol__panel" id="protocol-panel" role="tabpanel" aria-labelledby={`protocol-tab-${selected.code}`}>
+            <div className="nos-protocol__index" aria-hidden="true">{selected.code}</div>
+            <div className="nos-protocol__visual" aria-hidden="true"><div className="nos-pulse"><span /><span /><span /><strong>{selected.signal}</strong></div></div>
+            <div className="nos-protocol__copy" key={selected.code}>
+              <span className="nos-kicker">Fase {selected.code} / {selected.name}</span>
+              <h3>{selected.title}</h3>
+              <p>{selected.copy}</p>
+              <div className="nos-protocol__output"><small>Salida</small><strong>{selected.output}</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Transfer() {
+  return (
+    <section className="nos-transfer" aria-labelledby="transfer-title">
+      <div className="nos-shell nos-transfer__layout">
+        <div className="nos-transfer__heading">
+          <span className="nos-section-code nos-section-code--light">04 / Transferencia</span>
+          <h2 id="transfer-title">El proyecto no acaba<br />en la entrega.</h2>
+          <p>La entrega incluye las decisiones tomadas, responsables, documentación operativa y cambios previstos.</p>
+        </div>
+        <div className="nos-transfer__stack" aria-label="Elementos de una transferencia MEDLA">
+          <article><span>01</span><div><small>Qué queda</small><h3>Decisiones y razones</h3><p>Lo acordado, las alternativas descartadas y los límites que siguen vigentes.</p></div></article>
+          <article><span>02</span><div><small>Cómo funciona</small><h3>Documentación operativa</h3><p>Flujos, configuraciones y puntos de control explicados para quien los va a usar.</p></div></article>
+          <article><span>03</span><div><small>Quién continúa</small><h3>Responsables y siguiente acción</h3><p>Propiedad interna, mantenimiento previsto y próximos hitos sin ambigüedad.</p></div></article>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Principles() {
+  const items = [
+    ["01", "Problema antes que entregable", "No forzamos una solución conocida sobre una pregunta que aún no está bien formulada."],
+    ["02", "Decisiones visibles", "El equipo puede ver qué se decidió, quién lo hizo y qué información sostuvo la elección."],
+    ["03", "Responsabilidad clara", "Cada tramo tiene una persona que decide y una siguiente acción concreta."],
+    ["04", "Continuidad acordada", "La entrega identifica qué puede operar el equipo, qué mantenimiento requiere y cómo se solicitan los cambios."]
   ];
   return (
-    <section className="nos-timeline">
-      <div className="container">
-        <div className="section-head">
-          <span className="eyebrow">— Trayectoria</span>
-          <h2>Seis años <em>construyendo</em> criterio.</h2>
-          <p className="lead">No improvisamos la integración. La construimos año a año, siguiendo las necesidades reales de nuestros clientes.</p>
-        </div>
-        <div className="tl-wrap">
-          {events.map((e, i) => (
-            <div key={i} className={`tl-item ${e.current ? "current" : ""}`}>
-              <div className="tl-year">{e.y}</div>
-              <div className="tl-title">{e.t}</div>
-              <div className="tl-desc">{e.d}</div>
-            </div>
-          ))}
+    <section className="nos-principles" aria-labelledby="principles-title">
+      <div className="nos-shell">
+        <div className="nos-principles__head"><span className="nos-section-code">05 / Principios</span><h2 id="principles-title">La forma de trabajar<br /><em>también es parte del resultado.</em></h2></div>
+        <div className="nos-principles__list">
+          {items.map(([code, title, copy]) => <article key={code}><span>{code}</span><h3>{title}</h3><p>{copy}</p><i aria-hidden="true">↗</i></article>)}
         </div>
       </div>
     </section>
   );
 }
 
-/* ─────────── Team ─────────── */
-const AvatarPattern = ({ seed, initials }) => {
-  const hue1 = (seed * 47) % 360;
-  const hue2 = (seed * 89 + 140) % 360;
-  const shapes = [0, 1, 2, 3].map((i) => ({
-    cx: 30 + ((seed * (i + 1) * 37) % 140),
-    cy: 30 + ((seed * (i + 2) * 53) % 140),
-    r: 18 + ((seed * (i + 1) * 11) % 30),
-  }));
+function Closing() {
   return (
-    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id={`avg-${seed}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={`hsl(${hue1}, 30%, 90%)`} />
-          <stop offset="100%" stopColor={`hsl(${hue2}, 25%, 78%)`} />
-        </linearGradient>
-      </defs>
-      <rect width="200" height="200" fill={`url(#avg-${seed})`} />
-      {shapes.map((s, i) => (
-        <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill="#1A1A2E" opacity={0.06 + i * 0.03} />
-      ))}
-      <circle cx="100" cy="80" r="28" fill="#1A1A2E" opacity="0.85" />
-      <path d="M 50 180 Q 100 130 150 180 L 150 200 L 50 200 Z" fill="#1A1A2E" opacity="0.85" />
-      <text x="100" y="108" textAnchor="middle" fontSize="22" fill="#C9A84C" fontFamily="Cormorant Garamond" fontStyle="italic" fontWeight="500">
-        {initials}
-      </text>
-    </svg>
-  );
-};
-
-function NosTeam() {
-  const people = [
-    { n: "Massimiliano N", r: "Socio fundador · Director", b: "Abogado corporativo. 15 años negociando M&A y rondas de inversión antes de apostar por construir algo propio.", seed: 3, i: "MN" },
-    { n: "Sebastian G", r: "Socio fundador · Tecnología", b: "Ingeniero y ex-CTO. Diseña arquitecturas operativas que hablan tanto con auditores como con equipos de producto.", seed: 17, i: "SG" },
-  ];
-  return (
-    <section className="nos-team" id="equipo">
-      <div className="container">
-        <div className="section-head">
-          <span className="eyebrow">— Equipo</span>
-          <h2>Las personas detrás <em>del criterio</em>.</h2>
-          <p className="lead">Trabajamos de forma plana y directa. Cada cliente habla con la persona que toma las decisiones, no con un account manager que las traduce.</p>
-        </div>
-        <div className="team-grid">
-          {people.map((p, i) => (
-            <div className="team-card" key={i}>
-              <div className="team-avatar">
-                <AvatarPattern seed={p.seed} initials={p.i} />
-              </div>
-              <div className="name">{p.n}</div>
-              <div className="role">{p.r}</div>
-              <div className="bio">{p.b}</div>
-              <div className="team-card-social">
-                <a href="#" aria-label="LinkedIn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3" /><path d="M8 10v7M8 7.5v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7" strokeLinecap="round" /></svg>
-                </a>
-                <a href="#" aria-label="Email">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 7 9-7" strokeLinecap="round" /></svg>
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+    <section className="nos-closing" aria-labelledby="closing-title">
+      <div className="nos-closing__orbit" aria-hidden="true"><span /><span /><b>MEDLA</b></div>
+      <div className="nos-shell nos-closing__inner">
+        <span className="nos-kicker">Empezar por la pregunta</span>
+        <h2 id="closing-title">Cuéntanos qué decisión<br />está <em>bloqueada.</em></h2>
+        <p>Revisaremos la información contigo y te diremos qué disciplinas hacen falta, qué conviene resolver primero y cuál podría ser el siguiente paso.</p>
+        <div className="nos-closing__actions"><a className="nos-button nos-button--signal" href="contacto.html">Plantear un proyecto <Arrow /></a><a className="nos-button nos-button--quiet" href="servicios.html">Explorar servicios <Arrow /></a></div>
       </div>
     </section>
   );
 }
 
-/* ─────────── Values ─────────── */
-function NosValues() {
-  const values = [
-    {
-      n: "I",
-      t: "Escuchar antes de proponer",
-      d: "Cada engagement empieza con al menos una conversación larga. Lo que aprendemos ahí define toda la ruta.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 16 Q 12 10 18 10 L 30 10 Q 36 10 36 16 L 36 24 Q 36 30 30 30 L 20 30 L 14 36 L 14 30 Q 12 30 12 28 Z" />
-          <circle cx="20" cy="20" r="1" fill="currentColor" />
-          <circle cx="24" cy="20" r="1" fill="currentColor" />
-          <circle cx="28" cy="20" r="1" fill="currentColor" />
-        </svg>
-      ),
-    },
-    {
-      n: "II",
-      t: "Decir lo que no vemos",
-      d: "Si el alcance que pides no tiene sentido, lo decimos. Si necesitas algo que no ofrecemos, recomendamos a quien sí.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="24" cy="24" r="16" />
-          <path d="M24 14 L24 26" />
-          <circle cx="24" cy="32" r="1.5" fill="currentColor" />
-        </svg>
-      ),
-    },
-    {
-      n: "III",
-      t: "Documentar todo",
-      d: "Decisiones, razones, alternativas. El trabajo queda escrito para que tu equipo pueda continuarlo sin nosotros.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="12" y="8" width="24" height="32" rx="2" />
-          <path d="M17 18 L31 18 M17 24 L31 24 M17 30 L26 30" />
-        </svg>
-      ),
-    },
-    {
-      n: "IV",
-      t: "Cerrar bien o no abrir",
-      d: "Un engagement no termina cuando entregamos: termina cuando tu equipo lo está operando sin fricciones. Esa es nuestra vara.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10 24 L20 34 L38 14" />
-        </svg>
-      ),
-    },
-  ];
+function Footer() {
   return (
-    <section className="nos-values">
-      <div className="container">
-        <div className="section-head">
-          <span className="eyebrow">— Valores</span>
-          <h2>Cómo <em>trabajamos</em>, en la práctica.</h2>
-        </div>
-        <div className="values-grid">
-          {values.map((v, i) => (
-            <div className="value-card" key={i}>
-              <div className="value-num">{v.n}</div>
-              <div className="value-pattern">{v.svg}</div>
-              <h4>{v.t}</h4>
-              <p>{v.d}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─────────── CTA ─────────── */
-function NosCTA() {
-  return (
-    <section className="nos-cta">
-      <div className="container nos-cta-inner">
-        <span className="eyebrow" style={{ color: "var(--gold)", justifyContent: "center" }}>— Trabajemos juntos</span>
-        <h2 style={{ marginTop: 20 }}>¿Y si <em>el próximo</em> somos nosotros?</h2>
-        <p>Si llegaste hasta aquí es porque algo resuena. Conversemos: 30 minutos, sin compromiso, para entender si tiene sentido seguir adelante.</p>
-        <div className="hero-ctas" style={{ justifyContent: "center" }}>
-          <a href="contacto.html" className="btn btn-primary">Agendar diagnóstico <span className="arr">→</span></a>
-          <a href="contacto.html" className="btn btn-ghost" style={{ color: "var(--white)", borderColor: "rgba(255,255,255,0.3)" }}>Ver servicios</a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─────────── Footer ─────────── */
-function NosFooter() {
-  return (
-    <footer className="footer" id="blog">
-      <div className="container">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 160, display: "block", marginBottom: 16, filter: "invert(1)"}} /></a>
-            <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
-          </div>
-          <div>
-            <h4>Servicios</h4>
-            <ul>
-              <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="redes-sociales.html">Comunicación</a></li>
-              <li><a href="Langin_MEDLA_Jotform/dist/index.html">Soluciones Jotform</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Compañía</h4>
-            <ul>
-              <li><a href="nosotros.html">Nosotros</a></li>
-              <li><a href="blog.html">Blog</a></li>
-              <li><a href="contacto.html">Casos</a></li>
-              <li><a href="contacto.html">Carreras</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Contacto</h4>
-            <ul>
-              <li><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></li>
-              <li><a href="tel:+34641576772">+34 641 576 772</a></li>
-              <li><a href="#">Madrid, España</a></li>
-            </ul>
-            <a
-              href="https://api.whatsapp.com/send/?phone=34641576772&text=Hola%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n&type=phone_number&app_absent=0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-              style={{marginTop: 20, display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.85rem", padding: "10px 20px"}}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              Contactar por WhatsApp
-            </a>
+    <footer className="nos-footer">
+      <div className="nos-shell">
+        <div className="nos-footer__top">
+          <div className="nos-footer__brand"><a href="index.html" aria-label="MEDLA Empresas, inicio"><img src="logo.png" alt="MEDLA Empresas" /></a><p>Estructura legal, tecnológica y comercial para decisiones que atraviesan toda la empresa.</p></div>
+          <div className="nos-footer__nav">
+            <div><span>Ámbitos</span><a href="asesoria-legal.html">Legal</a><a href="agentes.html">Inteligencia artificial</a><a href="digitalizacion.html">Operaciones</a><a href="redes-sociales.html">Sistema comercial</a></div>
+            <div><span>MEDLA</span><a href="servicios.html">Servicios</a><a href="nosotros.html" aria-current="page">Nosotros</a><a href="blog.html">Cuadernos</a><a href="contacto.html">Contacto</a></div>
+            <div><span>Contacto</span><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a><a href="tel:+34641576772">+34 641 576 772</a><p>Madrid, España</p></div>
           </div>
         </div>
-        <div className="footer-bottom">
-          <span>© 2026 MEDLA Empresas. Todos los derechos reservados.</span>
-          <span>Aviso de privacidad · Términos</span>
-        </div>
+        <div className="nos-footer__bottom"><span>© 2026 MEDLA Empresas</span><a href="privacidad.html">Privacidad</a><a href="contacto.html">Iniciar conversación <Arrow /></a></div>
       </div>
     </footer>
   );
 }
 
 function NosotrosApp() {
-  return (
-    <div className="nos-page">
-      <NosNav />
-      <NosHero />
-      <NosManifest />
-      <NosStats />
-      <NosTimeline />
-      <NosTeam />
-      <NosValues />
-      <NosCTA />
-      <NosFooter />
-    </div>
-  );
+  return <div className="nos-page"><a className="nos-skip" href="#main-content">Saltar al contenido</a><NosNav /><main id="main-content"><Hero /><OpeningStatement /><Coordination /><Protocol /><Transfer /><Principles /><Closing /></main><Footer /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<NosotrosApp />);

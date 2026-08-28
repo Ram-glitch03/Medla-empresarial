@@ -4,29 +4,29 @@ const { useEffect, useReducer, useRef, useState } = React;
 const capabilities = [
   {
     n: "01",
-    eyebrow: "Estructura",
+    eyebrow: "Legal",
     title: "Contratos, sociedades y riesgos",
     desc: "Revisamos lo que existe, señalamos prioridades y dejamos los documentos al día, con responsables y vencimientos claros.",
     href: "asesoria-legal.html",
     className: "hp-capability--lead",
     signal: "Legal y corporativo",
-    deliverables: ["Contratos", "Compliance", "Gobierno"]
+    deliverables: ["Contratos", "Cumplimiento", "Gobierno"]
   },
   {
     n: "02",
-    eyebrow: "Inteligencia",
+    eyebrow: "Inteligencia artificial",
     title: "IA para tareas concretas",
-    desc: "Desarrollamos asistentes privados para consultar documentos, clasificar información o apoyar al equipo comercial.",
-    href: "jotform.html",
+    desc: "Desarrollamos asistentes conectados a fuentes autorizadas para consultar documentos, clasificar información o apoyar al equipo comercial.",
+    href: "agentes.html",
     className: "hp-capability--dark",
-    signal: "IA útil",
+    signal: "IA aplicada",
     deliverables: ["Asistentes", "Integraciones", "Guía de uso"]
   },
   {
     n: "03",
-    eyebrow: "Capital",
-    title: "Preparación de inversiones",
-    desc: "Ordenamos la estructura, los escenarios y la documentación necesaria para valorar opciones o presentarlas a inversores.",
+    eyebrow: "Inversión",
+    title: "Estructura y documentación para inversión",
+    desc: "Ordenamos la estructura societaria, construimos escenarios y preparamos la documentación para evaluar una operación o presentarla a inversores.",
     href: "inversiones.html",
     className: "",
     signal: "Capital",
@@ -34,27 +34,27 @@ const capabilities = [
   },
   {
     n: "04",
-    eyebrow: "Puesta en marcha",
-    title: "Constitución y puesta en marcha",
-    desc: "Elegimos la forma societaria adecuada y coordinamos documentos, registros y primeros pasos operativos.",
+    eyebrow: "Societario",
+    title: "Constitución de sociedades",
+    desc: "Definimos la forma societaria y coordinamos estatutos, pactos, registro y primeros trámites operativos.",
     href: "constitucion.html",
     className: "",
     signal: "Constitución",
-    deliverables: ["Sociedad", "Pactos", "Operativa inicial"]
+    deliverables: ["Estructura societaria", "Pactos", "Primeros trámites"]
   },
   {
     n: "05",
     eyebrow: "Operaciones",
     title: "Procesos, herramientas y datos",
-    desc: "Revisamos cómo trabaja el equipo, conectamos las herramientas y ponemos a dirección los datos que necesita.",
+    desc: "Revisamos cómo trabaja el equipo, conectamos las herramientas y consolidamos los datos que dirección necesita para decidir.",
     href: "digitalizacion.html",
     className: "hp-capability--wide",
-    signal: "Operación conectada",
-    deliverables: ["Mapa de procesos", "Integraciones", "Datos"]
+    signal: "Procesos e integraciones",
+    deliverables: ["Mapa de procesos", "Integraciones", "Indicadores"]
   },
   {
     n: "06",
-    eyebrow: "Eficiencia",
+    eyebrow: "Automatización",
     title: "Automatización con control",
     desc: "Automatizamos avisos, aprobaciones y movimientos de información, con registro y revisión cuando haga falta.",
     href: "automatizacion.html",
@@ -64,13 +64,23 @@ const capabilities = [
   },
   {
     n: "07",
-    eyebrow: "Crecimiento",
-    title: "Marketing y ventas bien coordinados",
-    desc: "Alineamos la oferta, los mensajes, la captación y el seguimiento para que ninguna oportunidad quede sin responsable.",
+    eyebrow: "Comercial",
+    title: "Captación, CRM y seguimiento comercial",
+    desc: "Definimos la oferta y el criterio de cualificación, conectamos la captación con el CRM y asignamos cada oportunidad con responsable y próxima acción.",
     href: "redes-sociales.html",
     className: "hp-capability--accent",
     signal: "Sistema comercial",
-    deliverables: ["Posicionamiento", "Pipeline", "Seguimiento"]
+    deliverables: ["Posicionamiento", "CRM", "Seguimiento comercial"]
+  },
+  {
+    n: "08",
+    eyebrow: "Captura de datos",
+    title: "Formularios y portales sobre Jotform",
+    desc: "Diseñamos la captura, validación y entrega de datos para que cada respuesta active el siguiente paso del proceso.",
+    href: "jotform.html",
+    className: "",
+    signal: "Jotform e integraciones",
+    deliverables: ["Formularios", "Validaciones", "Integraciones"]
   }
 ];
 
@@ -78,22 +88,22 @@ const operatingModel = [
   {
     n: "01",
     label: "Primera revisión",
-    title: "Vemos qué ocurre antes de proponer nada",
-    desc: "Hablamos con las personas implicadas, revisamos datos y documentación y localizamos dónde se atasca la decisión.",
+    title: "Revisamos el problema antes de definir la solución",
+    desc: "Hablamos con las personas implicadas, revisamos datos y documentación e identificamos decisiones, dependencias, riesgos y tiempos de espera.",
     output: "Diagnóstico y prioridades acordadas"
   },
   {
     n: "02",
     label: "Diseño",
-    title: "Acordamos alcance, responsables y orden",
+    title: "Definimos alcance, responsables y secuencia de trabajo",
     desc: "Definimos qué se hará, qué no, quién decide, cuánto esfuerzo requiere y cómo comprobaremos el resultado.",
     output: "Plan de trabajo y calendario"
   },
   {
     n: "03",
     label: "Desarrollo y entrega",
-    title: "Lo implantamos y enseñamos a mantenerlo",
-    desc: "Desarrollamos, probamos y documentamos la solución junto al equipo que después se hará cargo.",
+    title: "Desarrollamos, probamos y transferimos la solución",
+    desc: "Construimos con el equipo, validamos los casos críticos y entregamos configuración, documentación y criterios de mantenimiento.",
     output: "Solución implantada, probada y documentada"
   }
 ];
@@ -103,8 +113,8 @@ const demoScenarios = [
     id: "contract",
     code: "CASO 01 / CONTRATOS",
     tab: "Contrato",
-    title: "Así revisamos un contrato antes de que se convierta en un problema.",
-    summary: "El documento se contrasta con tus criterios de riesgo. Un abogado revisa las excepciones y el expediente queda registrado.",
+    title: "Revisión de un contrato con criterios de riesgo definidos.",
+    summary: "El documento se contrasta con tus criterios de riesgo. La revisión jurídica valida las excepciones y el expediente queda registrado.",
     sources: [
       { name: "DOCUMENTO", value: "Proveedor_nuevo.pdf" },
       { name: "CRITERIO", value: "Matriz jurídica v4" },
@@ -124,19 +134,19 @@ const demoScenarios = [
     code: "CASO 02 / OPERACIONES",
     tab: "Operaciones",
     title: "Una aprobación sin cadenas de correos.",
-    summary: "La solicitud entra una vez, aplica la política interna y llega a la persona que debe resolverla.",
+    summary: "La solicitud se registra una vez; el flujo aplica la política interna y la envía a la persona que debe resolverla.",
     sources: [
       { name: "ERP", value: "Solicitud #1042" },
-      { name: "POLICY", value: "Compras / Nivel 2" },
-      { name: "TEAM", value: "Finanzas + Operación" }
+      { name: "POLÍTICA", value: "Compras / Nivel 2" },
+      { name: "EQUIPO", value: "Finanzas + Operación" }
     ],
     stages: [
       { name: "Captura", detail: "12 campos unificados", code: "intake.map" },
       { name: "Regla", detail: "Política aplicada", code: "rule.check" },
       { name: "Aprobación", detail: "Responsable asignado", code: "owner.route" },
-      { name: "Sincronía", detail: "ERP actualizado", code: "system.sync" }
+      { name: "Sincronización", detail: "ERP actualizado", code: "system.sync" }
     ],
-    output: { title: "Aprobación al día", detail: "Estado, plazo e historial visibles" },
+    output: { title: "Aprobación resuelta y registrada", detail: "Estado, plazo e historial visibles" },
     trace: ["Solicitud detectada", "Política validada", "Dirección notificada", "Sistemas sincronizados"]
   },
   {
@@ -146,15 +156,15 @@ const demoScenarios = [
     title: "Un asistente que responde solo con información autorizada.",
     summary: "Busca en la documentación interna, cita la fuente y respeta los permisos de cada persona.",
     sources: [
-      { name: "DRIVE", value: "Base documental" },
-      { name: "ACCESS", value: "Roles y permisos" },
-      { name: "QUERY", value: "Pregunta interna" }
+      { name: "ARCHIVO", value: "Base documental" },
+      { name: "ACCESO", value: "Roles y permisos" },
+      { name: "CONSULTA", value: "Pregunta interna" }
     ],
     stages: [
       { name: "Permiso", detail: "Identidad verificada", code: "auth.scope" },
       { name: "Búsqueda", detail: "Contexto relevante", code: "index.retrieve" },
       { name: "Respuesta", detail: "Síntesis con fuentes", code: "answer.ground" },
-      { name: "Control", detail: "Feedback registrado", code: "quality.log" }
+      { name: "Control", detail: "Evaluación registrada", code: "quality.log" }
     ],
     output: { title: "Respuesta comprobable", detail: "Fuente, permiso y registro de uso" },
     trace: ["Usuario autorizado", "Fuentes recuperadas", "Respuesta generada", "Control registrado"]
@@ -163,17 +173,17 @@ const demoScenarios = [
     id: "growth",
     code: "CASO 04 / VENTAS",
     tab: "Crecimiento",
-    title: "Cada oportunidad tiene dueño y siguiente paso.",
+    title: "Cada oportunidad queda asignada y con una próxima acción.",
     summary: "La información llega al CRM, se prioriza y asigna sin perder el contexto.",
     sources: [
       { name: "WEB", value: "Nueva conversación" },
       { name: "CRM", value: "Cuenta / Contexto" },
-      { name: "SIGNAL", value: "Interés + Encaje" }
+      { name: "SEÑAL", value: "Interés + Encaje" }
     ],
     stages: [
       { name: "Captura", detail: "Contexto reunido", code: "lead.enrich" },
       { name: "Criterio", detail: "Encaje evaluado", code: "fit.score" },
-      { name: "Asignación", detail: "Owner y acción", code: "owner.route" },
+      { name: "Asignación", detail: "Responsable y acción", code: "owner.route" },
       { name: "Seguimiento", detail: "CRM actualizado", code: "next.sync" }
     ],
     output: { title: "Seguimiento preparado", detail: "Prioridad, responsable y próxima acción" },
@@ -185,9 +195,9 @@ const decisionCases = [
   {
     id: "scale",
     code: "EJEMPLO / 01",
-    label: "La operación no escala",
+    label: "El proceso depende de seguimiento manual",
     signal: "El equipo copia datos, persigue aprobaciones y pregunta por el estado.",
-    thesis: "Del seguimiento manual a un proceso que todos pueden ver.",
+    thesis: "Un flujo con estado, responsable y plazo visibles.",
     steps: [
       { n: "01", name: "Observar", owner: "Operaciones", text: "Mapeamos decisiones, esperas y traspasos reales." },
       { n: "02", name: "Diseñar", owner: "Arquitectura", text: "Definimos datos, reglas, responsables y excepciones." },
@@ -201,12 +211,12 @@ const decisionCases = [
     id: "legal",
     code: "EJEMPLO / 02",
     label: "El riesgo legal frena decisiones",
-    signal: "Contratos, obligaciones y versiones llegan tarde o sin contexto de negocio.",
+    signal: "Los contratos y obligaciones se revisan tarde, o con versiones y contexto dispersos.",
     thesis: "El criterio legal, disponible cuando hay que decidir.",
     steps: [
       { n: "01", name: "Ordenar", owner: "Legal", text: "Reunimos documentos, obligaciones, roles y vencimientos." },
-      { n: "02", name: "Priorizar", owner: "Dirección", text: "Traducimos riesgo a decisiones y próximos pasos." },
-      { n: "03", name: "Instrumentar", owner: "Tecnología", text: "Creamos plantillas, flujos, avisos y repositorio." },
+      { n: "02", name: "Priorizar", owner: "Dirección", text: "Clasificamos cada riesgo por impacto, responsable y plazo." },
+      { n: "03", name: "Implantar", owner: "Tecnología", text: "Creamos plantillas, flujos, avisos y repositorio." },
       { n: "04", name: "Transferir", owner: "Equipo", text: "Dejamos gobierno, responsables y trazabilidad." }
     ],
     stack: ["Criterio legal", "Documentos", "Avisos", "Gobierno"],
@@ -215,46 +225,46 @@ const decisionCases = [
   {
     id: "ai",
     code: "EJEMPLO / 03",
-    label: "La IA no llega a producción",
-    signal: "Hay herramientas y pruebas, pero ningún caso operando con permisos y control.",
-    thesis: "Un caso de IA que llega a producción con control.",
+    label: "Los pilotos de IA no se integran en el trabajo diario",
+    signal: "Hay herramientas y pruebas, pero ningún caso funciona aún con datos, permisos y control definidos.",
+    thesis: "Un caso acotado, integrado y medible.",
     steps: [
       { n: "01", name: "Elegir", owner: "Negocio", text: "Priorizamos una tarea con valor, datos y propietario." },
-      { n: "02", name: "Proteger", owner: "Legal + IT", text: "Definimos acceso, datos, riesgos y control humano." },
-      { n: "03", name: "Construir", owner: "IA", text: "Integramos el modelo, el contexto y las herramientas." },
-      { n: "04", name: "Medir", owner: "Dirección", text: "Registramos uso, calidad, incidencias y mejora." }
+      { n: "02", name: "Proteger", owner: "Legal + Sistemas", text: "Definimos acceso, datos, riesgos y control humano." },
+      { n: "03", name: "Construir", owner: "IA", text: "Conectamos el modelo con las fuentes autorizadas y el flujo de trabajo." },
+      { n: "04", name: "Medir", owner: "Dirección", text: "Registramos uso, calidad, incidencias y oportunidades de mejora." }
     ],
-    stack: ["Diseño del caso", "Datos privados", "Permisos", "Evaluación"],
+    stack: ["Diseño del caso", "Fuentes autorizadas", "Permisos", "Evaluación"],
     outputs: ["Caso de uso activo", "Asistente integrado", "Protocolo de calidad"]
   },
   {
     id: "commercial",
     code: "EJEMPLO / 04",
-    label: "El crecimiento está disperso",
+    label: "Marketing, CRM y ventas trabajan sin una lectura común",
     signal: "Marketing genera actividad, ventas gestiona oportunidades y dirección no ve el conjunto.",
     thesis: "Una sola lectura desde el primer contacto hasta la venta.",
     steps: [
       { n: "01", name: "Enfocar", owner: "Estrategia", text: "Alineamos cliente, problema, oferta y criterio de encaje." },
-      { n: "02", name: "Conectar", owner: "Growth", text: "Diseñamos señales, canales y captura de contexto." },
+      { n: "02", name: "Conectar", owner: "Marketing", text: "Diseñamos señales, canales y captura de contexto." },
       { n: "03", name: "Activar", owner: "Ventas", text: "Definimos prioridad, responsable y próximo paso." },
-      { n: "04", name: "Aprender", owner: "Dirección", text: "Unimos actividad, pipeline y decisiones de mejora." }
+      { n: "04", name: "Aprender", owner: "Dirección", text: "Unimos actividad, oportunidades y decisiones de mejora." }
     ],
     stack: ["Oferta", "CRM", "Seguimiento", "Operaciones de venta"],
-    outputs: ["Tesis comercial", "Pipeline gobernado", "Sistema de seguimiento"]
+    outputs: ["Propuesta y criterio de encaje", "Oportunidades con responsable", "Sistema de seguimiento"]
   }
 ];
 
 const buildStandard = [
   { layer: "Decisiones", clarity: "Qué se ha priorizado y por qué", owned: "Responsable, criterio y próxima revisión" },
-  { layer: "Desarrollo", clarity: "Qué hace la solución y qué no", owned: "Configuración, integraciones y código acordado" },
+  { layer: "Desarrollo", clarity: "Qué hace la solución y qué no", owned: "Configuración, integraciones y repositorio entregados" },
   { layer: "Control", clarity: "Cómo se detecta un problema", owned: "Estados, alertas e historial" },
-  { layer: "Continuidad", clarity: "Quién puede mantenerlo", owned: "Documentación y conocimiento en el equipo" }
+  { layer: "Continuidad", clarity: "Quién puede mantenerlo", owned: "Manual, responsables y criterios de cambio" }
 ];
 
 const worldBridgeRoutes = [
-  { id: "markets", number: "01", short: "Mercados", label: "Europa ↔ Américas", color: "#557a61", from: [.2, .56], to: [.57, .34], control: [.38, .13] },
-  { id: "teams", number: "02", short: "Equipos", label: "Dirección ↔ Equipos", color: "#9d8246", from: [.57, .34], to: [.82, .49], control: [.72, .22] },
-  { id: "systems", number: "03", short: "Sistemas", label: "Criterio ↔ Código", color: "#56849a", from: [.2, .56], to: [.82, .49], control: [.51, .05] }
+  { id: "markets", number: "01", short: "Marco", label: "Criterio común · adaptación local", color: "#557a61", from: [.2, .64], to: [.57, .55], control: [.38, .42] },
+  { id: "teams", number: "02", short: "Equipos", label: "Decisión · responsable · plazo", color: "#9d8246", from: [.57, .55], to: [.82, .64], control: [.72, .42] },
+  { id: "systems", number: "03", short: "Sistemas", label: "Datos · flujo · registro", color: "#56849a", from: [.2, .64], to: [.82, .64], control: [.51, .36] }
 ];
 
 function Arrow({ diagonal = false }) {
@@ -315,8 +325,23 @@ function SignatureField({ id, light = false }) {
 }
 
 function LightMotionField({ variant = "one" }) {
+  const fieldRef = useRef(null);
+
+  useEffect(() => {
+    const node = fieldRef.current;
+    if (!node || !("IntersectionObserver" in window)) {
+      node?.classList.add("is-active");
+      return undefined;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      node.classList.toggle("is-active", entry.isIntersecting);
+    }, { rootMargin: "160px 0px" });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={`hp-light-field hp-light-field--${variant}`} aria-hidden="true">
+    <div ref={fieldRef} className={`hp-light-field hp-light-field--${variant}`} aria-hidden="true">
       <i></i><i></i><i></i>
       <span></span><span></span>
     </div>
@@ -489,8 +514,8 @@ function WorldBridgeCanvas({ activeRoute }) {
       bridgeGradient.addColorStop(1, "rgba(8,10,15,0)");
       for (let band = 0; band < 6; band += 1) {
         context.beginPath();
-        context.moveTo(-40, height * (.78 + band * .017));
-        context.quadraticCurveTo(width * .5, height * (.02 + band * .012), width + 40, height * (.76 + band * .017));
+        context.moveTo(-40, height * (.86 + band * .012));
+        context.quadraticCurveTo(width * .5, height * (.36 + band * .01), width + 40, height * (.86 + band * .012));
         context.strokeStyle = bridgeGradient;
         context.lineWidth = band === 0 ? 1.2 : .65;
         context.stroke();
@@ -500,8 +525,9 @@ function WorldBridgeCanvas({ activeRoute }) {
         const pulse = reducedMotion ? 1 : .75 + Math.sin(time * .0007 + node.phase) * .25;
         const mobileX = node.group === 0 ? .08 + node.x * .72 : node.group === 1 ? .18 + node.x * .62 : .22 + node.x * .7;
         const mobileY = node.group === 0 ? .46 + (node.y - .5) * .18 : node.group === 1 ? .64 + (node.y - .5) * .16 : .79 + (node.y - .5) * .18;
+        const desktopY = .34 + node.y * .58;
         const nodeX = (width < 760 ? mobileX : node.x) * width;
-        const nodeY = (width < 760 ? mobileY : node.y) * height;
+        const nodeY = (width < 760 ? mobileY : desktopY) * height;
         context.beginPath();
         context.arc(nodeX + shiftX * node.depth, nodeY + shiftY * node.depth, node.size * pulse, 0, Math.PI * 2);
         context.fillStyle = node.group === 0 ? "#4f6f5b" : node.group === 1 ? "#927844" : "#5a7f90";
@@ -610,16 +636,16 @@ function WorldBridgeSection() {
         <div className="hp-world-bridge__wash" aria-hidden="true"></div>
 
         <div className="hp-world-bridge__intro hp-container">
-          <div className="hp-section-code" data-reveal>Entre continentes · Una dirección</div>
+          <div className="hp-section-code" data-reveal>01 — Coordinación internacional</div>
           <div>
-            <h2 data-reveal>De Madrid al mundo, <em>sin perder contexto por el camino.</em></h2>
-            <p data-reveal>Coordinamos decisiones, equipos y sistemas cuando el trabajo cruza países, proveedores o husos horarios. Un criterio compartido y una ejecución que todos pueden seguir.</p>
+            <h2 data-reveal>Cuando intervienen varios equipos, <em>la información no puede depender de un correo.</em></h2>
+            <p data-reveal>Alineamos responsables, documentación y herramientas para que cada decisión mantenga hechos, acuerdos y versiones entre equipos, proveedores y asesores.</p>
           </div>
         </div>
 
-        <div className="hp-world-bridge__hub hp-world-bridge__hub--west" aria-hidden="true"><i></i><span>AMÉRICAS</span><small>Mercados y equipos</small></div>
+        <div className="hp-world-bridge__hub hp-world-bridge__hub--west" aria-hidden="true"><i></i><span>EQUIPO / ORIGEN</span><small>Contexto local</small></div>
         <div className="hp-world-bridge__hub hp-world-bridge__hub--madrid" aria-hidden="true"><i></i><span>MEDLA / MADRID</span><small>Dirección compartida</small></div>
-        <div className="hp-world-bridge__hub hp-world-bridge__hub--east" aria-hidden="true"><i></i><span>EUROPA · MENA</span><small>Contextos distintos</small></div>
+        <div className="hp-world-bridge__hub hp-world-bridge__hub--east" aria-hidden="true"><i></i><span>EQUIPO / DESTINO</span><small>Ejecución local</small></div>
 
         <div className="hp-world-bridge__controls" role="group" aria-label="Conexiones que coordina MEDLA">
           <div className="hp-world-bridge__active" aria-live="polite"><span>{route.number}</span><strong>{route.label}</strong></div>
@@ -639,7 +665,7 @@ function WorldBridgeSection() {
         </div>
 
         <div className="hp-world-bridge__foot" aria-label="Cómo trabajamos entre mercados">
-          <span>Contexto local</span><i></i><span>Coordinación única</span><i></i><span>Control compartido</span>
+          <span>Contexto local</span><i></i><span>Criterio compartido</span><i></i><span>Ejecución trazable</span>
         </div>
       </div>
     </section>
@@ -698,24 +724,68 @@ function ScrollProgress() {
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef(null);
+  const panelRef = useRef(null);
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") setOpen(false);
-    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("keydown", onKeyDown);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    const main = document.querySelector("main");
+    const footer = document.querySelector("footer");
+    const setBackgroundInert = (value) => {
+      [main, footer].forEach((node) => {
+        if (!node) return;
+        if (value) node.setAttribute("inert", "");
+        else node.removeAttribute("inert");
+      });
+    };
+
+    if (!open) {
+      document.body.style.overflow = "";
+      setBackgroundInert(false);
+      if (wasOpenRef.current) toggleRef.current?.focus();
+      wasOpenRef.current = false;
+      return undefined;
+    }
+
+    wasOpenRef.current = true;
+    document.body.style.overflow = "hidden";
+    setBackgroundInert(true);
+    const panel = panelRef.current;
+    const focusables = panel ? [...panel.querySelectorAll('a[href], button:not([disabled])')] : [];
+    const focusFrame = window.requestAnimationFrame(() => focusables[0]?.focus());
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      setBackgroundInert(false);
+    };
   }, [open]);
 
   const closeMenu = () => setOpen(false);
@@ -733,13 +803,14 @@ function Nav() {
             <a href="#sistema">Cómo intervenimos</a>
             <a href="#capacidades">Qué hacemos</a>
             <a href="#modelo">Cómo trabajamos</a>
-            <a href="nosotros.html">El equipo</a>
+            <a href="nosotros.html">Nosotros</a>
           </div>
 
           <div className="hp-nav__actions">
-            <span className="hp-nav__location"><i></i> Madrid · Europa</span>
+            <span className="hp-nav__location"><i></i> Madrid · España</span>
             <a className="hp-nav__cta" href="contacto.html">Cuéntanos el problema <Arrow /></a>
             <button
+              ref={toggleRef}
               className="hp-nav__toggle"
               type="button"
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
@@ -755,13 +826,14 @@ function Nav() {
 
       <div id="hp-mobile-menu" className={`hp-mobile-menu ${open ? "is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menú de navegación" aria-hidden={!open}>
         <button className="hp-mobile-menu__backdrop" aria-label="Cerrar menú" onClick={closeMenu}></button>
-        <div className="hp-mobile-menu__panel">
+        <div ref={panelRef} className="hp-mobile-menu__panel">
+          <button className="hp-mobile-menu__close" type="button" aria-label="Cerrar menú" onClick={closeMenu}><MenuIcon close /></button>
           <div className="hp-mobile-menu__meta">MEDLA / Navegación</div>
           <div className="hp-mobile-menu__links">
             <a href="#sistema" onClick={closeMenu}><span>01</span> Cómo intervenimos</a>
             <a href="#capacidades" onClick={closeMenu}><span>02</span> Qué hacemos</a>
             <a href="#modelo" onClick={closeMenu}><span>03</span> Cómo trabajamos</a>
-            <a href="nosotros.html" onClick={closeMenu}><span>04</span> El equipo</a>
+            <a href="nosotros.html" onClick={closeMenu}><span>04</span> Nosotros</a>
           </div>
           <a className="hp-button hp-button--gold" href="contacto.html">Cuéntanos el problema <Arrow /></a>
           <div className="hp-mobile-menu__foot">Legal · Operaciones · Software · Ventas</div>
@@ -818,7 +890,7 @@ function MedlaOpsLab() {
     const direction = event.key === 'ArrowRight' ? 1 : -1;
     const next = (index + direction + demoScenarios.length) % demoScenarios.length;
     selectScenario(next);
-    event.currentTarget.parentElement.children[next].focus();
+    event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next]?.focus();
   };
   const moveLight = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -840,7 +912,10 @@ function MedlaOpsLab() {
           <button
             type="button"
             role="tab"
+            id={`ops-tab-${scenario.id}`}
+            aria-controls="ops-panel"
             aria-selected={state.scenario === index}
+            tabIndex={state.scenario === index ? 0 : -1}
             className={state.scenario === index ? "is-active" : ""}
             key={scenario.id}
             onClick={() => selectScenario(index)}
@@ -851,7 +926,7 @@ function MedlaOpsLab() {
         ))}
       </div>
 
-      <div className="hp-ops-lab__context" role="tabpanel">
+      <div id="ops-panel" className="hp-ops-lab__context" role="tabpanel" aria-labelledby={`ops-tab-${demo.id}`}>
         <div><span>{demo.code}</span><span>Demostración interactiva · Datos ficticios</span></div>
         <h2>{demo.title}</h2>
         <p>{demo.summary}</p>
@@ -922,19 +997,19 @@ function Hero() {
             <small>Negocio / Legal / Software</small>
           </div>
           <h1 className="hp-hero__entrance hp-hero__entrance--two">
-            Buenas empresas también se atascan. <em>Nosotros hacemos que vuelvan a avanzar.</em>
+            Cuando una decisión mezcla contratos, procesos y software, <em>MEDLA coordina el trabajo.</em>
           </h1>
           <p className="hp-hero__lead hp-hero__entrance hp-hero__entrance--three">
-            Nos metemos en el trabajo real, encontramos dónde se pierde tiempo o control y lo arreglamos: contratos, procesos, software, IA y ventas.
+            Analizamos el bloqueo con el equipo y ejecutamos la parte necesaria: contratos, procesos, software, automatización o soporte comercial.
           </p>
           <div className="hp-hero__actions hp-hero__entrance hp-hero__entrance--four">
-            <a className="hp-button hp-button--gold" href="contacto.html">Cuéntanos qué se atasca <Arrow /></a>
-            <a className="hp-button hp-button--quiet" href="#sistema">Ver cómo lo atacaríamos <Arrow diagonal /></a>
+            <a className="hp-button hp-button--gold" href="contacto.html">Cuéntanos la decisión <Arrow /></a>
+            <a className="hp-button hp-button--quiet" href="#sistema">Explorar un caso <Arrow diagonal /></a>
           </div>
           <div className="hp-hero__principles hp-hero__entrance hp-hero__entrance--five">
-            <div><span>01</span><strong>Entender</strong><small>Qué ocurre y por qué</small></div>
-            <div><span>02</span><strong>Resolver</strong><small>Diseño, desarrollo e integración</small></div>
-            <div><span>03</span><strong>Entregar</strong><small>Control y documentación para tu equipo</small></div>
+            <div><span>01</span><strong>Diagnosticar</strong><small>Decisiones, esperas y riesgo</small></div>
+            <div><span>02</span><strong>Implantar</strong><small>Proceso, software e integraciones</small></div>
+            <div><span>03</span><strong>Transferir</strong><small>Documentación, responsables y control</small></div>
           </div>
         </div>
 
@@ -942,19 +1017,18 @@ function Hero() {
           <MedlaOpsLab />
         </div>
       </div>
-      <div className="hp-hero__index" aria-hidden="true">01 / 06</div>
     </header>
   );
 }
 
 function SignalRail() {
   return (
-    <div className="hp-system-rail" aria-label="Estándares del sistema MEDLA">
+    <div className="hp-system-rail" aria-label="Principios de diseño MEDLA">
       <div className="hp-container hp-system-rail__inner">
         <div><code>01</code><span>Revisión humana</span></div>
-        <div><code>02</code><span>Registro de cada decisión</span></div>
-        <div><code>03</code><span>Permisos por persona</span></div>
-        <div><code>04</code><span>Documentación para el equipo</span></div>
+        <div><code>02</code><span>Registro de decisiones clave</span></div>
+        <div><code>03</code><span>Permisos según responsabilidad</span></div>
+        <div><code>04</code><span>Documentación acordada</span></div>
       </div>
     </div>
   );
@@ -1003,18 +1077,18 @@ function ThesisSection() {
     const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1;
     const next = (index + direction + decisionCases.length) % decisionCases.length;
     choose(next);
-    event.currentTarget.parentElement.children[next].focus();
+    event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
   return (
     <section className="hp-decision-room hp-section" id="sistema">
       <LightMotionField variant="one" />
       <div className="hp-container">
-        <div className="hp-section-code" data-reveal>01 — Así intervenimos</div>
+        <div className="hp-section-code" data-reveal>02 — Así intervenimos</div>
         <div className="hp-decision-room__heading">
-          <h2 data-reveal>Elige un problema.<br /><em>Te enseñamos cómo lo abordaríamos.</em></h2>
+          <h2 data-reveal>Cuatro problemas frecuentes.<br /><em>Un plan concreto para cada uno.</em></h2>
           <div data-reveal>
-            <p>Cada ejemplo muestra quién interviene, qué se desarrolla y qué recibe el equipo al final.</p>
+            <p>Cada ejemplo detalla responsables, trabajo incluido y entregables.</p>
             <small>Escenarios ilustrativos · No utilizan datos de clientes</small>
           </div>
         </div>
@@ -1028,7 +1102,10 @@ function ThesisSection() {
               <button
                 type="button"
                 role="tab"
+                id={`decision-tab-${decision.id}`}
+                aria-controls="decision-panel"
                 aria-selected={active === index}
+                tabIndex={active === index ? 0 : -1}
                 className={active === index ? "is-active" : ""}
                 key={decision.id}
                 onClick={() => choose(index)}
@@ -1041,7 +1118,7 @@ function ThesisSection() {
             ))}
           </div>
 
-          <div className="hp-decision-room__workspace" role="tabpanel" aria-live="polite">
+          <div id="decision-panel" className="hp-decision-room__workspace" role="tabpanel" aria-labelledby={`decision-tab-${item.id}`} aria-live="polite">
             <div className="hp-decision-room__case-head">
               <div><span>{item.code}</span><b>PLAN DE TRABAJO</b></div>
               <h3>{item.thesis}</h3>
@@ -1085,14 +1162,14 @@ function CapabilityGraphic({ item }) {
           <stop offset="1" stopColor="#8bc7ee" stopOpacity=".22" />
         </linearGradient>
       </defs>
-      <path id={routeId} className="hp-capability-graphic__route" d="M220 210C320 210 330 92 470 92" />
-      <path className="hp-capability-graphic__route hp-capability-graphic__route--two" d="M220 210C340 210 360 210 510 210" />
-      <path className="hp-capability-graphic__route hp-capability-graphic__route--three" d="M220 210C320 210 330 328 470 328" />
+      <path id={routeId} className="hp-capability-graphic__route" d="M220 210C320 210 330 92 470 92" stroke={`url(#capability-gradient-${item.n})`} />
+      <path className="hp-capability-graphic__route hp-capability-graphic__route--two" d="M220 210C340 210 360 210 510 210" stroke={`url(#capability-gradient-${item.n})`} />
+      <path className="hp-capability-graphic__route hp-capability-graphic__route--three" d="M220 210C320 210 330 328 470 328" stroke={`url(#capability-gradient-${item.n})`} />
       <g className="hp-capability-graphic__hub">
         <rect x="54" y="137" width="166" height="146" rx="20" />
-        <text x="82" y="177">UNA TAREA ENTRA</text>
+        <text x="82" y="177">PUNTO DE PARTIDA</text>
         <text x="82" y="218">{item.signal}</text>
-        <text x="82" y="251">Y SALE RESUELTA</text>
+        <text x="82" y="251">ENTREGABLES</text>
       </g>
       {item.deliverables.map((deliverable, index) => {
         const positions = [{ x: 470, y: 62 }, { x: 510, y: 180 }, { x: 470, y: 298 }];
@@ -1123,7 +1200,7 @@ function CapabilitiesSection() {
     const direction = ["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1;
     const next = (index + direction + capabilities.length) % capabilities.length;
     setActiveCapability(next);
-    event.currentTarget.parentElement.children[next].focus();
+    event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
   return (
@@ -1132,10 +1209,10 @@ function CapabilitiesSection() {
       <div className="hp-container">
         <div className="hp-section-intro">
           <div>
-            <div className="hp-section-code" data-reveal>02 — En qué podemos ayudarte</div>
-            <h2 data-reveal>Un equipo para los problemas que <em>cruzan varias áreas.</em></h2>
+            <div className="hp-section-code" data-reveal>03 — Áreas de intervención</div>
+            <h2 data-reveal>Legal, operaciones y tecnología <em>en el mismo plan de trabajo.</em></h2>
           </div>
-          <p data-reveal>Intervenimos solo donde hace falta. A veces es un contrato; otras, un proceso, una integración o todo el recorrido comercial.</p>
+          <p data-reveal>Podemos resolver una pieza concreta o coordinar el conjunto: desde un contrato o una integración hasta el proceso comercial completo.</p>
         </div>
       </div>
 
@@ -1146,11 +1223,13 @@ function CapabilitiesSection() {
               <button
                 type="button"
                 role="tab"
+                id={`capability-tab-${capability.n}`}
+                aria-controls="capability-panel"
                 aria-selected={activeCapability === index}
+                tabIndex={activeCapability === index ? 0 : -1}
                 className={activeCapability === index ? "is-active" : ""}
                 key={capability.n}
                 onClick={() => setActiveCapability(index)}
-                onFocus={() => setActiveCapability(index)}
                 onMouseEnter={() => setActiveCapability(index)}
                 onKeyDown={(event) => handleCapabilityKey(event, index)}
               >
@@ -1158,13 +1237,13 @@ function CapabilitiesSection() {
               </button>
             ))}
           </div>
-          <div className="hp-capability-explorer__stage" role="tabpanel" aria-live="polite">
+          <div id="capability-panel" className="hp-capability-explorer__stage" role="tabpanel" aria-labelledby={`capability-tab-${item.n}`} aria-live="polite">
             <div className="hp-capability-explorer__copy">
               <span>{item.signal} / {item.n}</span>
               <h3>{item.title}</h3>
               <p>{item.desc}</p>
               <div>{item.deliverables.map((deliverable) => <b key={deliverable}>{deliverable}</b>)}</div>
-              <a className="hp-text-link hp-text-link--light" href={item.href}>Ver esta capacidad <Arrow /></a>
+              <a className="hp-text-link hp-text-link--light" href={item.href}>Ver alcance y entregables <Arrow /></a>
             </div>
             <CapabilityGraphic item={item} key={item.n} />
           </div>
@@ -1181,8 +1260,8 @@ function OperatingModelSection() {
       <div className="hp-container hp-model__layout hp-layout-bleed">
         <div className="hp-model__intro">
           <div className="hp-section-code hp-section-code--light" data-reveal>04 — Nuestro trabajo</div>
-          <h2 data-reveal>Entender, resolver y <em>dejarlo en marcha.</em></h2>
-          <p data-reveal>Trabajamos con las personas que conocen el problema y con quienes usarán la solución después. Cada fase termina con algo revisable.</p>
+          <h2 data-reveal>Del diagnóstico a una solución <em>implantada y documentada.</em></h2>
+          <p data-reveal>El trabajo se divide en tres fases. Cada una tiene responsables, criterios de revisión y un entregable concreto.</p>
           <a className="hp-button hp-button--outline" href="contacto.html" data-reveal>Hablar de un proyecto <Arrow /></a>
         </div>
 
@@ -1238,7 +1317,7 @@ function TransferScene() {
       <div className="hp-transfer-scene__head">
         <div><i></i><span>{ordered ? "TRABAJO ORDENADO" : "PUNTO DE PARTIDA"}</span></div>
         <button type="button" aria-pressed={ordered} onClick={() => setOrdered(!ordered)}>
-          <span><i></i></span>{ordered ? "Ver cómo estaba" : "Ordenar el trabajo"}
+          <span><i></i></span>{ordered ? "Volver al punto de partida" : "Ver el resultado"}
         </button>
       </div>
 
@@ -1250,7 +1329,7 @@ function TransferScene() {
 
         <div className="hp-transfer-scene__core">
           <span>MEDLA</span>
-          <strong>{ordered ? "Listo para seguir" : "Trabajo disperso"}</strong>
+          <strong>{ordered ? "Proceso documentado" : "Trabajo disperso"}</strong>
           <small>{ordered ? "Responsables, criterio y control" : "Archivos, mensajes y decisiones sueltas"}</small>
         </div>
 
@@ -1267,8 +1346,8 @@ function TransferScene() {
       </div>
 
       <div className="hp-transfer-scene__foot">
-        <span>Pensado para seguir sin nosotros</span>
-        <p>Quien recibe la solución sabe cómo usarla, revisarla y ampliarla. Esa es la entrega.</p>
+        <span>Criterio de entrega</span>
+        <p>Entregamos responsables, documentación y criterios de cambio para que el equipo pueda operar y ampliar la solución.</p>
       </div>
     </div>
   );
@@ -1281,8 +1360,8 @@ function DifferenceSection() {
       <div className="hp-container">
         <div className="hp-section-code" data-reveal>05 — Qué queda al terminar</div>
         <div className="hp-difference__statement" data-reveal>
-          <span>Lo que te llevas</span>
-          <h2>La solución funciona. <em>Tu equipo sabe mantenerla.</em></h2>
+          <span>Condiciones de entrega</span>
+          <h2>Las decisiones, la documentación y el control <em>quedan en tu equipo.</em></h2>
         </div>
       </div>
       <div className="hp-stage-bleed">
@@ -1294,13 +1373,23 @@ function DifferenceSection() {
 
 function FinalCTA() {
   const issues = [
-    { id: "operacion", label: "Aprobaciones y tareas manuales", summary: "procesos y aprobaciones que todavía requieren perseguir a varias personas" },
-    { id: "legal", label: "Un contrato o riesgo legal", summary: "una decisión bloqueada por contratos, obligaciones o falta de criterio compartido" },
-    { id: "ia", label: "IA que no pasa de la prueba", summary: "un caso de IA que aún no funciona con los datos, permisos y controles necesarios" },
-    { id: "growth", label: "Ventas sin seguimiento claro", summary: "oportunidades comerciales sin responsable ni siguiente paso visible" }
+    { id: "operacion", label: "Aprobaciones y tareas manuales", summary: "un proceso de aprobaciones manuales sin un estado ni un responsable claros" },
+    { id: "legal", label: "Un contrato o riesgo legal", summary: "una decisión bloqueada por contratos, obligaciones o versiones dispersas" },
+    { id: "ia", label: "IA que no pasa de la prueba", summary: "un caso de IA que aún no opera con fuentes, permisos y controles definidos" },
+    { id: "growth", label: "Ventas sin seguimiento claro", summary: "oportunidades comerciales sin responsable o próxima acción" }
   ];
   const [selectedIssue, setSelectedIssue] = useState(issues[0]);
   const whatsappText = encodeURIComponent(`Hola, quiero hablar con MEDLA. Mi punto de partida es: ${selectedIssue.summary}.`);
+  const handleIssueKey = (event, index) => {
+    if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    let next = index;
+    if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = issues.length - 1;
+    else next = (index + (["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1) + issues.length) % issues.length;
+    setSelectedIssue(issues[next]);
+    event.currentTarget.parentElement.querySelectorAll('[role="radio"]')[next]?.focus();
+  };
 
   return (
     <section className="hp-final-cta hp-section" id="contacto">
@@ -1309,26 +1398,28 @@ function FinalCTA() {
           <SignatureField id="cta" light />
           <div className="hp-final-cta__content">
             <div className="hp-kicker hp-kicker--dark" data-reveal>
-              <span>Primera conversación</span>
-              <small>Iremos al asunto desde el principio</small>
+              <span>06 — Primera conversación</span>
+              <small>Empezamos por un caso concreto</small>
             </div>
-            <h2 data-reveal>Cuéntanos dónde <em>se atasca el trabajo.</em></h2>
-            <p data-reveal>Elige el tema que más se parece a tu situación. Lo usaremos para preparar la primera conversación.</p>
+            <h2 data-reveal>Empecemos por <em>una decisión concreta.</em></h2>
+            <p data-reveal>Selecciona el punto de partida. Lo añadiremos al formulario para que no tengas que empezar desde cero.</p>
             <div className="hp-final-cta__actions" data-reveal>
-              <a className="hp-button hp-button--ink" href={`contacto.html?context=${selectedIssue.id}`}>Enviar este contexto <Arrow /></a>
+              <a className="hp-button hp-button--ink" href={`contacto.html?context=${selectedIssue.id}`}>Continuar con este tema <Arrow /></a>
               <a className="hp-button hp-button--light-quiet" href={`https://api.whatsapp.com/send/?phone=34641576772&text=${whatsappText}&type=phone_number&app_absent=0`} target="_blank" rel="noopener noreferrer">WhatsApp <Arrow diagonal /></a>
             </div>
           </div>
           <div className="hp-brief-composer" data-reveal style={{ "--delay": "100ms" }}>
-            <div className="hp-brief-composer__head"><span>¿POR DÓNDE EMPEZAMOS?</span><span>{String(issues.findIndex((issue) => issue.id === selectedIssue.id) + 1).padStart(2, "0")} seleccionado</span></div>
+            <div className="hp-brief-composer__head"><span>¿POR DÓNDE EMPEZAMOS?</span><span>{String(issues.findIndex((issue) => issue.id === selectedIssue.id) + 1).padStart(2, "0")} / 04</span></div>
             <div className="hp-brief-composer__options" role="radiogroup" aria-label="Punto de partida">
               {issues.map((issue, index) => (
                 <button
                   type="button"
                   role="radio"
                   aria-checked={selectedIssue.id === issue.id}
+                  tabIndex={selectedIssue.id === issue.id ? 0 : -1}
                   className={selectedIssue.id === issue.id ? "is-selected" : ""}
                   onClick={() => setSelectedIssue(issue)}
+                  onKeyDown={(event) => handleIssueKey(event, index)}
                   key={issue.id}
                 >
                   <span>0{index + 1}</span>{issue.label}<i></i>
@@ -1336,12 +1427,12 @@ function FinalCTA() {
               ))}
             </div>
             <div className="hp-brief-composer__summary" aria-live="polite">
-              <span>LO QUE NOS CONTARÁS</span>
+              <span>PUNTO DE PARTIDA</span>
               <p>“Nuestro punto de partida es {selectedIssue.summary}.”</p>
-              <div><i></i> Listo para enviar</div>
+              <div><i></i> Se añadirá al formulario</div>
             </div>
           </div>
-          <div className="hp-final-cta__note">Primera conversación sin compromiso · Confidencialidad desde el inicio</div>
+          <div className="hp-final-cta__note">Información preparada desde el inicio · Siguiente paso definido con el equipo</div>
         </div>
       </div>
     </section>
@@ -1363,13 +1454,14 @@ function Footer() {
               <a href="#sistema">Cómo intervenimos</a>
               <a href="#capacidades">Qué hacemos</a>
               <a href="#modelo">Cómo trabajamos</a>
-              <a href="nosotros.html">El equipo</a>
-              <a href="blog.html">Perspectivas</a>
+              <a href="nosotros.html">Cómo nos organizamos</a>
+              <a href="blog.html">Cuadernos</a>
             </div>
             <div>
               <h3>Contacto</h3>
               <a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a>
               <a href="tel:+34641576772">+34 641 576 772</a>
+              <a href="privacidad.html">Privacidad</a>
               <span>Madrid, España</span>
             </div>
           </div>
@@ -1377,7 +1469,7 @@ function Footer() {
         <div className="hp-footer__bottom">
           <span>© 2026 MEDLA Empresas</span>
           <span>Legal · Operaciones · Software · Ventas</span>
-          <span>Aviso de privacidad · Términos</span>
+          <span>Madrid · España</span>
         </div>
       </div>
     </footer>
