@@ -251,6 +251,12 @@ const buildStandard = [
   { layer: "Continuidad", clarity: "Quién puede mantenerlo", owned: "Documentación y conocimiento en el equipo" }
 ];
 
+const worldBridgeRoutes = [
+  { id: "markets", number: "01", short: "Mercados", label: "Europa ↔ Américas", color: "#557a61", from: [.2, .56], to: [.57, .34], control: [.38, .13] },
+  { id: "teams", number: "02", short: "Equipos", label: "Dirección ↔ Equipos", color: "#9d8246", from: [.57, .34], to: [.82, .49], control: [.72, .22] },
+  { id: "systems", number: "03", short: "Sistemas", label: "Criterio ↔ Código", color: "#56849a", from: [.2, .56], to: [.82, .49], control: [.51, .05] }
+];
+
 function Arrow({ diagonal = false }) {
   return (
     <svg className="hp-arrow" viewBox="0 0 20 20" aria-hidden="true">
@@ -305,6 +311,338 @@ function SignatureField({ id, light = false }) {
         </>
       )}
     </svg>
+  );
+}
+
+function LightMotionField({ variant = "one" }) {
+  return (
+    <div className={`hp-light-field hp-light-field--${variant}`} aria-hidden="true">
+      <i></i><i></i><i></i>
+      <span></span><span></span>
+    </div>
+  );
+}
+
+function WorldBridgeCanvas({ activeRoute }) {
+  const canvasRef = useRef(null);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const stage = canvas?.parentElement;
+    const section = canvas?.closest(".hp-world-bridge");
+    const context = canvas?.getContext("2d");
+    if (!canvas || !stage || !section || !context) return undefined;
+
+    let width = 1;
+    let height = 1;
+    let dpr = 1;
+    let frame = 0;
+    let visible = true;
+    let lastFrame = 0;
+    let nodes = [];
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
+    const pointer = { x: .5, y: .5, targetX: .5, targetY: .5 };
+    const active = worldBridgeRoutes[activeRoute];
+    const polygons = [
+      [[.07,.29],[.12,.18],[.22,.16],[.3,.25],[.31,.36],[.25,.44],[.28,.55],[.23,.77],[.17,.84],[.13,.66],[.08,.55]],
+      [[.47,.27],[.52,.18],[.62,.18],[.68,.27],[.64,.36],[.69,.45],[.65,.7],[.57,.8],[.51,.64],[.48,.45]],
+      [[.64,.24],[.74,.16],[.9,.2],[.96,.33],[.9,.48],[.8,.55],[.71,.45],[.65,.36]]
+    ];
+
+    const seededRandom = (() => {
+      let seed = 90817;
+      return () => {
+        seed = (seed * 1664525 + 1013904223) % 4294967296;
+        return seed / 4294967296;
+      };
+    })();
+
+    const pointInPolygon = (point, polygon) => {
+      let inside = false;
+      for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+        const [xi, yi] = polygon[i];
+        const [xj, yj] = polygon[j];
+        const intersects = ((yi > point[1]) !== (yj > point[1])) &&
+          (point[0] < ((xj - xi) * (point[1] - yi)) / ((yj - yi) || .0001) + xi);
+        if (intersects) inside = !inside;
+      }
+      return inside;
+    };
+
+    const buildNodes = () => {
+      const counts = width < 700 ? [38, 34, 38] : [78, 62, 82];
+      const nextNodes = [];
+      polygons.forEach((polygon, polygonIndex) => {
+        const xs = polygon.map((point) => point[0]);
+        const ys = polygon.map((point) => point[1]);
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        const minY = Math.min(...ys);
+        const maxY = Math.max(...ys);
+        let attempts = 0;
+        while (nextNodes.filter((node) => node.group === polygonIndex).length < counts[polygonIndex] && attempts < 4000) {
+          attempts += 1;
+          const candidate = [minX + seededRandom() * (maxX - minX), minY + seededRandom() * (maxY - minY)];
+          if (!pointInPolygon(candidate, polygon)) continue;
+          nextNodes.push({
+            x: candidate[0],
+            y: candidate[1],
+            group: polygonIndex,
+            size: .55 + seededRandom() * 1.25,
+            alpha: .07 + seededRandom() * .2,
+            depth: .25 + seededRandom() * .9,
+            phase: seededRandom() * Math.PI * 2
+          });
+        }
+      });
+      nodes = nextNodes;
+    };
+
+    const resize = () => {
+      const rect = stage.getBoundingClientRect();
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildNodes();
+      draw(performance.now());
+    };
+
+    const quadraticPoint = (from, control, to, progress) => {
+      const inverse = 1 - progress;
+      return {
+        x: inverse * inverse * from.x + 2 * inverse * progress * control.x + progress * progress * to.x,
+        y: inverse * inverse * from.y + 2 * inverse * progress * control.y + progress * progress * to.y
+      };
+    };
+
+    const resolveRoute = (route) => {
+      if (width >= 760) return route;
+      const mobileRoutes = {
+        markets: { from: [.32, .51], to: [.5, .67], control: [.72, .56] },
+        teams: { from: [.5, .67], to: [.68, .82], control: [.22, .75] },
+        systems: { from: [.32, .51], to: [.68, .82], control: [.82, .67] }
+      };
+      return { ...route, ...mobileRoutes[route.id] };
+    };
+
+    const drawCurve = (route, opacity, lineWidth, reveal = 1) => {
+      route = resolveRoute(route);
+      const from = { x: route.from[0] * width, y: route.from[1] * height };
+      const to = { x: route.to[0] * width, y: route.to[1] * height };
+      const control = { x: route.control[0] * width, y: route.control[1] * height };
+      const parts = Math.max(10, Math.round(72 * reveal));
+      context.beginPath();
+      context.moveTo(from.x, from.y);
+      for (let i = 1; i <= parts; i += 1) {
+        const point = quadraticPoint(from, control, to, (i / parts) * reveal);
+        context.lineTo(point.x, point.y);
+      }
+      context.strokeStyle = route.color;
+      context.globalAlpha = opacity;
+      context.lineWidth = lineWidth;
+      context.stroke();
+      context.globalAlpha = 1;
+      return { from, to, control };
+    };
+
+    const drawPacket = (route, progress, intensity = 1) => {
+      route = resolveRoute(route);
+      const from = { x: route.from[0] * width, y: route.from[1] * height };
+      const to = { x: route.to[0] * width, y: route.to[1] * height };
+      const control = { x: route.control[0] * width, y: route.control[1] * height };
+      for (let trail = 8; trail >= 0; trail -= 1) {
+        const trailProgress = Math.max(0, progress - trail * .009);
+        const point = quadraticPoint(from, control, to, trailProgress);
+        context.beginPath();
+        context.arc(point.x, point.y, trail === 0 ? 4.2 : Math.max(.5, 2.5 - trail * .23), 0, Math.PI * 2);
+        context.fillStyle = route.color;
+        context.globalAlpha = intensity * (trail === 0 ? .95 : (8 - trail) * .045);
+        context.fill();
+      }
+      context.globalAlpha = 1;
+    };
+
+    const draw = (time) => {
+      context.clearRect(0, 0, width, height);
+      pointer.x += (pointer.targetX - pointer.x) * .045;
+      pointer.y += (pointer.targetY - pointer.y) * .045;
+      const sectionRect = section.getBoundingClientRect();
+      const scrollSpan = Math.max(1, section.offsetHeight - window.innerHeight);
+      const scrollProgress = reducedMotion || width < 760 ? 1 : Math.max(0, Math.min(1, -sectionRect.top / scrollSpan));
+      section.style.setProperty("--bridge-progress", scrollProgress.toFixed(3));
+      const shiftX = (pointer.x - .5) * 18;
+      const shiftY = (pointer.y - .5) * 12;
+
+      context.save();
+      context.translate(shiftX, shiftY);
+
+      const bridgeGradient = context.createLinearGradient(0, 0, width, 0);
+      bridgeGradient.addColorStop(0, "rgba(8,10,15,0)");
+      bridgeGradient.addColorStop(.48, "rgba(8,10,15,.09)");
+      bridgeGradient.addColorStop(.7, "rgba(85,122,97,.1)");
+      bridgeGradient.addColorStop(1, "rgba(8,10,15,0)");
+      for (let band = 0; band < 6; band += 1) {
+        context.beginPath();
+        context.moveTo(-40, height * (.78 + band * .017));
+        context.quadraticCurveTo(width * .5, height * (.02 + band * .012), width + 40, height * (.76 + band * .017));
+        context.strokeStyle = bridgeGradient;
+        context.lineWidth = band === 0 ? 1.2 : .65;
+        context.stroke();
+      }
+
+      nodes.forEach((node) => {
+        const pulse = reducedMotion ? 1 : .75 + Math.sin(time * .0007 + node.phase) * .25;
+        const mobileX = node.group === 0 ? .08 + node.x * .72 : node.group === 1 ? .18 + node.x * .62 : .22 + node.x * .7;
+        const mobileY = node.group === 0 ? .46 + (node.y - .5) * .18 : node.group === 1 ? .64 + (node.y - .5) * .16 : .79 + (node.y - .5) * .18;
+        const nodeX = (width < 760 ? mobileX : node.x) * width;
+        const nodeY = (width < 760 ? mobileY : node.y) * height;
+        context.beginPath();
+        context.arc(nodeX + shiftX * node.depth, nodeY + shiftY * node.depth, node.size * pulse, 0, Math.PI * 2);
+        context.fillStyle = node.group === 0 ? "#4f6f5b" : node.group === 1 ? "#927844" : "#5a7f90";
+        context.globalAlpha = node.alpha;
+        context.fill();
+      });
+      context.globalAlpha = 1;
+
+      worldBridgeRoutes.forEach((route, index) => {
+        const isActive = index === activeRoute;
+        const reveal = isActive ? .13 + scrollProgress * .87 : .16 + scrollProgress * .4;
+        drawCurve(route, isActive ? .66 : .12, isActive ? 1.7 : .75, reveal);
+      });
+
+      const routePoints = drawCurve(active, .18, 7, .13 + scrollProgress * .87);
+      [routePoints.from, routePoints.to].forEach((point, index) => {
+        const glow = context.createRadialGradient(point.x, point.y, 0, point.x, point.y, index === 0 ? 44 : 58);
+        glow.addColorStop(0, `${active.color}55`);
+        glow.addColorStop(1, `${active.color}00`);
+        context.fillStyle = glow;
+        context.beginPath();
+        context.arc(point.x, point.y, index === 0 ? 44 : 58, 0, Math.PI * 2);
+        context.fill();
+      });
+
+      if (!reducedMotion && scrollProgress > .1) {
+        const usable = Math.max(.08, scrollProgress);
+        for (let packet = 0; packet < 4; packet += 1) {
+          const progress = ((time * .000085 + packet * .255) % 1) * usable;
+          drawPacket(active, progress, .7 + packet * .07);
+        }
+      } else {
+        drawPacket(active, .72, .75);
+      }
+
+      context.restore();
+    };
+
+    const loop = (time) => {
+      frame = 0;
+      if (!visible || document.hidden || reducedMotion) return;
+      const fpsInterval = width < 760 ? 1000 / 30 : 1000 / 60;
+      if (time - lastFrame >= fpsInterval) {
+        lastFrame = time;
+        draw(time);
+      }
+      frame = window.requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+      if (!frame && visible && !document.hidden && !reducedMotion) frame = window.requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = 0;
+    };
+    const onPointerMove = (event) => {
+      if (!finePointer) return;
+      const rect = stage.getBoundingClientRect();
+      pointer.targetX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      pointer.targetY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+    };
+    const onPointerLeave = () => {
+      pointer.targetX = .5;
+      pointer.targetY = .5;
+    };
+    const onVisibility = () => {
+      visible = !document.hidden && section.getBoundingClientRect().bottom > 0 && section.getBoundingClientRect().top < window.innerHeight;
+      if (visible) start(); else stop();
+    };
+
+    const resizeObserver = new ResizeObserver(resize);
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) start(); else stop();
+    }, { rootMargin: "100px" });
+    resizeObserver.observe(stage);
+    intersectionObserver.observe(section);
+    stage.addEventListener("pointermove", onPointerMove, { passive: true });
+    stage.addEventListener("pointerleave", onPointerLeave);
+    document.addEventListener("visibilitychange", onVisibility);
+    resize();
+    if (reducedMotion) draw(performance.now()); else start();
+
+    return () => {
+      stop();
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+      stage.removeEventListener("pointermove", onPointerMove);
+      stage.removeEventListener("pointerleave", onPointerLeave);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [activeRoute, reducedMotion]);
+
+  return <canvas ref={canvasRef} className="hp-world-bridge__canvas" aria-hidden="true"></canvas>;
+}
+
+function WorldBridgeSection() {
+  const [activeRoute, setActiveRoute] = useState(0);
+  const route = worldBridgeRoutes[activeRoute];
+
+  return (
+    <section className="hp-world-bridge hp-section" id="puente">
+      <div className="hp-world-bridge__sticky">
+        <WorldBridgeCanvas activeRoute={activeRoute} />
+        <div className="hp-world-bridge__wash" aria-hidden="true"></div>
+
+        <div className="hp-world-bridge__intro hp-container">
+          <div className="hp-section-code" data-reveal>Entre continentes · Una dirección</div>
+          <div>
+            <h2 data-reveal>De Madrid al mundo, <em>sin perder contexto por el camino.</em></h2>
+            <p data-reveal>Coordinamos decisiones, equipos y sistemas cuando el trabajo cruza países, proveedores o husos horarios. Un criterio compartido y una ejecución que todos pueden seguir.</p>
+          </div>
+        </div>
+
+        <div className="hp-world-bridge__hub hp-world-bridge__hub--west" aria-hidden="true"><i></i><span>AMÉRICAS</span><small>Mercados y equipos</small></div>
+        <div className="hp-world-bridge__hub hp-world-bridge__hub--madrid" aria-hidden="true"><i></i><span>MEDLA / MADRID</span><small>Dirección compartida</small></div>
+        <div className="hp-world-bridge__hub hp-world-bridge__hub--east" aria-hidden="true"><i></i><span>EUROPA · MENA</span><small>Contextos distintos</small></div>
+
+        <div className="hp-world-bridge__controls" role="group" aria-label="Conexiones que coordina MEDLA">
+          <div className="hp-world-bridge__active" aria-live="polite"><span>{route.number}</span><strong>{route.label}</strong></div>
+          {worldBridgeRoutes.map((item, index) => (
+            <button
+              type="button"
+              aria-pressed={activeRoute === index}
+              className={activeRoute === index ? "is-active" : ""}
+              key={item.id}
+              onClick={() => setActiveRoute(index)}
+              onMouseEnter={() => setActiveRoute(index)}
+              onFocus={() => setActiveRoute(index)}
+            >
+              <span>{item.number}</span>{item.short}<i></i>
+            </button>
+          ))}
+        </div>
+
+        <div className="hp-world-bridge__foot" aria-label="Cómo trabajamos entre mercados">
+          <span>Contexto local</span><i></i><span>Coordinación única</span><i></i><span>Control compartido</span>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -604,7 +942,7 @@ function Hero() {
           <MedlaOpsLab />
         </div>
       </div>
-      <div className="hp-hero__index" aria-hidden="true">01 / 05</div>
+      <div className="hp-hero__index" aria-hidden="true">01 / 06</div>
     </header>
   );
 }
@@ -670,6 +1008,7 @@ function ThesisSection() {
 
   return (
     <section className="hp-decision-room hp-section" id="sistema">
+      <LightMotionField variant="one" />
       <div className="hp-container">
         <div className="hp-section-code" data-reveal>01 — Así intervenimos</div>
         <div className="hp-decision-room__heading">
@@ -679,7 +1018,9 @@ function ThesisSection() {
             <small>Escenarios ilustrativos · No utilizan datos de clientes</small>
           </div>
         </div>
+      </div>
 
+      <div className="hp-stage-bleed">
         <div className="hp-decision-room__shell" data-reveal>
           <div className="hp-decision-room__nav" role="tablist" aria-label="Bloqueos empresariales">
             <div className="hp-decision-room__nav-head"><span>PROBLEMA</span><span>4 ejemplos</span></div>
@@ -787,6 +1128,7 @@ function CapabilitiesSection() {
 
   return (
     <section className="hp-capabilities hp-section" id="capacidades">
+      <LightMotionField variant="two" />
       <div className="hp-container">
         <div className="hp-section-intro">
           <div>
@@ -795,7 +1137,9 @@ function CapabilitiesSection() {
           </div>
           <p data-reveal>Intervenimos solo donde hace falta. A veces es un contrato; otras, un proceso, una integración o todo el recorrido comercial.</p>
         </div>
+      </div>
 
+      <div className="hp-stage-bleed">
         <div className="hp-capability-explorer" data-reveal>
           <div className="hp-capability-explorer__nav" role="tablist" aria-label="Capacidades MEDLA">
             {capabilities.map((capability, index) => (
@@ -834,9 +1178,9 @@ function OperatingModelSection() {
   return (
     <section className="hp-model hp-section" id="modelo">
       <div className="hp-model__ambient" aria-hidden="true"></div>
-      <div className="hp-container hp-model__layout">
+      <div className="hp-container hp-model__layout hp-layout-bleed">
         <div className="hp-model__intro">
-          <div className="hp-section-code hp-section-code--light" data-reveal>03 — Nuestro trabajo</div>
+          <div className="hp-section-code hp-section-code--light" data-reveal>04 — Nuestro trabajo</div>
           <h2 data-reveal>Entender, resolver y <em>dejarlo en marcha.</em></h2>
           <p data-reveal>Trabajamos con las personas que conocen el problema y con quienes usarán la solución después. Cada fase termina con algo revisable.</p>
           <a className="hp-button hp-button--outline" href="contacto.html" data-reveal>Hablar de un proyecto <Arrow /></a>
@@ -933,12 +1277,15 @@ function TransferScene() {
 function DifferenceSection() {
   return (
     <section className="hp-difference hp-section" id="resultado">
+      <LightMotionField variant="three" />
       <div className="hp-container">
-        <div className="hp-section-code" data-reveal>04 — Qué queda al terminar</div>
+        <div className="hp-section-code" data-reveal>05 — Qué queda al terminar</div>
         <div className="hp-difference__statement" data-reveal>
           <span>Lo que te llevas</span>
           <h2>La solución funciona. <em>Tu equipo sabe mantenerla.</em></h2>
         </div>
+      </div>
+      <div className="hp-stage-bleed">
         <TransferScene />
       </div>
     </section>
@@ -957,7 +1304,7 @@ function FinalCTA() {
 
   return (
     <section className="hp-final-cta hp-section" id="contacto">
-      <div className="hp-container">
+      <div className="hp-stage-bleed hp-stage-bleed--flush">
         <div className="hp-final-cta__card">
           <SignatureField id="cta" light />
           <div className="hp-final-cta__content">
@@ -1046,6 +1393,7 @@ function App() {
       <main id="contenido">
         <Hero />
         <SignalRail />
+        <WorldBridgeSection />
         <ThesisSection />
         <CapabilitiesSection />
         <OperatingModelSection />
