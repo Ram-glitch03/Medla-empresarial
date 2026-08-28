@@ -348,9 +348,21 @@ function LightMotionField({ variant = "one" }) {
   );
 }
 
-function WorldBridgeCanvas({ activeRoute }) {
+function WorldBridgeCanvas({ activeRoute, onSceneChange }) {
   const canvasRef = useRef(null);
+  const activeRouteRef = useRef(activeRoute);
+  const onSceneChangeRef = useRef(onSceneChange);
+  const redrawRef = useRef(null);
   const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    activeRouteRef.current = activeRoute;
+    if (reducedMotion) redrawRef.current?.();
+  }, [activeRoute, reducedMotion]);
+
+  useEffect(() => {
+    onSceneChangeRef.current = onSceneChange;
+  }, [onSceneChange]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -365,10 +377,15 @@ function WorldBridgeCanvas({ activeRoute }) {
     let frame = 0;
     let visible = true;
     let lastFrame = 0;
+    let sequenceStartTime = null;
+    let scrollAssist = 0;
+    let furthestProgress = reducedMotion ? 1 : 0;
+    let lastCssProgress = -1;
+    let lastSceneKey = "";
     let nodes = [];
     const finePointer = window.matchMedia("(pointer: fine)").matches;
     const pointer = { x: .5, y: .5, targetX: .5, targetY: .5 };
-    const active = worldBridgeRoutes[activeRoute];
+    const sequenceDuration = () => width < 760 ? 6200 : 7600;
     const polygons = [
       [[.07,.29],[.12,.18],[.22,.16],[.3,.25],[.31,.36],[.25,.44],[.28,.55],[.23,.77],[.17,.84],[.13,.66],[.08,.55]],
       [[.47,.27],[.52,.18],[.62,.18],[.68,.27],[.64,.36],[.69,.45],[.65,.7],[.57,.8],[.51,.64],[.48,.45]],
@@ -493,14 +510,54 @@ function WorldBridgeCanvas({ activeRoute }) {
       context.globalAlpha = 1;
     };
 
+    const smoothstep = (start, end, value) => {
+      const amount = Math.max(0, Math.min(1, (value - start) / (end - start)));
+      return amount * amount * (3 - 2 * amount);
+    };
+
     const draw = (time) => {
       context.clearRect(0, 0, width, height);
       pointer.x += (pointer.targetX - pointer.x) * .045;
       pointer.y += (pointer.targetY - pointer.y) * .045;
+
       const sectionRect = section.getBoundingClientRect();
       const scrollSpan = Math.max(1, section.offsetHeight - window.innerHeight);
-      const scrollProgress = reducedMotion || width < 760 ? 1 : Math.max(0, Math.min(1, -sectionRect.top / scrollSpan));
-      section.style.setProperty("--bridge-progress", scrollProgress.toFixed(3));
+      const scrollProgress = reducedMotion ? 1 : Math.max(0, Math.min(1, -sectionRect.top / scrollSpan));
+
+      if (!reducedMotion) {
+        const readyToStart = sectionRect.bottom > 0 && sectionRect.top < window.innerHeight * .34;
+        if (visible && readyToStart && !document.hidden && sequenceStartTime === null) sequenceStartTime = time;
+        const autoProgress = sequenceStartTime === null ? 0 : Math.min(1, Math.max(0, (time - sequenceStartTime) / sequenceDuration()));
+        if (scrollProgress > scrollAssist) scrollAssist += (scrollProgress - scrollAssist) * .085;
+        furthestProgress = Math.max(furthestProgress, autoProgress, scrollAssist);
+      }
+
+      const sceneProgress = reducedMotion ? 1 : furthestProgress;
+      const routeReveal = [
+        smoothstep(.02, .34, sceneProgress),
+        smoothstep(.28, .66, sceneProgress),
+        smoothstep(.56, .94, sceneProgress)
+      ];
+      const hasStarted = reducedMotion || sequenceStartTime !== null || scrollAssist > .001;
+      const sceneStep = hasStarted ? (sceneProgress < .3 ? 0 : sceneProgress < .61 ? 1 : 2) : -1;
+      const completedRoutes = routeReveal.filter((value) => value >= .995).length;
+      const sceneComplete = sceneProgress >= .985;
+      const sceneKey = `${sceneStep}:${completedRoutes}:${sceneComplete}`;
+
+      if (Math.abs(sceneProgress - lastCssProgress) > .003 || (sceneProgress === 1 && lastCssProgress !== 1)) {
+        lastCssProgress = sceneProgress;
+        section.style.setProperty("--bridge-progress", sceneProgress.toFixed(3));
+        section.style.setProperty("--bridge-west", Math.max(.16, routeReveal[0]).toFixed(3));
+        section.style.setProperty("--bridge-madrid", Math.max(.16, routeReveal[0], routeReveal[1]).toFixed(3));
+        section.style.setProperty("--bridge-east", Math.max(.16, routeReveal[1], routeReveal[2]).toFixed(3));
+      }
+      if (sceneKey !== lastSceneKey) {
+        lastSceneKey = sceneKey;
+        section.dataset.bridgeAct = String(sceneStep);
+        section.dataset.bridgeComplete = String(sceneComplete);
+        onSceneChangeRef.current?.({ step: sceneStep, completed: completedRoutes, complete: sceneComplete });
+      }
+
       const shiftX = (pointer.x - .5) * 18;
       const shiftY = (pointer.y - .5) * 12;
 
@@ -521,6 +578,11 @@ function WorldBridgeCanvas({ activeRoute }) {
         context.stroke();
       }
 
+      const groupActivation = [
+        .22 + routeReveal[0] * .78,
+        .22 + Math.max(routeReveal[0], routeReveal[1]) * .78,
+        .22 + Math.max(routeReveal[1], routeReveal[2]) * .78
+      ];
       nodes.forEach((node) => {
         const pulse = reducedMotion ? 1 : .75 + Math.sin(time * .0007 + node.phase) * .25;
         const mobileX = node.group === 0 ? .08 + node.x * .72 : node.group === 1 ? .18 + node.x * .62 : .22 + node.x * .7;
@@ -531,40 +593,75 @@ function WorldBridgeCanvas({ activeRoute }) {
         context.beginPath();
         context.arc(nodeX + shiftX * node.depth, nodeY + shiftY * node.depth, node.size * pulse, 0, Math.PI * 2);
         context.fillStyle = node.group === 0 ? "#4f6f5b" : node.group === 1 ? "#927844" : "#5a7f90";
-        context.globalAlpha = node.alpha;
+        context.globalAlpha = node.alpha * groupActivation[node.group] * 1.35;
         context.fill();
       });
       context.globalAlpha = 1;
 
+      const activeIndex = activeRouteRef.current;
       worldBridgeRoutes.forEach((route, index) => {
-        const isActive = index === activeRoute;
-        const reveal = isActive ? .13 + scrollProgress * .87 : .16 + scrollProgress * .4;
-        drawCurve(route, isActive ? .66 : .12, isActive ? 1.7 : .75, reveal);
-      });
+        const reveal = routeReveal[index];
+        const isActive = index === activeIndex;
+        const points = drawCurve(route, .08, .7, 1);
 
-      const routePoints = drawCurve(active, .18, 7, .13 + scrollProgress * .87);
-      [routePoints.from, routePoints.to].forEach((point, index) => {
-        const glow = context.createRadialGradient(point.x, point.y, 0, point.x, point.y, index === 0 ? 44 : 58);
-        glow.addColorStop(0, `${active.color}55`);
-        glow.addColorStop(1, `${active.color}00`);
-        context.fillStyle = glow;
-        context.beginPath();
-        context.arc(point.x, point.y, index === 0 ? 44 : 58, 0, Math.PI * 2);
-        context.fill();
-      });
+        if (reveal > .002) {
+          drawCurve(route, (isActive ? .13 : .075) * reveal, isActive ? 10 : 7, reveal);
+          drawCurve(route, (isActive ? .78 : .5) * (.3 + reveal * .7), isActive ? 2.15 : 1.35, reveal);
 
-      if (!reducedMotion && scrollProgress > .1) {
-        const usable = Math.max(.08, scrollProgress);
-        for (let packet = 0; packet < 4; packet += 1) {
-          const progress = ((time * .000085 + packet * .255) % 1) * usable;
-          drawPacket(active, progress, .7 + packet * .07);
+          const glowRadius = width < 760 ? 42 : 62;
+          const glow = context.createRadialGradient(points.to.x, points.to.y, 0, points.to.x, points.to.y, glowRadius);
+          glow.addColorStop(0, `${route.color}${isActive ? "52" : "30"}`);
+          glow.addColorStop(1, `${route.color}00`);
+          context.fillStyle = glow;
+          context.globalAlpha = .2 + reveal * .8;
+          context.beginPath();
+          context.arc(points.to.x, points.to.y, glowRadius, 0, Math.PI * 2);
+          context.fill();
+          context.globalAlpha = 1;
+
+          if (!reducedMotion && reveal < .995) {
+            drawPacket(route, reveal, isActive ? 1 : .82);
+          }
+
+          if (!reducedMotion && reveal > .78 && reveal < .998) {
+            const arrival = smoothstep(.78, 1, reveal);
+            context.beginPath();
+            context.arc(points.to.x, points.to.y, 10 + arrival * (width < 760 ? 42 : 66), 0, Math.PI * 2);
+            context.strokeStyle = route.color;
+            context.lineWidth = 1.2;
+            context.globalAlpha = Math.sin(arrival * Math.PI) * .34;
+            context.stroke();
+            context.globalAlpha = 1;
+          }
+
+          if (!reducedMotion && reveal >= .995) {
+            for (let packet = 0; packet < 2; packet += 1) {
+              const packetProgress = (time * (.000055 + index * .000006) + packet * .5 + index * .17) % 1;
+              drawPacket(route, packetProgress, isActive ? .74 : .48);
+            }
+          }
         }
-      } else {
-        drawPacket(active, .72, .75);
+      });
+
+      if (sceneComplete && !reducedMotion) {
+        const madrid = resolveRoute(worldBridgeRoutes[0]).to;
+        const center = { x: madrid[0] * width, y: madrid[1] * height };
+        for (let ring = 0; ring < 2; ring += 1) {
+          const phase = (time * .00011 + ring * .5) % 1;
+          context.beginPath();
+          context.arc(center.x, center.y, 22 + phase * (width < 760 ? 120 : 240), 0, Math.PI * 2);
+          context.strokeStyle = "#557a61";
+          context.lineWidth = 1;
+          context.globalAlpha = (1 - phase) * .12;
+          context.stroke();
+        }
+        context.globalAlpha = 1;
       }
 
       context.restore();
     };
+
+    redrawRef.current = () => draw(performance.now());
 
     const loop = (time) => {
       frame = 0;
@@ -596,12 +693,14 @@ function WorldBridgeCanvas({ activeRoute }) {
     };
     const onVisibility = () => {
       visible = !document.hidden && section.getBoundingClientRect().bottom > 0 && section.getBoundingClientRect().top < window.innerHeight;
+      section.dataset.bridgeVisible = String(visible);
       if (visible) start(); else stop();
     };
 
     const resizeObserver = new ResizeObserver(resize);
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
+      section.dataset.bridgeVisible = String(visible);
       if (visible) start(); else stop();
     }, { rootMargin: "100px" });
     resizeObserver.observe(stage);
@@ -609,31 +708,39 @@ function WorldBridgeCanvas({ activeRoute }) {
     stage.addEventListener("pointermove", onPointerMove, { passive: true });
     stage.addEventListener("pointerleave", onPointerLeave);
     document.addEventListener("visibilitychange", onVisibility);
+    const initialRect = section.getBoundingClientRect();
+    visible = initialRect.bottom > -100 && initialRect.top < window.innerHeight + 100;
+    section.dataset.bridgeVisible = String(visible);
     resize();
     if (reducedMotion) draw(performance.now()); else start();
 
     return () => {
       stop();
+      redrawRef.current = null;
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       stage.removeEventListener("pointermove", onPointerMove);
       stage.removeEventListener("pointerleave", onPointerLeave);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [activeRoute, reducedMotion]);
+  }, [reducedMotion]);
 
   return <canvas ref={canvasRef} className="hp-world-bridge__canvas" aria-hidden="true"></canvas>;
 }
 
 function WorldBridgeSection() {
-  const [activeRoute, setActiveRoute] = useState(0);
+  const [scene, setScene] = useState({ step: -1, completed: 0, complete: false });
+  const [previewRoute, setPreviewRoute] = useState(null);
+  const [pinnedRoute, setPinnedRoute] = useState(null);
+  const activeRoute = previewRoute ?? pinnedRoute ?? Math.max(scene.step, 0);
   const route = worldBridgeRoutes[activeRoute];
 
   return (
-    <section className="hp-world-bridge hp-section" id="puente">
+    <section className="hp-world-bridge hp-section" id="puente" data-bridge-act={scene.step} data-bridge-complete={scene.complete}>
       <div className="hp-world-bridge__sticky">
-        <WorldBridgeCanvas activeRoute={activeRoute} />
+        <WorldBridgeCanvas activeRoute={activeRoute} onSceneChange={setScene} />
         <div className="hp-world-bridge__wash" aria-hidden="true"></div>
+        <div className="hp-world-bridge__core" aria-hidden="true"><i></i><i></i><i></i><span>RED OPERATIVA</span></div>
 
         <div className="hp-world-bridge__intro hp-container">
           <div className="hp-section-code" data-reveal>01 — Coordinación internacional</div>
@@ -648,16 +755,22 @@ function WorldBridgeSection() {
         <div className="hp-world-bridge__hub hp-world-bridge__hub--east" aria-hidden="true"><i></i><span>EQUIPO / DESTINO</span><small>Ejecución local</small></div>
 
         <div className="hp-world-bridge__controls" role="group" aria-label="Conexiones que coordina MEDLA">
-          <div className="hp-world-bridge__active" aria-live="polite"><span>{route.number}</span><strong>{route.label}</strong></div>
+          <div className="hp-world-bridge__active" aria-live={pinnedRoute !== null ? "polite" : "off"}>
+            <span>{route.number}</span><strong>{route.label}</strong>
+            <small><i></i>{scene.complete ? "Red completa · en operación" : scene.step < 0 ? "Lista para conectar" : `Secuencia 0${scene.step + 1} / 03`}</small>
+          </div>
           {worldBridgeRoutes.map((item, index) => (
             <button
               type="button"
-              aria-pressed={activeRoute === index}
-              className={activeRoute === index ? "is-active" : ""}
+              aria-pressed={pinnedRoute === index}
+              className={`${activeRoute === index ? "is-active" : ""} ${index < scene.completed ? "is-complete" : ""}`.trim()}
               key={item.id}
-              onClick={() => setActiveRoute(index)}
-              onMouseEnter={() => setActiveRoute(index)}
-              onFocus={() => setActiveRoute(index)}
+              style={{ "--bridge-route-color": item.color }}
+              onClick={() => setPinnedRoute((current) => current === index ? null : index)}
+              onMouseEnter={() => setPreviewRoute(index)}
+              onMouseLeave={() => setPreviewRoute(null)}
+              onFocus={() => setPreviewRoute(index)}
+              onBlur={() => setPreviewRoute(null)}
             >
               <span>{item.number}</span>{item.short}<i></i>
             </button>
