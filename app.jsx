@@ -262,9 +262,9 @@ const buildStandard = [
 ];
 
 const worldBridgeRoutes = [
-  { id: "markets", number: "01", short: "Marco", label: "Criterio común · adaptación local", color: "#557a61", from: [.2, .64], to: [.57, .55], control: [.38, .42] },
-  { id: "teams", number: "02", short: "Equipos", label: "Decisión · responsable · plazo", color: "#9d8246", from: [.57, .55], to: [.82, .64], control: [.72, .42] },
-  { id: "systems", number: "03", short: "Sistemas", label: "Datos · flujo · registro", color: "#56849a", from: [.2, .64], to: [.82, .64], control: [.51, .36] }
+  { id: "intake", number: "01", short: "Información", label: "Correos · documentos · bloqueos", color: "#56849a" },
+  { id: "dossier", number: "02", short: "Criterio", label: "Versión válida · criterio · decisión", color: "#557a61" },
+  { id: "action", number: "03", short: "Acción", label: "Responsable · plazo · siguiente paso", color: "#9d8246" }
 ];
 
 function Arrow({ diagonal = false }) {
@@ -348,178 +348,34 @@ function LightMotionField({ variant = "one" }) {
   );
 }
 
-function WorldBridgeCanvas({ activeRoute, onSceneChange }) {
-  const canvasRef = useRef(null);
-  const activeRouteRef = useRef(activeRoute);
+function WorldBridgeSequence({ onSceneChange }) {
+  const markerRef = useRef(null);
   const onSceneChangeRef = useRef(onSceneChange);
-  const redrawRef = useRef(null);
   const reducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    activeRouteRef.current = activeRoute;
-    if (reducedMotion) redrawRef.current?.();
-  }, [activeRoute, reducedMotion]);
 
   useEffect(() => {
     onSceneChangeRef.current = onSceneChange;
   }, [onSceneChange]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const stage = canvas?.parentElement;
-    const section = canvas?.closest(".hp-world-bridge");
-    const context = canvas?.getContext("2d");
-    if (!canvas || !stage || !section || !context) return undefined;
+    const marker = markerRef.current;
+    const section = marker?.closest(".hp-world-bridge");
+    if (!marker || !section) return undefined;
 
-    let width = 1;
-    let height = 1;
-    let dpr = 1;
     let frame = 0;
-    let visible = true;
-    let lastFrame = 0;
+    let visible = false;
     let sequenceStartTime = null;
     let scrollAssist = 0;
     let furthestProgress = reducedMotion ? 1 : 0;
     let lastCssProgress = -1;
     let lastSceneKey = "";
-    let nodes = [];
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    const pointer = { x: .5, y: .5, targetX: .5, targetY: .5 };
-    const sequenceDuration = () => width < 760 ? 6200 : 7600;
-    const polygons = [
-      [[.07,.29],[.12,.18],[.22,.16],[.3,.25],[.31,.36],[.25,.44],[.28,.55],[.23,.77],[.17,.84],[.13,.66],[.08,.55]],
-      [[.47,.27],[.52,.18],[.62,.18],[.68,.27],[.64,.36],[.69,.45],[.65,.7],[.57,.8],[.51,.64],[.48,.45]],
-      [[.64,.24],[.74,.16],[.9,.2],[.96,.33],[.9,.48],[.8,.55],[.71,.45],[.65,.36]]
-    ];
-
-    const seededRandom = (() => {
-      let seed = 90817;
-      return () => {
-        seed = (seed * 1664525 + 1013904223) % 4294967296;
-        return seed / 4294967296;
-      };
-    })();
-
-    const pointInPolygon = (point, polygon) => {
-      let inside = false;
-      for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-        const [xi, yi] = polygon[i];
-        const [xj, yj] = polygon[j];
-        const intersects = ((yi > point[1]) !== (yj > point[1])) &&
-          (point[0] < ((xj - xi) * (point[1] - yi)) / ((yj - yi) || .0001) + xi);
-        if (intersects) inside = !inside;
-      }
-      return inside;
-    };
-
-    const buildNodes = () => {
-      const counts = width < 700 ? [38, 34, 38] : [78, 62, 82];
-      const nextNodes = [];
-      polygons.forEach((polygon, polygonIndex) => {
-        const xs = polygon.map((point) => point[0]);
-        const ys = polygon.map((point) => point[1]);
-        const minX = Math.min(...xs);
-        const maxX = Math.max(...xs);
-        const minY = Math.min(...ys);
-        const maxY = Math.max(...ys);
-        let attempts = 0;
-        while (nextNodes.filter((node) => node.group === polygonIndex).length < counts[polygonIndex] && attempts < 4000) {
-          attempts += 1;
-          const candidate = [minX + seededRandom() * (maxX - minX), minY + seededRandom() * (maxY - minY)];
-          if (!pointInPolygon(candidate, polygon)) continue;
-          nextNodes.push({
-            x: candidate[0],
-            y: candidate[1],
-            group: polygonIndex,
-            size: .55 + seededRandom() * 1.25,
-            alpha: .07 + seededRandom() * .2,
-            depth: .25 + seededRandom() * .9,
-            phase: seededRandom() * Math.PI * 2
-          });
-        }
-      });
-      nodes = nextNodes;
-    };
-
-    const resize = () => {
-      const rect = stage.getBoundingClientRect();
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      buildNodes();
-      draw(performance.now());
-    };
-
-    const quadraticPoint = (from, control, to, progress) => {
-      const inverse = 1 - progress;
-      return {
-        x: inverse * inverse * from.x + 2 * inverse * progress * control.x + progress * progress * to.x,
-        y: inverse * inverse * from.y + 2 * inverse * progress * control.y + progress * progress * to.y
-      };
-    };
-
-    const resolveRoute = (route) => {
-      if (width >= 760) return route;
-      const mobileRoutes = {
-        markets: { from: [.32, .51], to: [.5, .67], control: [.72, .56] },
-        teams: { from: [.5, .67], to: [.68, .82], control: [.22, .75] },
-        systems: { from: [.32, .51], to: [.68, .82], control: [.82, .67] }
-      };
-      return { ...route, ...mobileRoutes[route.id] };
-    };
-
-    const drawCurve = (route, opacity, lineWidth, reveal = 1) => {
-      route = resolveRoute(route);
-      const from = { x: route.from[0] * width, y: route.from[1] * height };
-      const to = { x: route.to[0] * width, y: route.to[1] * height };
-      const control = { x: route.control[0] * width, y: route.control[1] * height };
-      const parts = Math.max(10, Math.round(72 * reveal));
-      context.beginPath();
-      context.moveTo(from.x, from.y);
-      for (let i = 1; i <= parts; i += 1) {
-        const point = quadraticPoint(from, control, to, (i / parts) * reveal);
-        context.lineTo(point.x, point.y);
-      }
-      context.strokeStyle = route.color;
-      context.globalAlpha = opacity;
-      context.lineWidth = lineWidth;
-      context.stroke();
-      context.globalAlpha = 1;
-      return { from, to, control };
-    };
-
-    const drawPacket = (route, progress, intensity = 1) => {
-      route = resolveRoute(route);
-      const from = { x: route.from[0] * width, y: route.from[1] * height };
-      const to = { x: route.to[0] * width, y: route.to[1] * height };
-      const control = { x: route.control[0] * width, y: route.control[1] * height };
-      for (let trail = 8; trail >= 0; trail -= 1) {
-        const trailProgress = Math.max(0, progress - trail * .009);
-        const point = quadraticPoint(from, control, to, trailProgress);
-        context.beginPath();
-        context.arc(point.x, point.y, trail === 0 ? 4.2 : Math.max(.5, 2.5 - trail * .23), 0, Math.PI * 2);
-        context.fillStyle = route.color;
-        context.globalAlpha = intensity * (trail === 0 ? .95 : (8 - trail) * .045);
-        context.fill();
-      }
-      context.globalAlpha = 1;
-    };
 
     const smoothstep = (start, end, value) => {
       const amount = Math.max(0, Math.min(1, (value - start) / (end - start)));
       return amount * amount * (3 - 2 * amount);
     };
 
-    const draw = (time) => {
-      context.clearRect(0, 0, width, height);
-      pointer.x += (pointer.targetX - pointer.x) * .045;
-      pointer.y += (pointer.targetY - pointer.y) * .045;
-
+    const render = (time) => {
       const sectionRect = section.getBoundingClientRect();
       const scrollSpan = Math.max(1, section.offsetHeight - window.innerHeight);
       const scrollProgress = reducedMotion ? 1 : Math.max(0, Math.min(1, -sectionRect.top / scrollSpan));
@@ -527,153 +383,46 @@ function WorldBridgeCanvas({ activeRoute, onSceneChange }) {
       if (!reducedMotion) {
         const readyToStart = sectionRect.bottom > 0 && sectionRect.top < window.innerHeight * .34;
         if (visible && readyToStart && !document.hidden && sequenceStartTime === null) sequenceStartTime = time;
-        const autoProgress = sequenceStartTime === null ? 0 : Math.min(1, Math.max(0, (time - sequenceStartTime) / sequenceDuration()));
-        if (scrollProgress > scrollAssist) scrollAssist += (scrollProgress - scrollAssist) * .085;
+        const duration = window.innerWidth < 760 ? 5800 : 6900;
+        const autoProgress = sequenceStartTime === null ? 0 : Math.min(1, Math.max(0, (time - sequenceStartTime) / duration));
+        if (scrollProgress > scrollAssist) scrollAssist += (scrollProgress - scrollAssist) * .08;
         furthestProgress = Math.max(furthestProgress, autoProgress, scrollAssist);
       }
 
       const sceneProgress = reducedMotion ? 1 : furthestProgress;
-      const routeReveal = [
-        smoothstep(.02, .34, sceneProgress),
-        smoothstep(.28, .66, sceneProgress),
-        smoothstep(.56, .94, sceneProgress)
+      const stageReveal = [
+        smoothstep(.01, .3, sceneProgress),
+        smoothstep(.27, .64, sceneProgress),
+        smoothstep(.58, .94, sceneProgress)
       ];
       const hasStarted = reducedMotion || sequenceStartTime !== null || scrollAssist > .001;
-      const sceneStep = hasStarted ? (sceneProgress < .3 ? 0 : sceneProgress < .61 ? 1 : 2) : -1;
-      const completedRoutes = routeReveal.filter((value) => value >= .995).length;
+      const sceneStep = hasStarted ? (sceneProgress < .3 ? 0 : sceneProgress < .62 ? 1 : 2) : -1;
+      const completedStages = stageReveal.filter((value) => value >= .995).length;
       const sceneComplete = sceneProgress >= .985;
-      const sceneKey = `${sceneStep}:${completedRoutes}:${sceneComplete}`;
+      const sceneKey = `${sceneStep}:${completedStages}:${sceneComplete}`;
 
       if (Math.abs(sceneProgress - lastCssProgress) > .003 || (sceneProgress === 1 && lastCssProgress !== 1)) {
         lastCssProgress = sceneProgress;
         section.style.setProperty("--bridge-progress", sceneProgress.toFixed(3));
-        section.style.setProperty("--bridge-west", Math.max(.16, routeReveal[0]).toFixed(3));
-        section.style.setProperty("--bridge-madrid", Math.max(.16, routeReveal[0], routeReveal[1]).toFixed(3));
-        section.style.setProperty("--bridge-east", Math.max(.16, routeReveal[1], routeReveal[2]).toFixed(3));
+        section.style.setProperty("--bridge-intake", stageReveal[0].toFixed(3));
+        section.style.setProperty("--bridge-dossier", stageReveal[1].toFixed(3));
+        section.style.setProperty("--bridge-action", stageReveal[2].toFixed(3));
       }
+
       if (sceneKey !== lastSceneKey) {
         lastSceneKey = sceneKey;
         section.dataset.bridgeAct = String(sceneStep);
         section.dataset.bridgeComplete = String(sceneComplete);
-        onSceneChangeRef.current?.({ step: sceneStep, completed: completedRoutes, complete: sceneComplete });
+        onSceneChangeRef.current?.({ step: sceneStep, completed: completedStages, complete: sceneComplete });
       }
-
-      const shiftX = (pointer.x - .5) * 18;
-      const shiftY = (pointer.y - .5) * 12;
-
-      context.save();
-      context.translate(shiftX, shiftY);
-
-      const bridgeGradient = context.createLinearGradient(0, 0, width, 0);
-      bridgeGradient.addColorStop(0, "rgba(8,10,15,0)");
-      bridgeGradient.addColorStop(.48, "rgba(8,10,15,.09)");
-      bridgeGradient.addColorStop(.7, "rgba(85,122,97,.1)");
-      bridgeGradient.addColorStop(1, "rgba(8,10,15,0)");
-      for (let band = 0; band < 6; band += 1) {
-        context.beginPath();
-        context.moveTo(-40, height * (.86 + band * .012));
-        context.quadraticCurveTo(width * .5, height * (.36 + band * .01), width + 40, height * (.86 + band * .012));
-        context.strokeStyle = bridgeGradient;
-        context.lineWidth = band === 0 ? 1.2 : .65;
-        context.stroke();
-      }
-
-      const groupActivation = [
-        .22 + routeReveal[0] * .78,
-        .22 + Math.max(routeReveal[0], routeReveal[1]) * .78,
-        .22 + Math.max(routeReveal[1], routeReveal[2]) * .78
-      ];
-      nodes.forEach((node) => {
-        const pulse = reducedMotion ? 1 : .75 + Math.sin(time * .0007 + node.phase) * .25;
-        const mobileX = node.group === 0 ? .08 + node.x * .72 : node.group === 1 ? .18 + node.x * .62 : .22 + node.x * .7;
-        const mobileY = node.group === 0 ? .46 + (node.y - .5) * .18 : node.group === 1 ? .64 + (node.y - .5) * .16 : .79 + (node.y - .5) * .18;
-        const desktopY = .34 + node.y * .58;
-        const nodeX = (width < 760 ? mobileX : node.x) * width;
-        const nodeY = (width < 760 ? mobileY : desktopY) * height;
-        context.beginPath();
-        context.arc(nodeX + shiftX * node.depth, nodeY + shiftY * node.depth, node.size * pulse, 0, Math.PI * 2);
-        context.fillStyle = node.group === 0 ? "#4f6f5b" : node.group === 1 ? "#927844" : "#5a7f90";
-        context.globalAlpha = node.alpha * groupActivation[node.group] * 1.35;
-        context.fill();
-      });
-      context.globalAlpha = 1;
-
-      const activeIndex = activeRouteRef.current;
-      worldBridgeRoutes.forEach((route, index) => {
-        const reveal = routeReveal[index];
-        const isActive = index === activeIndex;
-        const points = drawCurve(route, .08, .7, 1);
-
-        if (reveal > .002) {
-          drawCurve(route, (isActive ? .13 : .075) * reveal, isActive ? 10 : 7, reveal);
-          drawCurve(route, (isActive ? .78 : .5) * (.3 + reveal * .7), isActive ? 2.15 : 1.35, reveal);
-
-          const glowRadius = width < 760 ? 42 : 62;
-          const glow = context.createRadialGradient(points.to.x, points.to.y, 0, points.to.x, points.to.y, glowRadius);
-          glow.addColorStop(0, `${route.color}${isActive ? "52" : "30"}`);
-          glow.addColorStop(1, `${route.color}00`);
-          context.fillStyle = glow;
-          context.globalAlpha = .2 + reveal * .8;
-          context.beginPath();
-          context.arc(points.to.x, points.to.y, glowRadius, 0, Math.PI * 2);
-          context.fill();
-          context.globalAlpha = 1;
-
-          if (!reducedMotion && reveal < .995) {
-            drawPacket(route, reveal, isActive ? 1 : .82);
-          }
-
-          if (!reducedMotion && reveal > .78 && reveal < .998) {
-            const arrival = smoothstep(.78, 1, reveal);
-            context.beginPath();
-            context.arc(points.to.x, points.to.y, 10 + arrival * (width < 760 ? 42 : 66), 0, Math.PI * 2);
-            context.strokeStyle = route.color;
-            context.lineWidth = 1.2;
-            context.globalAlpha = Math.sin(arrival * Math.PI) * .34;
-            context.stroke();
-            context.globalAlpha = 1;
-          }
-
-          if (!reducedMotion && reveal >= .995) {
-            for (let packet = 0; packet < 2; packet += 1) {
-              const packetProgress = (time * (.000055 + index * .000006) + packet * .5 + index * .17) % 1;
-              drawPacket(route, packetProgress, isActive ? .74 : .48);
-            }
-          }
-        }
-      });
-
-      if (sceneComplete && !reducedMotion) {
-        const madrid = resolveRoute(worldBridgeRoutes[0]).to;
-        const center = { x: madrid[0] * width, y: madrid[1] * height };
-        for (let ring = 0; ring < 2; ring += 1) {
-          const phase = (time * .00011 + ring * .5) % 1;
-          context.beginPath();
-          context.arc(center.x, center.y, 22 + phase * (width < 760 ? 120 : 240), 0, Math.PI * 2);
-          context.strokeStyle = "#557a61";
-          context.lineWidth = 1;
-          context.globalAlpha = (1 - phase) * .12;
-          context.stroke();
-        }
-        context.globalAlpha = 1;
-      }
-
-      context.restore();
     };
-
-    redrawRef.current = () => draw(performance.now());
 
     const loop = (time) => {
       frame = 0;
       if (!visible || document.hidden || reducedMotion) return;
-      const fpsInterval = width < 760 ? 1000 / 30 : 1000 / 60;
-      if (time - lastFrame >= fpsInterval) {
-        lastFrame = time;
-        draw(time);
-      }
+      render(time);
       frame = window.requestAnimationFrame(loop);
     };
-
     const start = () => {
       if (!frame && visible && !document.hidden && !reducedMotion) frame = window.requestAnimationFrame(loop);
     };
@@ -681,51 +430,35 @@ function WorldBridgeCanvas({ activeRoute, onSceneChange }) {
       if (frame) window.cancelAnimationFrame(frame);
       frame = 0;
     };
-    const onPointerMove = (event) => {
-      if (!finePointer) return;
-      const rect = stage.getBoundingClientRect();
-      pointer.targetX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-      pointer.targetY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-    };
-    const onPointerLeave = () => {
-      pointer.targetX = .5;
-      pointer.targetY = .5;
-    };
     const onVisibility = () => {
-      visible = !document.hidden && section.getBoundingClientRect().bottom > 0 && section.getBoundingClientRect().top < window.innerHeight;
+      const rect = section.getBoundingClientRect();
+      visible = !document.hidden && rect.bottom > -80 && rect.top < window.innerHeight + 80;
       section.dataset.bridgeVisible = String(visible);
       if (visible) start(); else stop();
     };
 
-    const resizeObserver = new ResizeObserver(resize);
-    const intersectionObserver = new IntersectionObserver(([entry]) => {
+    const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       section.dataset.bridgeVisible = String(visible);
       if (visible) start(); else stop();
-    }, { rootMargin: "100px" });
-    resizeObserver.observe(stage);
-    intersectionObserver.observe(section);
-    stage.addEventListener("pointermove", onPointerMove, { passive: true });
-    stage.addEventListener("pointerleave", onPointerLeave);
+    }, { rootMargin: "80px" });
+
+    observer.observe(section);
     document.addEventListener("visibilitychange", onVisibility);
     const initialRect = section.getBoundingClientRect();
-    visible = initialRect.bottom > -100 && initialRect.top < window.innerHeight + 100;
+    visible = initialRect.bottom > -80 && initialRect.top < window.innerHeight + 80;
     section.dataset.bridgeVisible = String(visible);
-    resize();
-    if (reducedMotion) draw(performance.now()); else start();
+    render(performance.now());
+    if (!reducedMotion) start();
 
     return () => {
       stop();
-      redrawRef.current = null;
-      resizeObserver.disconnect();
-      intersectionObserver.disconnect();
-      stage.removeEventListener("pointermove", onPointerMove);
-      stage.removeEventListener("pointerleave", onPointerLeave);
+      observer.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [reducedMotion]);
 
-  return <canvas ref={canvasRef} className="hp-world-bridge__canvas" aria-hidden="true"></canvas>;
+  return <span ref={markerRef} className="hp-world-bridge__sequence" aria-hidden="true"></span>;
 }
 
 function WorldBridgeSection() {
@@ -736,32 +469,121 @@ function WorldBridgeSection() {
   const route = worldBridgeRoutes[activeRoute];
 
   return (
-    <section className="hp-world-bridge hp-section" id="puente" data-bridge-act={scene.step} data-bridge-complete={scene.complete}>
+    <section
+      className="hp-world-bridge hp-section"
+      id="puente"
+      data-bridge-act={scene.step}
+      data-bridge-complete={scene.complete}
+      data-bridge-focus={activeRoute}
+    >
       <div className="hp-world-bridge__sticky">
-        <WorldBridgeCanvas activeRoute={activeRoute} onSceneChange={setScene} />
-        <div className="hp-world-bridge__wash" aria-hidden="true"></div>
-        <div className="hp-world-bridge__core" aria-hidden="true"><i></i><i></i><i></i><span>RED OPERATIVA</span></div>
+        <WorldBridgeSequence onSceneChange={setScene} />
+        <div className="hp-world-bridge__wash" aria-hidden="true"><i></i><i></i><i></i></div>
 
         <div className="hp-world-bridge__intro hp-container">
           <div className="hp-section-code" data-reveal>01 — Coordinación internacional</div>
           <div>
             <h2 data-reveal>Cuando intervienen varios equipos, <em>la información no puede depender de un correo.</em></h2>
-            <p data-reveal>Alineamos responsables, documentación y herramientas para que cada decisión mantenga hechos, acuerdos y versiones entre equipos, proveedores y asesores.</p>
+            <p data-reveal>Un alta de proveedor puede mezclar un correo, un contrato y un bloqueo en el ERP. Reunimos ese contexto, fijamos la versión válida y dejamos la decisión con responsable, plazo y siguiente acción.</p>
           </div>
         </div>
 
-        <div className="hp-world-bridge__hub hp-world-bridge__hub--west" aria-hidden="true"><i></i><span>EQUIPO / ORIGEN</span><small>Contexto local</small></div>
-        <div className="hp-world-bridge__hub hp-world-bridge__hub--madrid" aria-hidden="true"><i></i><span>MEDLA / MADRID</span><small>Dirección compartida</small></div>
-        <div className="hp-world-bridge__hub hp-world-bridge__hub--east" aria-hidden="true"><i></i><span>EQUIPO / DESTINO</span><small>Ejecución local</small></div>
+        <div className="hp-world-bridge__flow hp-container" aria-label="Ejemplo ilustrativo de cómo MEDLA convierte información dispersa en una acción asignada">
+          <header className="hp-world-bridge__flow-head">
+            <span>Ejemplo ilustrativo</span>
+            <strong>Alta de un proveedor internacional</strong>
+            <small>De información dispersa a una acción que alguien puede ejecutar</small>
+          </header>
 
-        <div className="hp-world-bridge__controls" role="group" aria-label="Conexiones que coordina MEDLA">
+          <div className="hp-world-bridge__scene">
+            <article className="hp-world-bridge__source" id="bridge-phase-intake">
+              <header>
+                <span>01 / Información de partida</span>
+                <h3>La información llega separada</h3>
+              </header>
+              <ul>
+                <li>
+                  <span>Email / equipo local</span>
+                  <strong>¿Quién valida las condiciones?</strong>
+                  <small>Sin responsable asignado</small>
+                </li>
+                <li>
+                  <span>Documento / proveedor</span>
+                  <strong>Contrato_proveedor_v7.pdf</strong>
+                  <small>Versión pendiente de confirmar</small>
+                </li>
+                <li>
+                  <span>ERP / administración</span>
+                  <strong>Alta bloqueada</strong>
+                  <small>Falta documentación fiscal</small>
+                </li>
+              </ul>
+            </article>
+
+            <div className="hp-world-bridge__transfer hp-world-bridge__transfer--one" aria-hidden="true">
+              <span>Reunir y contrastar</span><i></i><b></b>
+            </div>
+
+            <article className="hp-world-bridge__dossier" id="bridge-phase-dossier">
+              <header>
+                <span>MEDLA / Expediente único</span>
+                <strong>Alta de proveedor</strong>
+                <small><i></i> Coordinación activa</small>
+              </header>
+              <dl>
+                <div>
+                  <dt>Versión válida</dt>
+                  <dd>Contrato v7</dd>
+                </div>
+                <div>
+                  <dt>Condición para continuar</dt>
+                  <dd>Certificado fiscal vigente</dd>
+                </div>
+                <div>
+                  <dt>Decisión identificada</dt>
+                  <dd>Validar condiciones comerciales</dd>
+                </div>
+              </dl>
+              <p>Hechos reunidos <i></i> criterio aplicado <i></i> decisión visible</p>
+            </article>
+
+            <div className="hp-world-bridge__transfer hp-world-bridge__transfer--two" aria-hidden="true">
+              <span>Asignar y ejecutar</span><i></i><b></b>
+            </div>
+
+            <article className="hp-world-bridge__result" id="bridge-phase-action">
+              <header>
+                <span>03 / Resultado</span>
+                <h3>La decisión ya tiene dueño</h3>
+              </header>
+              <dl>
+                <div>
+                  <dt>Responsable</dt>
+                  <dd>Dirección de Operaciones</dd>
+                </div>
+                <div>
+                  <dt>Plazo</dt>
+                  <dd>Viernes · 12:00</dd>
+                </div>
+                <div>
+                  <dt>Próxima acción</dt>
+                  <dd>Aprobar condiciones y registrar el alta</dd>
+                </div>
+              </dl>
+              <p><i></i> Listo para ejecutar</p>
+            </article>
+          </div>
+        </div>
+
+        <div className="hp-world-bridge__controls" role="group" aria-label="Fases del ejemplo de coordinación">
           <div className="hp-world-bridge__active" aria-live={pinnedRoute !== null ? "polite" : "off"}>
             <span>{route.number}</span><strong>{route.label}</strong>
-            <small><i></i>{scene.complete ? "Red completa · en operación" : scene.step < 0 ? "Lista para conectar" : `Secuencia 0${scene.step + 1} / 03`}</small>
+            <small><i></i>{scene.complete ? "Caso resuelto · listo para ejecutar" : scene.step < 0 ? "Ejemplo preparado" : `Secuencia 0${scene.step + 1} / 03`}</small>
           </div>
           {worldBridgeRoutes.map((item, index) => (
             <button
               type="button"
+              aria-controls={`bridge-phase-${item.id}`}
               aria-pressed={pinnedRoute === index}
               className={`${activeRoute === index ? "is-active" : ""} ${index < scene.completed ? "is-complete" : ""}`.trim()}
               key={item.id}
@@ -777,8 +599,8 @@ function WorldBridgeSection() {
           ))}
         </div>
 
-        <div className="hp-world-bridge__foot" aria-label="Cómo trabajamos entre mercados">
-          <span>Contexto local</span><i></i><span>Criterio compartido</span><i></i><span>Ejecución trazable</span>
+        <div className="hp-world-bridge__foot" aria-label="Cómo convertimos información en ejecución">
+          <span>Información dispersa</span><i></i><span>Expediente común</span><i></i><span>Acción asignada</span>
         </div>
       </div>
     </section>
