@@ -22,19 +22,19 @@ const MEDLA_MAP = [
   {
     number: "02",
     title: "Legal y estructura",
-    text: "Decisiones societarias, contratos y financiación preparados para poder ejecutar.",
+    text: "Estructura societaria, contratos y financiación coordinados para que el proyecto pueda avanzar.",
     links: [
       ["Asesoría legal", "asesoria-legal.html"],
       ["Constitución de sociedades", "constitucion.html"],
-      ["Inversiones y financiación", "inversiones.html"],
+      ["Inversión y financiación", "inversiones.html"],
     ],
   },
   {
     number: "03",
-    title: "Crecimiento y captación",
-    text: "Web, contenido, CRM y seguimiento conectados a un proceso comercial medible.",
+    title: "Posicionamiento, captación y CRM",
+    text: "Mensaje, puntos de entrada, CRM y seguimiento conectados a un proceso comercial medible.",
     links: [
-      ["Crecimiento digital", "redes-sociales.html"],
+      ["Posicionamiento, captación y CRM", "redes-sociales.html"],
       ["Mapa de servicios", "servicios.html"],
       ["Solicitar diagnóstico", "contacto.html?path=diagnostico"],
     ],
@@ -46,6 +46,42 @@ const MEDLA_MAP = [
     links: [
       ["Nuestro modelo", "nosotros.html"],
       ["Cuadernos", "blog.html"],
+      ["Privacidad", "privacidad.html"],
+    ],
+  },
+];
+
+const MEDLA_FOOTER_GROUPS = [
+  {
+    title: "Operación y sistemas",
+    links: [
+      ["Digitalización", "digitalizacion.html"],
+      ["Automatización", "automatizacion.html"],
+      ["Agentes de IA", "agentes.html"],
+      ["Formularios y datos", "jotform.html"],
+    ],
+  },
+  {
+    title: "Legal y estructura",
+    links: [
+      ["Asesoría legal", "asesoria-legal.html"],
+      ["Constitución de sociedades", "constitucion.html"],
+      ["Inversión y financiación", "inversiones.html"],
+    ],
+  },
+  {
+    title: "Posicionamiento, captación y CRM",
+    links: [
+      ["Posicionamiento, captación y CRM", "redes-sociales.html"],
+      ["Mapa de servicios", "servicios.html"],
+      ["Cuadernos", "blog.html"],
+    ],
+  },
+  {
+    title: "MEDLA",
+    links: [
+      ["Cómo trabajamos", "nosotros.html"],
+      ["Solicitar diagnóstico", "contacto.html?path=diagnostico"],
       ["Privacidad", "privacidad.html"],
     ],
   },
@@ -135,7 +171,7 @@ function MedlaSiteHeader({ current = "", context = "", ctaHref = "" }) {
 
         <div className="medla-site-actions">
           <a className="medla-site-cta" href={resolvedCta} aria-current={current === "contact" ? "page" : undefined}>Solicitar diagnóstico <ShellArrow /></a>
-          <button ref={triggerRef} className="medla-site-map-trigger" type="button" aria-expanded={open} aria-controls="medla-site-map" onClick={() => setOpen(true)}>
+          <button ref={triggerRef} className="medla-site-map-trigger" type="button" aria-label={open ? "Cerrar mapa del sitio" : "Abrir mapa del sitio"} aria-expanded={open} aria-controls="medla-site-map" onClick={() => setOpen(true)}>
             <span>Mapa</span><ShellMenuIcon />
           </button>
         </div>
@@ -173,10 +209,59 @@ function MedlaSiteHeader({ current = "", context = "", ctaHref = "" }) {
   </>;
 }
 
+function MedlaSiteFooter({ current = "", context = "" }) {
+  const ctaHref = current === "contact"
+    ? "#form"
+    : context
+      ? `contacto.html?context=${encodeURIComponent(context)}`
+      : "contacto.html?path=diagnostico";
+
+  return <footer className="medla-site-footer">
+    <div className="medla-site-footer__shell">
+      <div className="medla-site-footer__opening">
+        <div className="medla-site-footer__identity">
+          <a href="index.html" aria-label="MEDLA Empresas, inicio"><img src="logo.png" alt="" /></a>
+          <p>Consultoría y desarrollo para proyectos que cruzan negocio, legal, operaciones y tecnología.</p>
+        </div>
+        <div className="medla-site-footer__conversation">
+          <span>Primera conversación</span>
+          <h2>Cuéntanos qué necesitas <em>resolver.</em></h2>
+          <p>No hace falta que el problema esté ordenado. Empezamos por entender el bloqueo y te indicamos el siguiente paso.</p>
+          <a href={ctaHref}>Solicitar diagnóstico <ShellArrow /></a>
+        </div>
+      </div>
+
+      <nav className="medla-site-footer__routes" aria-label="Mapa del sitio">
+        {MEDLA_FOOTER_GROUPS.map((group, groupIndex) => <section key={group.title}>
+          <header><span>0{groupIndex + 1}</span><h3>{group.title}</h3></header>
+          <div>{group.links.map(([label, href]) => <a key={href} href={href}>{label}<ShellArrow /></a>)}</div>
+        </section>)}
+      </nav>
+
+      <div className="medla-site-footer__flow" aria-label="Método MEDLA: definir, coordinar, ejecutar y transferir">
+        {["Definir", "Coordinar", "Ejecutar", "Transferir"].map((label, index) => <React.Fragment key={label}>
+          <span><i />{label}</span>{index < 3 && <b />}
+        </React.Fragment>)}
+      </div>
+
+      <div className="medla-site-footer__base">
+        <span>© {new Date().getFullYear()} MEDLA ASESORES, S.L.</span>
+        <a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a>
+        <a href="tel:+34641576772">+34 641 576 772</a>
+        <span>Madrid · España</span>
+      </div>
+    </div>
+  </footer>;
+}
+
 window.MedlaSiteHeader = MedlaSiteHeader;
+window.MedlaSiteFooter = MedlaSiteFooter;
 
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-medla-header]").forEach((root) => {
     ReactDOM.createRoot(root).render(<MedlaSiteHeader current={root.dataset.current || ""} context={root.dataset.context || ""} ctaHref={root.dataset.ctaHref || ""} />);
+  });
+  document.querySelectorAll("[data-medla-footer]").forEach((root) => {
+    ReactDOM.createRoot(root).render(<MedlaSiteFooter current={root.dataset.current || ""} context={root.dataset.context || ""} />);
   });
 });

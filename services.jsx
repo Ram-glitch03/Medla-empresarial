@@ -14,11 +14,11 @@ const SERVICES = [
     statement: "Diseñamos la base societaria para que propiedad, administración y operación no se contradigan después.",
     trigger: "Una nueva sociedad o un cambio de socios exige ordenar roles, capital y reglas de decisión.",
     intervention: "Definición de la estructura, preparación documental y coordinación de los trámites necesarios.",
-    outcome: "Una sociedad preparada para operar con una arquitectura entendible por socios y administración.",
+    outcome: "Una sociedad preparada para operar con una estructura comprensible para socios y administración.",
     scope: ["Diseño societario", "Pactos y estatutos", "Órganos de administración", "Cambios estructurales"], href: "constitucion.html",
   },
   {
-    id: "inversiones", num: "03", label: "Finanzas", icon: "inversiones", title: "Preparación financiera y de inversión",
+    id: "inversiones", num: "03", label: "Inversión", icon: "inversiones", title: "Inversión y financiación",
     statement: "Ordenamos información, escenarios y materiales para decidir con rigor; no prometemos rentabilidades.",
     trigger: "La dirección necesita valorar una oportunidad, preparar financiación o presentar el negocio con claridad.",
     intervention: "Estructuración de datos, supuestos, escenarios y documentación para el proceso de decisión.",
@@ -51,11 +51,11 @@ const SERVICES = [
   },
   {
     id: "social", num: "07", label: "Captación y CRM", icon: "social", title: "Posicionamiento, captación y CRM",
-    statement: "Traducimos el valor de la empresa en una narrativa que clientes, talento y socios pueden entender.",
-    trigger: "La empresa hace un trabajo sólido, pero su mercado no percibe con claridad qué la diferencia.",
-    intervention: "Arquitectura de mensajes, sistema editorial, producción y aprendizaje a partir de la respuesta.",
-    outcome: "Una presencia coherente que demuestra criterio con hechos, formatos y una voz reconocible.",
-    scope: ["Narrativa de marca", "Sistema editorial", "Contenido ejecutivo", "Medición y aprendizaje"], href: "redes-sociales.html",
+    statement: "Conectamos posicionamiento, captación y seguimiento para que cada oportunidad llegue al equipo con contexto.",
+    trigger: "La empresa genera interés, pero los contactos llegan dispersos o no dejan una siguiente acción comercial clara.",
+    intervention: "Arquitectura de mensajes, puntos de entrada, criterios de cualificación, CRM y circuito de seguimiento.",
+    outcome: "Un recorrido comercial medible, con contexto, prioridad y responsable para cada oportunidad.",
+    scope: ["Posicionamiento", "Captación", "Cualificación y CRM", "Seguimiento comercial"], href: "redes-sociales.html",
   },
   {
     id: "jotform", num: "08", label: "Jotform", icon: "digitalizacion", title: "Soluciones sobre Jotform",
@@ -71,7 +71,7 @@ const BLOCKERS = [
   {
     id: "operacion",
     label: "El trabajo se atasca entre correos, hojas y aprobaciones",
-    title: "Primero hacemos visible el recorrido completo.",
+    title: "Primero documentamos el proceso completo.",
     text: "Mapeamos estados, responsables, datos y excepciones antes de conectar herramientas. Así sabemos qué automatizar y qué debe seguir siendo una decisión humana.",
     services: ["digitalizacion", "automatizacion", "jotform"],
     context: "digitalizacion",
@@ -171,7 +171,7 @@ function Constellation() {
     <svg viewBox="0 0 660 500"><defs><radialGradient id="svc-halo"><stop offset="0" stopColor="#79d2c5" stopOpacity=".2" /><stop offset="1" stopColor="#79d2c5" stopOpacity="0" /></radialGradient></defs>
       <circle className="const-halo" cx="330" cy="250" r="178" fill="url(#svc-halo)" /><circle className="const-orbit const-orbit-a" cx="330" cy="250" r="190" /><circle className="const-orbit const-orbit-b" cx="330" cy="250" r="122" />
       {points.map(([x, y], index) => <g key={index}><line className="const-line" x1="330" y1="250" x2={x} y2={y} /><circle className="const-pulse" cx={x} cy={y} r="14" style={{ animationDelay: `${index * -0.38}s` }} /><circle className="const-node" cx={x} cy={y} r="4" /><text className="const-label" x={x + (x < 330 ? -17 : 17)} y={y - 14} textAnchor={x < 330 ? "end" : "start"}>{SERVICES[index].label}</text></g>)}
-      <g className="const-core"><circle cx="330" cy="250" r="45" /><text x="330" y="246" textAnchor="middle">MEDLA</text><text x="330" y="264" textAnchor="middle">SYSTEM</text></g>
+      <g className="const-core"><circle cx="330" cy="250" r="45" /><text x="330" y="246" textAnchor="middle">SISTEMA</text><text x="330" y="264" textAnchor="middle">MEDLA</text></g>
     </svg>
     <div className="const-readout"><span>08 áreas de trabajo</span><span>01 plan coordinado</span></div>
   </div>;
@@ -213,7 +213,7 @@ function DecisionRouter() {
         <h3>{current.title}</h3>
         <p>{current.text}</p>
         <div className="svc-router-capabilities"><span>Capacidades que pueden intervenir</span>{recommended.map((service) => <a key={service.id} href={service.href}><b>{service.num}</b>{service.label}<i aria-hidden="true">↗</i></a>)}</div>
-        <a className="svc-button svc-button-primary" href={`contacto.html?context=${current.context}`}>Continuar con este contexto <span>↗</span></a>
+        <a className="svc-button svc-button-primary" href={`contacto.html?context=${current.context}`}>Continuar con esta situación <span>↗</span></a>
       </article>
     </div>
   </section>;
@@ -224,6 +224,7 @@ function ServiceExplorer() {
   const [t, setT] = useState(0);
   const [horizontalRail, setHorizontalRail] = useState(() => window.matchMedia("(max-width: 760px)").matches);
   const tabRefs = useRef([]);
+  const railRef = useRef(null);
   const visualRef = useRef(null);
   const current = SERVICES[active];
   const Scene = Scenes[current.icon] || Scenes.legal;
@@ -246,7 +247,12 @@ function ServiceExplorer() {
   }, []);
   useEffect(() => {
     if (!horizontalRail) return;
-    tabRefs.current[active]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    const rail = railRef.current;
+    const tab = tabRefs.current[active];
+    if (!rail || !tab) return;
+    const left = tab.offsetLeft - (rail.clientWidth - tab.clientWidth) / 2;
+    const fullyVisible = tab.offsetLeft >= rail.scrollLeft && tab.offsetLeft + tab.offsetWidth <= rail.scrollLeft + rail.clientWidth;
+    if (!fullyVisible) rail.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
   }, [active, horizontalRail]);
   const choose = (index, focus = false) => { setActive(index); if (focus) tabRefs.current[index]?.focus(); };
   const onTabKeyDown = (event, index) => {
@@ -259,7 +265,7 @@ function ServiceExplorer() {
   return <section className="svc-explorer" id="explorador" aria-labelledby="explorer-title">
     <div className="svc-section-intro"><p className="svc-kicker"><span>Mapa de servicios</span> / Selecciona un área</p><h2 id="explorer-title">Ocho áreas de trabajo.<br /><em>Un mismo proyecto.</em></h2><p>Cada servicio puede contratarse por separado. Si el proyecto cruza varias áreas, coordinamos responsables, documentos y entregas en un único plan.</p></div>
     <div className="svc-explorer-shell">
-      <div className="svc-rail" role="tablist" aria-label="Servicios MEDLA" aria-orientation={horizontalRail ? "horizontal" : "vertical"}>
+      <div className="svc-rail" ref={railRef} role="tablist" aria-label="Servicios MEDLA" aria-orientation={horizontalRail ? "horizontal" : "vertical"}>
         {SERVICES.map((service, index) => <button key={service.id} id={`tab-${service.id}`} ref={(node) => { tabRefs.current[index] = node; }} type="button" className={index === active ? "is-active" : ""} role="tab" aria-selected={index === active} aria-controls="service-panel" tabIndex={index === active ? 0 : -1} onClick={() => choose(index)} onKeyDown={(event) => onTabKeyDown(event, index)}><span>{service.num}</span><strong>{service.label}</strong><i>↗</i></button>)}
       </div>
       <article key={current.id} className="svc-panel" id="service-panel" role="tabpanel" aria-labelledby={`tab-${current.id}`} tabIndex="0">
@@ -281,12 +287,8 @@ function ServicesCta() {
   return <section className="svc-cta" aria-labelledby="svc-cta-title"><div><p className="svc-kicker"><span>Siguiente paso</span> / Primera revisión</p><h2 id="svc-cta-title">Cuéntanos tu proyecto.<br /><em>Te diremos por dónde empezar.</em></h2></div><div className="svc-cta-side"><p>Revisaremos el objetivo, las prioridades y las áreas necesarias para proponerte un siguiente paso claro.</p><a className="svc-button svc-button-primary" href="contacto.html">Solicitar diagnóstico <span>↗</span></a></div></section>;
 }
 
-function ServicesFooter() {
-  return <footer className="inner-footer"><a className="inner-footer-brand" href="index.html"><img src="logo.png" alt="MEDLA Empresas" /></a><div><span>Servicios</span><a href="servicios.html">Mapa de servicios</a><a href="contacto.html">Cuéntanos tu proyecto</a></div><div><span>MEDLA</span><a href="nosotros.html">Cómo trabajamos</a><a href="blog.html">Insights</a></div><div><span>Contacto</span><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a><a href="tel:+34641576772">+34 641 576 772</a></div><div className="inner-footer-base"><span>© 2026 MEDLA Empresas</span><a href="privacidad.html">Privacidad</a><span>Madrid · España</span></div></footer>;
-}
-
 function ServicesApp() {
-  return <div className="svc-page"><window.MedlaSiteHeader current="services" /><main id="main"><ServicesHero /><DecisionRouter /><ServiceExplorer /><Orchestration /><ServicesCta /></main><ServicesFooter /></div>;
+  return <div className="svc-page"><window.MedlaSiteHeader current="services" /><main id="main"><ServicesHero /><DecisionRouter /><ServiceExplorer /><Orchestration /><ServicesCta /></main><window.MedlaSiteFooter /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<ServicesApp />);

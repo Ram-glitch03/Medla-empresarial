@@ -555,7 +555,7 @@ function WorldBridgeSection() {
               </header>
               <ul>
                 <li>
-                  <span>Email / equipo local</span>
+                  <span>Correo / equipo local</span>
                   <strong>¿Quién valida las condiciones?</strong>
                   <small>Sin responsable asignado</small>
                 </li>
@@ -982,16 +982,16 @@ function Hero() {
         <div className="hp-hero__copy">
           <div className="hp-kicker hp-hero__entrance hp-hero__entrance--one">
             <span>Consultoría y desarrollo · Madrid</span>
-            <small>Negocio / Legal / Software</small>
+            <small>Fundadores / Pymes / Dirección</small>
           </div>
           <h1 className="hp-hero__entrance hp-hero__entrance--two">
             Legal, operaciones y tecnología. <em>Un único equipo para resolver el proyecto.</em>
           </h1>
           <p className="hp-hero__lead hp-hero__entrance hp-hero__entrance--three">
-            Definimos el problema, ejecutamos la solución y la dejamos lista para trabajar: contratos, procesos, software, automatización o crecimiento comercial.
+            Trabajamos con fundadores, pymes y equipos de dirección. Ordenamos contratos, procesos y sistemas; construimos la solución y la dejamos documentada para que el equipo pueda operarla.
           </p>
           <div className="hp-hero__actions hp-hero__entrance hp-hero__entrance--four">
-            <a className="hp-button hp-button--gold" href="contacto.html">Cuéntanos tu proyecto <Arrow /></a>
+            <a className="hp-button hp-button--gold" href="contacto.html">Solicitar diagnóstico <Arrow /></a>
             <a className="hp-button hp-button--quiet" href="nosotros.html">Ver cómo trabajamos <Arrow diagonal /></a>
           </div>
           <div className="hp-hero__principles hp-hero__entrance hp-hero__entrance--five">
@@ -1250,7 +1250,7 @@ function OperatingModelSection() {
           <div className="hp-section-code hp-section-code--light" data-reveal>04 — Nuestro trabajo</div>
           <h2 data-reveal>Del diagnóstico a una solución <em>implantada y documentada.</em></h2>
           <p data-reveal>El trabajo se divide en tres fases. Cada una tiene responsables, criterios de revisión y un entregable concreto.</p>
-          <a className="hp-button hp-button--outline" href="contacto.html" data-reveal>Hablar de un proyecto <Arrow /></a>
+          <a className="hp-button hp-button--outline" href="contacto.html" data-reveal>Solicitar diagnóstico <Arrow /></a>
         </div>
 
         <div className="hp-model__steps">
@@ -1278,7 +1278,7 @@ function TransferScene() {
   const reducedMotion = useReducedMotion();
   const sources = [
     {
-      channel: "Email / equipo local",
+      channel: "Correo / equipo local",
       title: "¿Quién valida las condiciones?",
       status: "Sin responsable asignado"
     },
@@ -1500,7 +1500,7 @@ function FinalCTA() {
             <span>06 — Primera conversación</span>
             <small>No hace falta que lo tengas ordenado</small>
           </div>
-          <h2 id="final-intake-title" data-reveal>Cuéntanos qué necesita resolver <em>tu equipo.</em></h2>
+          <h2 id="final-intake-title" data-reveal>Cuéntanos qué necesitas <em>resolver.</em></h2>
           <p data-reveal>Elige el caso más cercano. Prepararemos el formulario con ese punto de partida para que puedas revisarlo antes de enviarlo.</p>
         </header>
 
@@ -1555,43 +1555,6 @@ function FinalCTA() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="hp-footer">
-      <div className="hp-container">
-        <div className="hp-footer__top">
-          <div className="hp-footer__brand">
-            <a href="index.html" aria-label="MEDLA Empresas, inicio"><img src="logo.png" alt="MEDLA Empresas" /></a>
-            <p>Consultoría y desarrollo para resolver problemas legales, operativos y tecnológicos dentro de la empresa.</p>
-          </div>
-          <div className="hp-footer__nav">
-            <div>
-              <h3>Explorar</h3>
-              <a href="#sistema">Cómo intervenimos</a>
-              <a href="#capacidades">Qué hacemos</a>
-              <a href="#modelo">Cómo trabajamos</a>
-              <a href="nosotros.html">Cómo nos organizamos</a>
-              <a href="blog.html">Cuadernos</a>
-            </div>
-            <div>
-              <h3>Contacto</h3>
-              <a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a>
-              <a href="tel:+34641576772">+34 641 576 772</a>
-              <a href="privacidad.html">Privacidad</a>
-              <span>Madrid, España</span>
-            </div>
-          </div>
-        </div>
-        <div className="hp-footer__bottom">
-          <span>© 2026 MEDLA Empresas</span>
-          <span>Legal · Operaciones · Software · Ventas</span>
-          <span>Madrid · España</span>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 function App() {
   return (
     <>
@@ -1608,7 +1571,7 @@ function App() {
         <DifferenceSection />
         <FinalCTA />
       </main>
-      <Footer />
+      <window.MedlaSiteFooter />
     </>
   );
 }

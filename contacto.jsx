@@ -149,11 +149,11 @@ function CtHero({ context }) {
           </div>
         </div>
         <aside className="ct-brief" aria-label="Vista previa del contexto que recibirá MEDLA">
-          <header><span>MEDLA / BRIEF INICIAL</span><b>01</b></header>
+          <header><span>MEDLA / CONTEXTO INICIAL</span><b>01</b></header>
           <div className="ct-brief-status"><i></i><span>{context ? "Tema seleccionado" : "Preparado para completar"}</span></div>
           <h2>{context?.label || "Cuéntanos tu proyecto"}</h2>
           <dl>
-            <div><dt>Tema seleccionado</dt><dd>{context ? "Conservado desde la página anterior" : "Lo describes en cuatro pasos breves"}</dd></div>
+            <div><dt>Tema seleccionado</dt><dd>{context ? "Conservado desde la página anterior" : "Empiezas por el bloqueo, sin elegir un servicio"}</dd></div>
             <div><dt>Primera revisión</dt><dd>Problema · momento · responsables</dd></div>
             <div><dt>Respuesta</dt><dd>Alcance y siguiente paso</dd></div>
           </dl>
@@ -176,9 +176,9 @@ const PATHS = [
   {
     id: "propuesta",
     icon: <IconMsg />,
-    title: "Propuesta a medida",
+    title: "Solicitud de propuesta",
     desc: "Para equipos que ya tienen claro el alcance y necesitan una propuesta económica detallada.",
-    meta: "Alcance a medida",
+    meta: "Alcance definido",
   },
   {
     id: "alianza",
@@ -220,14 +220,14 @@ function CtPaths({ active, onPick }) {
 
 /* ─────────── Multi-step Form ─────────── */
 const ALCANCE_OPTIONS = [
-  "Asesoría legal corporativa",
-  "Constitución o reestructuración societaria",
-  "Inversiones y capital",
-  "Digitalización de procesos",
-  "Automatización e integración",
-  "IA aplicada",
-  "Posicionamiento, captación y CRM",
-  "Aún no lo tengo claro",
+  { value: "Asesoría legal corporativa", label: "Asesoría legal corporativa" },
+  { value: "Constitución / reestructura", label: "Constitución o reestructuración societaria" },
+  { value: "Inversión y financiación", label: "Inversión y financiación" },
+  { value: "Digitalización de procesos", label: "Digitalización de procesos" },
+  { value: "Automatización e integración", label: "Automatización e integración" },
+  { value: "IA aplicada", label: "IA aplicada" },
+  { value: "Posicionamiento, captación y CRM", label: "Posicionamiento, captación y CRM" },
+  { value: "Aún no lo tengo claro", label: "Aún no lo tengo claro" },
 ];
 
 const CONTEXT_PRESETS = {
@@ -253,12 +253,12 @@ const CONTEXT_PRESETS = {
   },
   constitucion: {
     label: "Constitución y estructura societaria",
-    alcance: ["Constitución o reestructuración societaria", "Asesoría legal corporativa"],
+    alcance: ["Constitución / reestructura", "Asesoría legal corporativa"],
     notas: "Punto de partida: hay que ordenar propiedad, administración, capital y reglas de decisión antes de operar o cambiar la estructura.",
   },
   inversiones: {
-    label: "Preparación financiera y de inversión",
-    alcance: ["Inversiones y capital", "Asesoría legal corporativa"],
+    label: "Inversión y financiación",
+    alcance: ["Inversión y financiación", "Asesoría legal corporativa"],
     notas: "Punto de partida: necesitamos comparar escenarios o preparar una decisión de financiación con datos y supuestos trazables.",
   },
   digitalizacion: {
@@ -296,21 +296,21 @@ const selectedContext = baseContext ? {
 } : null;
 
 const ETAPA_OPTIONS = [
-  "Proyecto en fase de constitución",
-  "Startup en ronda de financiación",
-  "Pyme en crecimiento",
-  "Empresa consolidada",
-  "Grupo empresarial o holding",
-  "Otro",
+  { value: "Pre-constitución", label: "Emprendedor o proyecto en fase de constitución" },
+  { value: "Empresa emergente en ronda", label: "Empresa emergente en ronda de financiación" },
+  { value: "Pyme en crecimiento", label: "Pyme en crecimiento" },
+  { value: "Empresa establecida", label: "Empresa consolidada" },
+  { value: "Grupo o holding", label: "Grupo empresarial o holding" },
+  { value: "Otro", label: "Otro / Prefiero explicarlo" },
 ];
 
 const PRESUPUESTO_LABELS = [
-  { min: 0, max: 0, label: "A definir" },
-  { min: 1, max: 3, label: "1.000 – 3.000 €" },
-  { min: 3, max: 8, label: "3.000 – 8.000 €" },
-  { min: 8, max: 15, label: "8.000 – 15.000 €" },
-  { min: 15, max: 30, label: "15.000 – 30.000 €" },
-  { min: 30, max: 999, label: "Más de 30.000 €" },
+  { min: 0, max: 0, label: "A definir", value: "A definir" },
+  { min: 1, max: 3, label: "1.000 – 3.000 €", value: "1K – 3K" },
+  { min: 3, max: 8, label: "3.000 – 8.000 €", value: "3K – 8K" },
+  { min: 8, max: 15, label: "8.000 – 15.000 €", value: "8K – 15K" },
+  { min: 15, max: 30, label: "15.000 – 30.000 €", value: "15K – 30K" },
+  { min: 30, max: 999, label: "Más de 30.000 €", value: "30K+" },
 ];
 
 function CtForm({ pathId }) {
@@ -339,20 +339,35 @@ function CtForm({ pathId }) {
     questionRef.current?.focus();
   }, [step]);
 
-  const totalSteps = 4;
-  const toggleAlcance = (opt) =>
+  const totalSteps = 3;
+  const toggleAlcance = (opt) => {
     setData((d) => ({
       ...d,
       alcance: d.alcance.includes(opt) ? d.alcance.filter((x) => x !== opt) : [...d.alcance, opt],
     }));
+    if (sendError) setSendError(null);
+  };
 
-  const setEtapa = (opt) => setData((d) => ({ ...d, etapa: opt }));
-  const setField = (k, v) => setData((d) => ({ ...d, [k]: v }));
+  const setEtapa = (opt) => {
+    setData((d) => ({ ...d, etapa: opt }));
+    if (sendError) setSendError(null);
+  };
+  const setField = (k, v) => {
+    setData((d) => ({ ...d, [k]: v }));
+    if (sendError) setSendError(null);
+  };
 
+  const problemReady = data.notas.trim().length >= 12;
+  const contactReady = data.nombre.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim());
   const canAdvance =
-    (step === 0 && data.alcance.length > 0) ||
-    (step === 1 && !!data.etapa) ||
+    (step === 0 && problemReady) ||
+    (step === 1 && contactReady) ||
     step >= 2;
+
+  const selectedScopeLabels = data.alcance.map((value) => ALCANCE_OPTIONS.find((option) => option.value === value)?.label || value);
+  const selectedStageLabel = ETAPA_OPTIONS.find((option) => option.value === data.etapa)?.label || "Sin indicar";
+  const selectedBudget = PRESUPUESTO_LABELS[data.presupuestoIdx];
+  const issuePreview = data.notas.trim().replace(/\s+/g, " ") || "Aún no has descrito el bloqueo.";
 
   const submitToWebhook = async () => {
     if (!privacyAccepted) {
@@ -363,16 +378,16 @@ function CtForm({ pathId }) {
     setSendError(null);
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), 12000);
-    const rangoPresupuesto = PRESUPUESTO_LABELS[data.presupuestoIdx].label;
+    const alcance = data.alcance.length ? data.alcance : ["Aún no lo tengo claro"];
     const payload = {
       tipo_contacto: pathId,
       nombre: data.nombre,
       empresa: data.empresa,
       email: data.email,
       telefono: data.telefono,
-      alcance: data.alcance,
-      etapa_empresa: data.etapa,
-      rango_presupuesto: rangoPresupuesto,
+      alcance,
+      etapa_empresa: data.etapa || "Otro",
+      rango_presupuesto: selectedBudget.value,
       notas: data.notas,
       consentimiento_privacidad: true,
       version_privacidad: "2026-08-28",
@@ -404,6 +419,16 @@ function CtForm({ pathId }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (step !== totalSteps - 1 || sending) return;
+    if (!problemReady) {
+      setStep(0);
+      setSendError("Describe brevemente qué está bloqueado antes de enviar.");
+      return;
+    }
+    if (!contactReady) {
+      setStep(1);
+      setSendError("Revisa el nombre y el correo electrónico antes de enviar.");
+      return;
+    }
     submitToWebhook();
   };
 
@@ -411,14 +436,22 @@ function CtForm({ pathId }) {
     diagnostico: "Diagnóstico inicial",
     propuesta: "Solicitud de propuesta",
     alianza: "Colaboración profesional",
-  }[pathId];
+  }[pathId] || "Conversación inicial";
 
   const stepHints = [
-    "Qué necesitas",
-    "Dónde estás",
-    "Presupuesto aproximado",
-    "Tus datos",
+    "Qué está bloqueado",
+    "Cómo respondemos",
+    "Añadir contexto",
   ];
+
+  const fallbackText = encodeURIComponent([
+    `Hola, quiero contactar con MEDLA por: ${stepTitle.toLowerCase()}.`,
+    `Bloqueo: ${data.notas.trim()}`,
+    `Nombre: ${data.nombre.trim()}`,
+    `Correo electrónico: ${data.email.trim()}`,
+    data.empresa.trim() ? `Empresa: ${data.empresa.trim()}` : "",
+    selectedScopeLabels.length ? `Áreas: ${selectedScopeLabels.join(", ")}` : "Áreas: por definir",
+  ].filter(Boolean).join("\n\n"));
 
   return (
     <section className="contacto-form-wrap" id="form">
@@ -427,20 +460,36 @@ function CtForm({ pathId }) {
           <aside className="form-side">
             <div className="form-side-top">
               <span className="eyebrow">— {stepTitle}</span>
-              <h3>Cuéntanos lo esencial para preparar una primera respuesta útil.</h3>
-              <p>Cuatro pasos breves para que podamos revisar el problema, el momento de la empresa y el alcance antes de responder.</p>
+              <h3>Empecemos por lo que está ocurriendo.</h3>
+              <p>Primero describe el bloqueo. Después indícanos cómo responderte. El resto del contexto es opcional.</p>
 
               <div className="form-side-steps">
                 {stepHints.map((h, i) => (
                   <div
                     key={i}
-                    className={`form-side-step ${i < step ? "done" : ""} ${i === step && !sent ? "current" : ""}`}
+                    className={`form-side-step ${i < step || sent ? "done" : ""} ${i === step && !sent ? "current" : ""}`}
+                    aria-current={i === step && !sent ? "step" : undefined}
                   >
                     <div className="step-dot">{i < step || sent ? "✓" : i + 1}</div>
                     <div>{h}</div>
                   </div>
                 ))}
               </div>
+
+              {!sent && (
+                <section className="form-live-brief" aria-label="Resumen del contexto en preparación">
+                  <header><span>CONTEXTO / EN PREPARACIÓN</span><b>0{step + 1}</b></header>
+                  <div className="form-live-brief__status"><i></i>{problemReady ? "Punto de partida descrito" : "Esperando el punto de partida"}</div>
+                  <dl>
+                    <div className="form-live-brief__issue"><dt>Bloqueo</dt><dd>{issuePreview}</dd></div>
+                    <div><dt>Contacto</dt><dd>{data.nombre.trim() || "Sin completar"}</dd></div>
+                    <div><dt>Áreas</dt><dd>{selectedScopeLabels.length ? selectedScopeLabels.join(" · ") : "Sin clasificar"}</dd></div>
+                    <div><dt>Momento</dt><dd>{selectedStageLabel}</dd></div>
+                    <div><dt>Presupuesto</dt><dd>{selectedBudget.label}</dd></div>
+                  </dl>
+                  <footer><span>{selectedContext ? "Contexto heredado" : "Contexto editable"}</span><i>{String(step + 1).padStart(2, "0")} / 03</i></footer>
+                </section>
+              )}
             </div>
 
             <div className="form-side-channels">
@@ -463,97 +512,44 @@ function CtForm({ pathId }) {
             )}
 
             {!sent && step === 0 && (
-              <div className="form-step">
+              <div className="form-step form-step--issue">
                 <div>
                   <div className="step-label">Paso 1 · {stepHints[0]}</div>
-                  <h4 ref={questionRef} tabIndex="-1" id="contact-scope-question">¿Qué necesitas resolver? <span aria-hidden="true">*</span><span className="sr-only"> Selección obligatoria.</span></h4>
-                  <p id="contact-scope-hint" style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>
-                    Selecciona todas las líneas relevantes. Si aún no lo tienes claro, no pasa nada.
-                  </p>
+                  <h4 id="contact-issue-question">¿Qué está bloqueado? <span aria-hidden="true">*</span><span className="sr-only"> Respuesta obligatoria.</span></h4>
+                  <p id="contact-issue-hint" className="form-step__hint">Explícalo como lo contarías en una conversación: qué ocurre, quién interviene y qué debería poder pasar después.</p>
                 </div>
-                <div className="options-grid" role="group" aria-labelledby="contact-scope-question" aria-describedby="contact-scope-hint">
-                  {ALCANCE_OPTIONS.map((o) => (
-                    <button
-                      key={o}
-                      className={`opt-card ${data.alcance.includes(o) ? "selected" : ""}`}
-                      aria-pressed={data.alcance.includes(o)}
-                      onClick={() => toggleAlcance(o)}
-                      type="button"
-                    >
-                      <span>{o}</span>
-                      <span className="opt-check"></span>
-                    </button>
-                  ))}
+                {selectedContext && (
+                  <div className="brief-origin">
+                    <span>Contexto conservado desde la página anterior</span>
+                    <strong>{selectedContext.label}</strong>
+                    <small>Puedes modificar o sustituir el texto que hemos preparado.</small>
+                  </div>
+                )}
+                <div className="field field--issue">
+                  <label htmlFor="contact-issue">Describe el punto de partida</label>
+                  <textarea
+                    ref={questionRef}
+                    id="contact-issue"
+                    required
+                    minLength="12"
+                    maxLength="3000"
+                    value={data.notas}
+                    onChange={(event) => setField("notas", event.target.value)}
+                    aria-labelledby="contact-issue-question"
+                    aria-describedby="contact-issue-hint contact-issue-count"
+                    placeholder="Por ejemplo: la aprobación de nuevos proveedores depende de correos y no sabemos quién debe decidir cada excepción…"
+                  />
+                  <div className="field-meta" id="contact-issue-count"><span>{problemReady ? "Punto de partida listo" : "Escribe al menos una frase"}</span><span>{data.notas.length} / 3000</span></div>
                 </div>
               </div>
             )}
 
             {!sent && step === 1 && (
-              <div className="form-step">
+              <div className="form-step form-step--identity">
                 <div>
                   <div className="step-label">Paso 2 · {stepHints[1]}</div>
-                  <h4 ref={questionRef} tabIndex="-1" id="contact-stage-question">¿En qué etapa está tu empresa? <span aria-hidden="true">*</span><span className="sr-only"> Selección obligatoria.</span></h4>
-                  <p id="contact-stage-hint" style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>Selecciona una opción para continuar.</p>
-                </div>
-                <div className="options-grid" role="group" aria-labelledby="contact-stage-question" aria-describedby="contact-stage-hint">
-                  {ETAPA_OPTIONS.map((o) => (
-                    <button
-                      key={o}
-                      className={`opt-card ${data.etapa === o ? "selected" : ""}`}
-                      aria-pressed={data.etapa === o}
-                      onClick={() => setEtapa(o)}
-                      type="button"
-                    >
-                      <span>{o}</span>
-                      <span className="opt-check"></span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {!sent && step === 2 && (
-              <div className="form-step">
-                <div>
-                  <div className="step-label">Paso 3 · {stepHints[2]}</div>
-                  <h4 ref={questionRef} tabIndex="-1">¿Qué presupuesto aproximado manejas?</h4>
-                  <p style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>
-                    Nos ayuda a orientar el alcance. Si aún no está definido, puedes indicarlo.
-                  </p>
-                </div>
-                <div className="slider-wrap">
-                  <div className="slider-value">{PRESUPUESTO_LABELS[data.presupuestoIdx].label}</div>
-                  <input
-                    type="range"
-                    aria-label="Rango de presupuesto"
-                    aria-valuetext={PRESUPUESTO_LABELS[data.presupuestoIdx].label}
-                    min="0"
-                    max={PRESUPUESTO_LABELS.length - 1}
-                    step="1"
-                    value={data.presupuestoIdx}
-                    onChange={(e) => setField("presupuestoIdx", parseInt(e.target.value))}
-                  />
-                  <div className="slider-ticks">
-                    <span>A definir</span>
-                    <span>1–3 mil €</span>
-                    <span>3–8 mil €</span>
-                    <span>8–15 mil €</span>
-                    <span>15–30 mil €</span>
-                    <span>30 mil €+</span>
-                  </div>
-                  <div className="slider-note">
-                    <p><span>Referencia inicial</span> No es una propuesta económica ni compromete un alcance.</p>
-                    <p><span>Antes de empezar</span> Entregables, calendario y condiciones quedan por escrito.</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {!sent && step === 3 && (
-              <div className="form-step">
-                <div>
-                  <div className="step-label">Paso 4 · {stepHints[3]}</div>
-                  <h4 ref={questionRef} tabIndex="-1">¿Cómo te contactamos?</h4>
+                  <h4 ref={questionRef} tabIndex="-1">¿Cómo podemos responderte?</h4>
+                  <p className="form-step__hint">Nombre y correo son suficientes. Empresa y teléfono son opcionales.</p>
                 </div>
                 <div className="fields-row">
                   <div className="field">
@@ -561,23 +557,81 @@ function CtForm({ pathId }) {
                     <input id="contact-name" type="text" required autoComplete="name" value={data.nombre} onChange={(e) => setField("nombre", e.target.value)} placeholder="Nombre y apellidos" />
                   </div>
                   <div className="field">
-                    <label htmlFor="contact-company">Empresa</label>
-                    <input id="contact-company" type="text" autoComplete="organization" value={data.empresa} onChange={(e) => setField("empresa", e.target.value)} placeholder="Nombre comercial" />
+                    <label htmlFor="contact-email">Correo electrónico *</label>
+                    <input id="contact-email" type="email" required autoComplete="email" value={data.email} onChange={(e) => setField("email", e.target.value)} placeholder="tu@empresa.com" />
                   </div>
                 </div>
                 <div className="fields-row">
                   <div className="field">
-                    <label htmlFor="contact-email">Email *</label>
-                    <input id="contact-email" type="email" required autoComplete="email" value={data.email} onChange={(e) => setField("email", e.target.value)} placeholder="tu@empresa.com" />
+                    <label htmlFor="contact-company">Empresa <span>Opcional</span></label>
+                    <input id="contact-company" type="text" autoComplete="organization" value={data.empresa} onChange={(e) => setField("empresa", e.target.value)} placeholder="Nombre comercial" />
                   </div>
                   <div className="field">
-                    <label htmlFor="contact-phone">Teléfono</label>
+                    <label htmlFor="contact-phone">Teléfono <span>Opcional</span></label>
                     <input id="contact-phone" type="tel" autoComplete="tel" value={data.telefono} onChange={(e) => setField("telefono", e.target.value)} placeholder="+34…" />
                   </div>
                 </div>
-                <div className="field">
-                  <label htmlFor="contact-notes">Notas (opcional)</label>
-                  <textarea id="contact-notes" value={data.notas} onChange={(e) => setField("notas", e.target.value)} placeholder="Cuéntanos el contexto: objetivo, urgencia, cualquier detalle útil…" />
+                <p className="form-data-note"><i></i>Usaremos estos datos para revisar y responder a esta solicitud.</p>
+              </div>
+            )}
+
+            {!sent && step === 2 && (
+              <div className="form-step form-step--context">
+                <div>
+                  <div className="step-label">Paso 3 · {stepHints[2]}</div>
+                  <h4 ref={questionRef} tabIndex="-1">Añadir contexto <em>es opcional.</em></h4>
+                  <p className="form-step__hint">Si ya conoces el área, el momento de la empresa o el presupuesto, puedes indicarlo. También puedes enviar la consulta sin clasificarla.</p>
+                </div>
+                <div className="context-stack">
+                  <fieldset className="context-block">
+                    <legend><span>01</span> Área o servicio</legend>
+                    <p>Selecciona las líneas que puedan estar relacionadas.</p>
+                    <div className="options-grid options-grid--compact">
+                      {ALCANCE_OPTIONS.map((option) => (
+                        <button
+                          key={option.value}
+                          className={`opt-card ${data.alcance.includes(option.value) ? "selected" : ""}`}
+                          aria-pressed={data.alcance.includes(option.value)}
+                          onClick={() => toggleAlcance(option.value)}
+                          type="button"
+                        >
+                          <span>{option.label}</span>
+                          <span className="opt-check"></span>
+                        </button>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  <div className="context-split">
+                    <fieldset className="context-block">
+                      <legend><span>02</span> Momento de la empresa</legend>
+                      <div className="field">
+                        <label htmlFor="contact-stage">Selecciona solo si ayuda a entender el caso</label>
+                        <select id="contact-stage" value={data.etapa || ""} onChange={(event) => setEtapa(event.target.value || null)}>
+                          <option value="">Prefiero no indicarlo</option>
+                          {ETAPA_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                        </select>
+                      </div>
+                    </fieldset>
+
+                    <fieldset className="context-block">
+                      <legend><span>03</span> Presupuesto orientativo</legend>
+                      <div className="slider-wrap slider-wrap--compact">
+                        <div className="slider-value">{selectedBudget.label}</div>
+                        <input
+                          type="range"
+                          aria-label="Rango de presupuesto orientativo"
+                          aria-valuetext={selectedBudget.label}
+                          min="0"
+                          max={PRESUPUESTO_LABELS.length - 1}
+                          step="1"
+                          value={data.presupuestoIdx}
+                          onChange={(e) => setField("presupuestoIdx", parseInt(e.target.value, 10))}
+                        />
+                        <div className="slider-ticks slider-ticks--ends"><span>A definir</span><span>30 mil €+</span></div>
+                      </div>
+                    </fieldset>
+                  </div>
                 </div>
                 <div className="contact-honeypot" aria-hidden="true">
                   <label htmlFor="contact-website">Tu web</label>
@@ -589,7 +643,10 @@ function CtForm({ pathId }) {
                     type="checkbox"
                     required
                     checked={privacyAccepted}
-                    onChange={(event) => setPrivacyAccepted(event.target.checked)}
+                    onChange={(event) => {
+                      setPrivacyAccepted(event.target.checked);
+                      if (sendError) setSendError(null);
+                    }}
                   />
                   <label htmlFor="contact-privacy">
                     He leído y acepto la <a href="privacidad.html" target="_blank" rel="noopener noreferrer">política de privacidad</a> y consiento el tratamiento de mis datos para responder a esta solicitud.
@@ -606,7 +663,7 @@ function CtForm({ pathId }) {
                   </svg>
                 </div>
                 <h3>Mensaje enviado, {data.nombre.split(" ")[0] || "gracias"}.</h3>
-                <p>Hemos recibido el contexto. Una persona del equipo lo revisará antes de responder.</p>
+                <p>Hemos recibido el contexto. En la primera respuesta indicaremos el encaje, la información pendiente y el siguiente paso.</p>
                 <div className="hero-ctas">
                   <a href="servicios.html" className="btn btn-primary">Explorar servicios <span className="arr">→</span></a>
                   <a href="index.html" className="btn btn-ghost">Volver al inicio</a>
@@ -619,7 +676,7 @@ function CtForm({ pathId }) {
                 <button type="button" className="btn-link" onClick={back} disabled={step === 0 || sending}>← Anterior</button>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
                   {sendError && (
-                    <div className="send-fallback" role="alert"><span>{sendError}</span><div><a href="mailto:info@medla-empresas.com">Enviar por email</a><a href="https://wa.me/34641576772" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></div></div>
+                    <div className="send-fallback" role="alert"><span>{sendError}</span><div><a href={`mailto:info@medla-empresas.com?subject=${encodeURIComponent(`Consulta MEDLA · ${stepTitle}`)}&body=${fallbackText}`}>Enviar por correo</a><a href={`https://wa.me/34641576772?text=${fallbackText}`} target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></div></div>
                   )}
                   <button
                     type={step === totalSteps - 1 ? "submit" : "button"}
@@ -631,7 +688,7 @@ function CtForm({ pathId }) {
                       cursor: !sending && (step === totalSteps - 1 || canAdvance) ? "pointer" : "default"
                     }}
                   >
-                    {sending ? "Enviando…" : step === totalSteps - 1 ? "Enviar mensaje" : "Siguiente"} <span className="arr">→</span>
+                    {sending ? "Enviando…" : step === totalSteps - 1 ? "Enviar consulta" : "Continuar"} <span className="arr">→</span>
                   </button>
                 </div>
               </div>
@@ -660,7 +717,7 @@ function CtInfo() {
               <a className="info-channel" href="mailto:info@medla-empresas.com">
                 <div className="info-channel-icon"><IconMail /></div>
                 <div className="info-channel-body">
-                  <div className="info-channel-label">Email</div>
+                  <div className="info-channel-label">Correo electrónico</div>
                   <div className="info-channel-val">info@medla-empresas.com</div>
                 </div>
                 <span className="info-channel-arr">→</span>
@@ -767,7 +824,7 @@ function CtFAQ() {
       <div className="container">
         <div className="section-head" style={{ textAlign: "center", margin: "0 auto" }}>
           <span className="eyebrow" style={{ justifyContent: "center" }}>— Preguntas frecuentes</span>
-          <h2 style={{ margin: "12px auto 0" }}>Antes de escribir, quizá <em>ya lo respondimos</em>.</h2>
+          <h2 style={{ margin: "12px auto 0" }}>Antes de escribirnos, quizá <em>ya tengas la respuesta</em>.</h2>
         </div>
         <div className="faq-grid">
           {FAQS.map((f, i) => (
@@ -800,60 +857,6 @@ function CtFAQ() {
   );
 }
 
-/* ─────────── Footer (reused) ─────────── */
-function CtFooter() {
-  return (
-    <footer className="footer">
-      <div className="container">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 72, display: "block", marginBottom: 16}} /></a>
-            <p>Contratos, procesos y herramientas con responsables y próximos pasos claros.</p>
-          </div>
-          <div>
-            <h4>Servicios</h4>
-            <ul>
-              <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="redes-sociales.html">Comunicación</a></li>
-              <li><a href="jotform.html">Soluciones Jotform</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Empresa</h4>
-            <ul>
-              <li><a href="nosotros.html">Nosotros</a></li>
-              <li><a href="blog.html">Cuadernos</a></li>
-              <li><a href="contacto.html">Contacto</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Contacto</h4>
-            <ul>
-              <li><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></li>
-              <li><a href="tel:+34641576772">+34 641 576 772</a></li>
-              <li>Madrid, España</li>
-            </ul>
-            <a
-              href="https://api.whatsapp.com/send/?phone=34641576772&text=Hola%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n&type=phone_number&app_absent=0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-              style={{marginTop: 20, display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.85rem", padding: "10px 20px"}}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              Contactar por WhatsApp
-            </a>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 MEDLA empresas. Todos los derechos reservados.</span>
-          <span><a href="privacidad.html">Privacidad</a> · Madrid, España</span>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 /* ─────────── App ─────────── */
 function ContactoApp() {
   const [path, setPath] = useState("diagnostico");
@@ -867,7 +870,7 @@ function ContactoApp() {
         <CtInfo />
         <CtFAQ />
       </main>
-      <CtFooter />
+      <window.MedlaSiteFooter current="contact" />
     </div>
   );
 }

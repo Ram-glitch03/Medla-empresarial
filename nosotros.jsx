@@ -120,7 +120,7 @@ function Hero() {
         </div>
         <h1 id="nos-title">Un equipo para dirigir proyectos<br /><em>de negocio, legal y tecnología.</em></h1>
         <div className="nos-hero__bottom">
-          <p>Coordinamos especialistas, prioridades y entregas para que el proyecto avance con un responsable claro en cada fase.</p>
+          <p>Trabajamos con fundadores, pymes y equipos de dirección, coordinando especialistas y entregas con un responsable claro en cada fase.</p>
           <a href="#punto-de-partida">Ver cómo trabajamos <Arrow /></a>
         </div>
       </div>
@@ -156,11 +156,11 @@ function ResponsibilityDesk() {
         <div className="nos-responsibility__head">
           <span className="nos-section-code">02 / Quién responde</span>
           <h2 id="responsibility-title">Siempre sabrás<br /><em>quién responde de cada parte.</em></h2>
-          <p>Cada fase tiene un responsable, una versión de trabajo y una entrega que el cliente puede revisar.</p>
+          <p>Al iniciar el encargo, cada rol se asigna a una persona concreta. Cada fase mantiene responsable, versión de trabajo y entrega revisable.</p>
         </div>
         <div className="nos-responsibility__desk">
           <article className="nos-responsibility__record">
-            <header><span>REGISTRO / DEC-024</span><b>EN REVISIÓN</b></header>
+            <header><span>EJEMPLO / DEC-024</span><b>DEMOSTRACIÓN</b></header>
             <div className="nos-responsibility__stamp" aria-hidden="true"><span>M/</span><small>DECISIÓN</small></div>
             <h3>Condiciones para aprobar el siguiente tramo.</h3>
             <dl><div><dt>Versión</dt><dd>03 · compartida</dd></div><div><dt>Responsable</dt><dd>Dirección del encargo</dd></div><div><dt>Siguiente acción</dt><dd>Validación del cliente</dd></div></dl>
@@ -170,6 +170,20 @@ function ResponsibilityDesk() {
             {roles.map(([code, title, text, output]) => <article key={code}><span>{code}</span><div><h3>{title}</h3><p>{text}</p></div><strong>{output}</strong></article>)}
           </div>
         </div>
+        <aside className="nos-responsibility__firm" aria-label="Identidad verificada de MEDLA">
+          <div>
+            <span>Identidad de la firma</span>
+            <h3>Responsabilidad empresarial visible.</h3>
+            <p>La entidad que recibe el encargo y trata los datos está identificada públicamente. Los perfiles concretos de cada proyecto se confirman al definir el equipo.</p>
+          </div>
+          <dl>
+            <div><dt>Razón social</dt><dd>MEDLA ASESORES, S.L.</dd></div>
+            <div><dt>Sede</dt><dd>Móstoles · Madrid · España</dd></div>
+            <div><dt>Registro Mercantil</dt><dd>Tomo 46169 · Folio 20 · Hoja M-811076</dd></div>
+            <div><dt>Contacto</dt><dd><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></dd></div>
+          </dl>
+          <a href="privacidad.html#responsable">Ver información legal <Arrow /></a>
+        </aside>
       </div>
     </section>
   );
@@ -255,7 +269,7 @@ function Protocol() {
       <div className="nos-shell">
         <div className="nos-protocol__intro">
           <span className="nos-section-code">04 / Protocolo</span>
-          <h2 id="protocol-title">Del problema<br />a una entrega <em>que el equipo puede continuar.</em></h2>
+          <h2 id="protocol-title">Del problema<br />a una solución <em>que el equipo puede operar y mejorar.</em></h2>
           <p>El recorrido cambia según el proyecto. El principio no: cada fase debe producir una salida que permita tomar la siguiente decisión.</p>
         </div>
         <div className="nos-protocol__workbench">
@@ -332,32 +346,14 @@ function Closing() {
         <span className="nos-kicker">Empezar por la pregunta</span>
         <h2 id="closing-title">Cuéntanos qué necesitas<br /><em>resolver.</em></h2>
         <p>Revisaremos el proyecto contigo y te diremos qué áreas hacen falta, qué conviene priorizar y cuál es el siguiente paso.</p>
-        <div className="nos-closing__actions"><a className="nos-button nos-button--signal" href="contacto.html">Cuéntanos tu proyecto <Arrow /></a><a className="nos-button nos-button--quiet" href="servicios.html">Explorar servicios <Arrow /></a></div>
+        <div className="nos-closing__actions"><a className="nos-button nos-button--signal" href="contacto.html">Solicitar diagnóstico <Arrow /></a><a className="nos-button nos-button--quiet" href="servicios.html">Explorar servicios <Arrow /></a></div>
       </div>
     </section>
   );
 }
 
-function Footer() {
-  return (
-    <footer className="nos-footer">
-      <div className="nos-shell">
-        <div className="nos-footer__top">
-          <div className="nos-footer__brand"><a href="index.html" aria-label="MEDLA Empresas, inicio"><img src="logo.png" alt="MEDLA Empresas" /></a><p>Estructura legal, tecnológica y comercial para decisiones que atraviesan toda la empresa.</p></div>
-          <div className="nos-footer__nav">
-            <div><span>Ámbitos</span><a href="asesoria-legal.html">Legal</a><a href="agentes.html">Inteligencia artificial</a><a href="digitalizacion.html">Operaciones</a><a href="redes-sociales.html">Sistema comercial</a></div>
-            <div><span>MEDLA</span><a href="servicios.html">Servicios</a><a href="nosotros.html" aria-current="page">Nosotros</a><a href="blog.html">Cuadernos</a><a href="contacto.html">Contacto</a></div>
-            <div><span>Contacto</span><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a><a href="tel:+34641576772">+34 641 576 772</a><p>Madrid, España</p></div>
-          </div>
-        </div>
-        <div className="nos-footer__bottom"><span>© 2026 MEDLA Empresas</span><a href="privacidad.html">Privacidad</a><a href="contacto.html">Iniciar conversación <Arrow /></a></div>
-      </div>
-    </footer>
-  );
-}
-
 function NosotrosApp() {
-  return <div className="nos-page"><a className="nos-skip" href="#main-content">Saltar al contenido</a><window.MedlaSiteHeader current="about" /><main id="main-content"><Hero /><OpeningStatement /><ResponsibilityDesk /><Coordination /><Protocol /><Transfer /><Principles /><Closing /></main><Footer /></div>;
+  return <div className="nos-page"><a className="nos-skip" href="#main-content">Saltar al contenido</a><window.MedlaSiteHeader current="about" /><main id="main-content"><Hero /><OpeningStatement /><ResponsibilityDesk /><Coordination /><Protocol /><Transfer /><Principles /><Closing /></main><window.MedlaSiteFooter /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<NosotrosApp />);

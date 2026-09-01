@@ -361,7 +361,7 @@ section[id] { scroll-margin-top: 90px; }
 .sp-instrument__segments { position: absolute; inset: 0; }
 .sp-instrument__segments i { position: absolute; display: block; border: 1px solid rgba(255,255,255,.14); background: rgba(8,10,15,.72); transition: border-color .4s var(--sp-ease), background .4s var(--sp-ease), transform .4s var(--sp-ease), opacity .4s ease; }
 .sp-instrument__segments i.is-active { border-color: color-mix(in srgb, var(--sp-signal) 76%, white 8%); background: color-mix(in srgb, var(--sp-signal) 16%, rgba(8,10,15,.88)); box-shadow: 0 0 26px color-mix(in srgb, var(--sp-signal) 18%, transparent); }
-.sp-instrument__segments i span { position: absolute; color: rgba(255,255,255,.5); font: 600 5.5px/1.15 var(--sp-body); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.sp-instrument__segments i span { position: absolute; color: rgba(255,255,255,.64); font: 650 7px/1.15 var(--sp-body); letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
 
 .sp-instrument--document { inset: 15% 24%; border: 1px solid rgba(255,255,255,.2); background: linear-gradient(135deg,rgba(255,255,255,.045),transparent); box-shadow: 15px 15px 0 rgba(255,255,255,.025), 30px 30px 0 rgba(255,255,255,.015); }
 .sp-instrument--document::before { position: absolute; inset: 14% 12%; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.14) 0 1px, transparent 1px 26px); content: ""; }
@@ -710,7 +710,7 @@ section[id] { scroll-margin-top: 90px; }
   .sp-scene__core span { font-size: 23px; }
   .sp-scene__core small { font-size: 5.8px; }
   .sp-instrument { inset: 19%; }
-  .sp-instrument__segments i span { font-size: 4.8px; }
+  .sp-instrument__segments i span { font-size: 6.2px; }
   .sp-instrument--document { inset: 14% 25%; }
   .sp-instrument--flow { inset: 25% 6%; }
   .sp-instrument--flow .sp-instrument__segments i { width: 36px; height: 36px; }
@@ -795,6 +795,23 @@ section[id] { scroll-margin-top: 90px; }
   .sp-scene__nodes button { width: 100%; font-size: 6.8px; }
   .sp-scene__core { width: 92px; }
   .sp-hero__foot { width: calc(100% - 32px); }
+  .sp-scope__workspace,
+  .sp-scope__panel,
+  .sp-deliverables__theatre,
+  .sp-deliverables__theatre > article,
+  .sp-deliverables__copy,
+  .sp-deliverables__theatre article > ol { min-width: 0; max-width: 100%; }
+  .sp-scope__signal,
+  .sp-scope__work,
+  .sp-scope__outputs { min-width: 0; }
+  .sp-scope__panel,
+  .sp-deliverables__copy,
+  .sp-deliverables__theatre article > ol { padding-right: 18px; padding-left: 18px; }
+  .sp-scope__work p,
+  .sp-deliverables__copy p,
+  .sp-deliverables__theatre article > ol li { overflow-wrap: anywhere; }
+  .sp-scope__work h3,
+  .sp-deliverables__copy h3 { font-size: clamp(42px,12.1vw,46px); overflow-wrap: normal; word-break: normal; }
 }
 
 @media (prefers-reduced-motion: reduce) {

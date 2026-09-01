@@ -19,7 +19,7 @@ const ALLOWED_STAGES = new Set([
 const ALLOWED_SCOPES = new Set([
   "Asesoría legal corporativa",
   "Constitución / reestructura",
-  "Inversiones y capital",
+  "Inversión y financiación",
   "Digitalización de procesos",
   "Automatización e integración",
   "IA aplicada",

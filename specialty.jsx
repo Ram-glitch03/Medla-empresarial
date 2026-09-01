@@ -141,7 +141,7 @@ const SPECIALTIES = {
       code: "FLUJO / 01",
       core: "REGLA",
       mark: "↳",
-      caption: "Un evento útil termina en una acción registrada, o en una excepción con responsable.",
+      caption: "Cada solicitud o cambio termina en una acción registrada o en una excepción con responsable.",
       nodes: [
         { label: "Evento", detail: "Una entrada verificable inicia el flujo en el momento correcto." },
         { label: "Regla", detail: "Condiciones explícitas deciden qué camino sigue cada caso." },
@@ -289,7 +289,7 @@ const SPECIALTIES = {
     ],
     deliverables: [
       { code: "DI-01", title: "Plano del sistema", text: "Una arquitectura que relaciona usuarios, datos, decisiones, herramientas e integraciones.", contents: ["Flujos críticos", "Modelo de información", "Permisos y dependencias"] },
-      { code: "DI-02", title: "Solución en operación", text: "Los recorridos priorizados implantados y probados con situaciones reales del equipo.", contents: ["Interfaces", "Integraciones", "Pruebas de aceptación"] },
+      { code: "DI-02", title: "Solución en operación", text: "Los procesos prioritarios, implantados y probados con situaciones reales del equipo.", contents: ["Interfaces", "Integraciones", "Pruebas de aceptación"] },
       { code: "DI-03", title: "Base para evolucionar", text: "El conocimiento necesario para operar y cambiar el sistema sin volver a depender de memoria informal.", contents: ["Repositorio y decisiones", "Manual de operación", "Gobierno de cambios"] },
     ],
     process: [
@@ -307,7 +307,7 @@ const SPECIALTIES = {
   },
 
   inversiones: {
-    descriptor: "Estructura y análisis de inversión",
+    descriptor: "Inversión y financiación",
     eyebrow: "Decisiones antes del compromiso",
     accent: "#b79b59",
     hero: {
@@ -405,7 +405,7 @@ const SPECIALTIES = {
     },
     scope: [
       { name: "Posicionamiento", signal: "La oferta necesita una formulación precisa antes de producir contenido.", work: "Ordenamos audiencias, problemas, propuesta, pruebas disponibles y lenguaje; definimos qué merece repetirse y qué debe desaparecer.", outputs: ["Arquitectura de mensajes", "Prioridades de audiencia", "Guía de lenguaje"] },
-      { name: "Sistema editorial", signal: "El contenido debe sostener una idea a lo largo del tiempo y de varios formatos.", work: "Diseñamos territorios, series, formatos y circuitos de aprobación ajustados a la capacidad del equipo.", outputs: ["Líneas editoriales", "Formatos", "Flujo de producción"] },
+      { name: "Sistema editorial", signal: "El contenido debe sostener una idea a lo largo del tiempo y de varios formatos.", work: "Diseñamos temas, series, formatos y circuitos de aprobación ajustados a la capacidad del equipo.", outputs: ["Líneas editoriales", "Formatos", "Flujo de producción"] },
       { name: "Captación", signal: "El interés necesita un siguiente paso claro y una entrada con contexto.", work: "Conectamos piezas, páginas, formularios y criterios de calificación sin añadir fricción innecesaria.", outputs: ["Recorridos de entrada", "Campos y criterios", "Mensajes de continuidad"] },
       { name: "CRM y seguimiento", signal: "Cada oportunidad necesita responsable, estado e historial.", work: "Definimos el paso al CRM, reglas de asignación, cadencias y señales para continuar, pausar o cerrar el seguimiento.", outputs: ["Modelo de oportunidad", "Responsables", "Secuencias de seguimiento"] },
     ],
@@ -425,7 +425,7 @@ const SPECIALTIES = {
       title: "La comunicación termina cuando el equipo sabe qué hacer con la respuesta.",
       body: "No separamos redes, página, formulario y CRM como encargos inconexos. Definimos qué contexto viaja entre ellos y quién asume la siguiente acción.",
     },
-    cta: { title: "Revisemos tu recorrido comercial.", body: "Comparte la oferta, los canales actuales y cómo dais seguimiento. Identificaremos dónde se pierden oportunidades o información.", button: "Revisar captación y CRM" },
+    cta: { title: "Revisemos tu recorrido comercial.", body: "Comparte la oferta, los canales actuales y cómo realiza el equipo el seguimiento. Identificaremos dónde se pierden oportunidades o información.", button: "Revisar captación y CRM" },
   },
 
   jotform: {
@@ -888,7 +888,7 @@ function Process({ process }) {
         <div className="sp-process__head" data-reveal>
           <div className="sp-kicker"><span>05</span>Forma de trabajo</div>
           <h2 id="process-title">Así pasamos de la revisión inicial a la entrega.</h2>
-          <p>Cada fase cierra una decisión antes de abrir la siguiente. Así evitamos que la complejidad se esconda detrás de actividad.</p>
+          <p>Cada fase cierra una decisión antes de abrir la siguiente. Así evitamos que la complejidad quede oculta tras una lista de tareas.</p>
         </div>
         <ol className="sp-process__steps">
           {process.map((step, index) => (
@@ -935,25 +935,6 @@ function ContactCTA({ cta, context }) {
   );
 }
 
-function Footer({ descriptor, context }) {
-  return (
-    <footer className="sp-footer">
-      <div className="sp-shell">
-        <div className="sp-footer__top">
-          <Brand descriptor={descriptor} />
-          <p>Contratos, procesos y herramientas coordinados dentro del mismo encargo.</p>
-        </div>
-        <div className="sp-footer__links">
-          <div><span>Explorar</span><a href="index.html">Inicio</a><a href="servicios.html">Servicios</a><a href="nosotros.html">Nosotros</a></div>
-          <div><span>Contacto</span><a href={`contacto.html?context=${context}`}>Solicitar diagnóstico</a><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></div>
-          <div><span>Ubicación</span><p>Madrid · España</p><p>Trabajo coordinado de forma remota.</p></div>
-        </div>
-        <div className="sp-footer__bottom"><span>© {new Date().getFullYear()} MEDLA</span><a href="privacidad.html">Privacidad</a><span>Objetivos · Ejecución · Transferencia</span></div>
-      </div>
-    </footer>
-  );
-}
-
 function App() {
   const pathname = window.location.pathname.split("/").pop()?.replace(/\.html$/, "") || "";
   const requested = document.body.dataset.specialty || PAGE_ALIASES[pathname] || "legal";
@@ -972,7 +953,7 @@ function App() {
         <Boundary boundary={config.boundary} />
         <ContactCTA cta={config.cta} context={config.context} />
       </main>
-      <Footer descriptor={config.descriptor} context={config.context} />
+      <window.MedlaSiteFooter context={config.context} />
     </div>
   );
 }

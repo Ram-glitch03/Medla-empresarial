@@ -75,7 +75,7 @@ const GUIDES = [
     sections: [
       ["Define el cambio observable", "Describe qué será distinto al terminar y para quién. Evita convertir una lista de entregables en la definición del éxito."],
       ["Asigna derechos de decisión", "Distingue quién propone, quién aporta contexto y quién aprueba. Una responsabilidad colectiva suele ocultar que nadie tiene autoridad suficiente para desbloquear el trabajo."],
-      ["Cierra la primera transferencia", "Acordad dónde quedan decisiones, documentos y cambios. El canal y el formato importan menos que la posibilidad de recuperar el contexto sin depender de la memoria."]
+      ["Cierra la primera transferencia", "Acuerda dónde quedan decisiones, documentos y cambios. El canal y el formato importan menos que la posibilidad de recuperar el contexto sin depender de la memoria."]
     ],
     takeaway: "Un buen arranque no intenta resolver el proyecto: crea las condiciones para decidir con velocidad y dejar rastro."
   }
@@ -235,12 +235,6 @@ function ConversationCTA() {
   return <section className="journal-cta"><div className="journal-cta-label">03 — Aplicación</div><p>Si quieres aplicar una guía a un caso concreto, cuéntanos qué necesitas resolver.</p><a href="contacto.html?context=cuadernos"><span>Describir el caso</span><span aria-hidden="true">↗</span></a></section>;
 }
 
-function BlogFooter() {
-  return <footer className="journal-footer"><div className="journal-footer-top"><a href="index.html" className="journal-footer-logo"><Wordmark /></a><p>Legal, tecnología y operación dentro de una misma decisión.</p><a href="mailto:info@medla-empresas.com">info@medla-empresas.com <span aria-hidden="true">↗</span></a></div>
-    <div className="journal-footer-links"><div><span>Explorar</span><a href="servicios.html">Servicios</a><a href="nosotros.html">Cómo trabajamos</a><a href="blog.html">Cuadernos</a><a href="contacto.html">Contacto</a></div><div><span>Áreas</span><a href="asesoria-legal.html">Asesoría legal</a><a href="automatizacion.html">Automatización</a><a href="agentes.html">Agentes de IA</a><a href="digitalizacion.html">Digitalización</a></div><div><span>Contacto</span><a href="tel:+34641576772">+34 641 576 772</a><p>Madrid, España</p><a href="privacidad.html">Privacidad</a></div></div>
-    <div className="journal-footer-bottom"><span>© 2026 MEDLA Empresas</span><span>Cuadernos / Edición abierta</span></div></footer>;
-}
-
 const BLOG_HISTORY_STATE = "medlaBlog";
 
 function createBlogEntryId() {
@@ -339,7 +333,7 @@ function BlogApp() {
     readerOrigin.current = openedFromIndex ? "index" : "direct";
     setSelected(next);
   };
-  return <div className="journal-page"><a className="journal-skip" href="#indice">Saltar al índice</a><window.MedlaSiteHeader current="insights" /><main><Hero onOpenCover={() => openGuide(GUIDES[0])} /><FilterBar active={activeCategory} onChange={setActiveCategory} query={query} setQuery={setQuery} resultCount={filtered.length} /><GuideIndex guides={filtered} onOpen={openGuide} /><EditorialStatement /><ConversationCTA /></main><BlogFooter /><GuideReader guide={selected} onClose={closeReader} onNext={nextGuide} /></div>;
+  return <div className="journal-page"><a className="journal-skip" href="#indice">Saltar al índice</a><window.MedlaSiteHeader current="insights" /><main><Hero onOpenCover={() => openGuide(GUIDES[0])} /><FilterBar active={activeCategory} onChange={setActiveCategory} query={query} setQuery={setQuery} resultCount={filtered.length} /><GuideIndex guides={filtered} onOpen={openGuide} /><EditorialStatement /><ConversationCTA /></main><window.MedlaSiteFooter /><GuideReader guide={selected} onClose={closeReader} onNext={nextGuide} /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<BlogApp />);
