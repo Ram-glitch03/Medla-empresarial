@@ -144,6 +144,37 @@ function OpeningStatement() {
   );
 }
 
+function ResponsibilityDesk() {
+  const roles = [
+    ["01", "Dirección del encargo", "Mantiene la pregunta, prioriza dependencias y cierra cada decisión antes de abrir la siguiente.", "Decisión y alcance"],
+    ["02", "Especialista de disciplina", "Aporta criterio jurídico, técnico, operativo o comercial sobre una versión común del caso.", "Criterio aplicable"],
+    ["03", "Responsable del cliente", "Valida hechos, toma las decisiones reservadas al negocio y recibe el traspaso del trabajo.", "Aprobación y continuidad"],
+  ];
+  return (
+    <section className="nos-responsibility" aria-labelledby="responsibility-title">
+      <div className="nos-shell">
+        <div className="nos-responsibility__head">
+          <span className="nos-section-code">02 / Quién responde</span>
+          <h2 id="responsibility-title">Aquí no se contrata<br /><em>una caja negra.</em></h2>
+          <p>Cada decisión tiene una función responsable, una versión de trabajo y una salida que puede revisarse.</p>
+        </div>
+        <div className="nos-responsibility__desk">
+          <article className="nos-responsibility__record">
+            <header><span>REGISTRO / DEC-024</span><b>EN REVISIÓN</b></header>
+            <div className="nos-responsibility__stamp" aria-hidden="true"><span>M/</span><small>DECISIÓN</small></div>
+            <h3>Condiciones para aprobar el siguiente tramo.</h3>
+            <dl><div><dt>Versión</dt><dd>03 · compartida</dd></div><div><dt>Responsable</dt><dd>Dirección del encargo</dd></div><div><dt>Siguiente acción</dt><dd>Validación del cliente</dd></div></dl>
+            <footer><i></i> Una decisión · un registro · un responsable</footer>
+          </article>
+          <div className="nos-responsibility__roles">
+            {roles.map(([code, title, text, output]) => <article key={code}><span>{code}</span><div><h3>{title}</h3><p>{text}</p></div><strong>{output}</strong></article>)}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const disciplines = [
   { id: "direccion", name: "Dirección", code: "01", title: "Convierte una preocupación difusa en una decisión abordable.", copy: "Define la pregunta, separa lo urgente de lo importante y alinea alcance, responsables y criterio de éxito.", output: "Marco de decisión" },
   { id: "legal", name: "Legal", code: "02", title: "Traduce el riesgo en condiciones que el negocio puede aplicar.", copy: "Revisa obligaciones, límites y dependencias para que la solución funcione también fuera del documento.", output: "Condiciones y controles" },
@@ -181,7 +212,7 @@ function Coordination() {
     <section className="nos-coordination" aria-labelledby="coordination-title">
       <div className="nos-shell">
         <div className="nos-coordination__head">
-          <span className="nos-section-code nos-section-code--light">02 / Coordinación</span>
+          <span className="nos-section-code nos-section-code--light">03 / Coordinación</span>
           <h2 id="coordination-title">Especialidades distintas.<br /><em>Una misma mesa.</em></h2>
           <p>Cada proyecto activa solo las disciplinas que necesita. La coordinación mantiene decisiones, dependencias y cambios en un único hilo de trabajo.</p>
         </div>
@@ -223,7 +254,7 @@ function Protocol() {
     <section className="nos-protocol" aria-labelledby="protocol-title">
       <div className="nos-shell">
         <div className="nos-protocol__intro">
-          <span className="nos-section-code">03 / Protocolo</span>
+          <span className="nos-section-code">04 / Protocolo</span>
           <h2 id="protocol-title">Del problema<br />a una entrega <em>que el equipo puede continuar.</em></h2>
           <p>El recorrido cambia según el proyecto. El principio no: cada fase debe producir una salida que permita tomar la siguiente decisión.</p>
         </div>
@@ -260,7 +291,7 @@ function Transfer() {
     <section className="nos-transfer" aria-labelledby="transfer-title">
       <div className="nos-shell nos-transfer__layout">
         <div className="nos-transfer__heading">
-          <span className="nos-section-code nos-section-code--light">04 / Transferencia</span>
+          <span className="nos-section-code nos-section-code--light">05 / Transferencia</span>
           <h2 id="transfer-title">El proyecto no acaba<br />en la entrega.</h2>
           <p>La entrega incluye las decisiones tomadas, responsables, documentación operativa y cambios previstos.</p>
         </div>
@@ -284,7 +315,7 @@ function Principles() {
   return (
     <section className="nos-principles" aria-labelledby="principles-title">
       <div className="nos-shell">
-        <div className="nos-principles__head"><span className="nos-section-code">05 / Principios</span><h2 id="principles-title">La forma de trabajar<br /><em>también es parte del resultado.</em></h2></div>
+        <div className="nos-principles__head"><span className="nos-section-code">06 / Principios</span><h2 id="principles-title">La forma de trabajar<br /><em>también es parte del resultado.</em></h2></div>
         <div className="nos-principles__list">
           {items.map(([code, title, copy]) => <article key={code}><span>{code}</span><h3>{title}</h3><p>{copy}</p><i aria-hidden="true">↗</i></article>)}
         </div>
@@ -326,7 +357,7 @@ function Footer() {
 }
 
 function NosotrosApp() {
-  return <div className="nos-page"><a className="nos-skip" href="#main-content">Saltar al contenido</a><NosNav /><main id="main-content"><Hero /><OpeningStatement /><Coordination /><Protocol /><Transfer /><Principles /><Closing /></main><Footer /></div>;
+  return <div className="nos-page"><a className="nos-skip" href="#main-content">Saltar al contenido</a><NosNav /><main id="main-content"><Hero /><OpeningStatement /><ResponsibilityDesk /><Coordination /><Protocol /><Transfer /><Principles /><Closing /></main><Footer /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<NosotrosApp />);

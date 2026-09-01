@@ -21,3 +21,10 @@ html{scroll-behavior:smooth;background:var(--j-black)}body{background:var(--j-bl
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.signal-orbit-b,.guide-row,.reader,.reader-shell,.journal-menu-panel,.reader-progress span{animation:none!important}.guide-row{opacity:1}*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
 .journal-footer-bottom{color:rgba(232,229,220,.68)}
 @media(max-width:760px){.journal-search input{font-size:16px}}
+.text-action{border-left:0;border-right:0;border-top:0;background:transparent;cursor:pointer}
+.reader-progress span{width:0;animation:none;transition:width .16s linear}
+.reader-aside small{color:rgba(16,19,25,.62);font:inherit}
+.reader-actions{justify-content:flex-start;flex-wrap:wrap}
+.reader-actions a{margin-right:auto}
+.reader-copy-status{min-height:22px;margin:14px 0 0;color:rgba(16,19,25,.62);font-size:11px;letter-spacing:.05em;text-align:right}
+@media(max-width:760px){.reader-actions a{margin-right:0}.reader-copy-status{text-align:left}.reader-aside small{display:none}}

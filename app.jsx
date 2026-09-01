@@ -392,14 +392,19 @@ function LightMotionField({ variant = "one" }) {
   );
 }
 
-function WorldBridgeSequence({ onSceneChange }) {
+function WorldBridgeSequence({ onSceneChange, requestedStep }) {
   const markerRef = useRef(null);
   const onSceneChangeRef = useRef(onSceneChange);
+  const requestedStepRef = useRef(requestedStep);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     onSceneChangeRef.current = onSceneChange;
   }, [onSceneChange]);
+
+  useEffect(() => {
+    requestedStepRef.current = requestedStep;
+  }, [requestedStep]);
 
   useEffect(() => {
     const marker = markerRef.current;
@@ -433,7 +438,10 @@ function WorldBridgeSequence({ onSceneChange }) {
         furthestProgress = Math.max(furthestProgress, autoProgress, scrollAssist);
       }
 
-      const sceneProgress = reducedMotion ? 1 : furthestProgress;
+      const manualProgress = requestedStepRef.current === null
+        ? null
+        : [0.29, 0.6, 1][requestedStepRef.current];
+      const sceneProgress = reducedMotion ? 1 : manualProgress ?? furthestProgress;
       const stageReveal = [
         smoothstep(.01, .3, sceneProgress),
         smoothstep(.27, .64, sceneProgress),
@@ -521,7 +529,7 @@ function WorldBridgeSection() {
       data-bridge-focus={activeRoute}
     >
       <div className="hp-world-bridge__sticky">
-        <WorldBridgeSequence onSceneChange={setScene} />
+        <WorldBridgeSequence onSceneChange={setScene} requestedStep={pinnedRoute} />
         <div className="hp-world-bridge__wash" aria-hidden="true"><i></i><i></i><i></i></div>
 
         <div className="hp-world-bridge__intro hp-container">
@@ -863,6 +871,7 @@ function MedlaOpsLab() {
   }, [state.running, state.scenario, isVisible, reducedMotion]);
 
   const selectScenario = (index) => dispatch({ type: "SELECT", index });
+  const paused = !state.running || !isVisible || reducedMotion;
   const handleTabKey = (event, index) => {
     if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
     event.preventDefault();
@@ -878,7 +887,7 @@ function MedlaOpsLab() {
   };
 
   return (
-    <div ref={labRef} className="hp-ops-lab" onPointerMove={moveLight} aria-label="Demostración interactiva de un sistema MEDLA">
+    <div ref={labRef} className={`hp-ops-lab${paused ? " is-paused" : ""}`} onPointerMove={moveLight} aria-label="Demostración interactiva de un sistema MEDLA">
       <div className="hp-ops-lab__topbar">
         <div><span>M/</span> LABORATORIO <b>Demostración</b></div>
         <button type="button" onClick={() => dispatch({ type: "TOGGLE" })} aria-label={state.running ? "Pausar simulación" : "Reanudar simulación"}>
@@ -1489,7 +1498,7 @@ function FinalCTA() {
         <header className="hp-final-intake__intro">
           <div className="hp-kicker hp-final-intake__kicker" data-reveal>
             <span>06 — Primera conversación</span>
-            <small>No necesitas preparar un briefing</small>
+            <small>No hace falta que lo tengas ordenado</small>
           </div>
           <h2 id="final-intake-title" data-reveal>¿Qué está frenando <em>al equipo?</em></h2>
           <p data-reveal>Elige el caso más cercano. Abriremos el formulario con ese contexto ya preparado y podrás ajustarlo antes de enviarlo.</p>

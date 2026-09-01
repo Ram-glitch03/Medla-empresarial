@@ -94,7 +94,9 @@ function BlogNav() {
   useEffect(() => {
     if (!open) return undefined;
     const oldOverflow = document.body.style.overflow;
+    const background = [...document.querySelectorAll(".journal-page > :not(.journal-menu-shell)")];
     document.body.style.overflow = "hidden";
+    background.forEach((element) => element.setAttribute("inert", ""));
     const focusables = Array.from(dialogRef.current.querySelectorAll("a[href], button:not([disabled])"));
     focusables[0] && focusables[0].focus();
     const onKey = (event) => {
@@ -105,7 +107,7 @@ function BlogNav() {
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     };
     document.addEventListener("keydown", onKey);
-    return () => { document.body.style.overflow = oldOverflow; document.removeEventListener("keydown", onKey); triggerRef.current && triggerRef.current.focus(); };
+    return () => { document.body.style.overflow = oldOverflow; background.forEach((element) => element.removeAttribute("inert")); document.removeEventListener("keydown", onKey); triggerRef.current && triggerRef.current.focus(); };
   }, [open]);
   return <>
     <nav className="journal-nav" aria-label="Navegación principal">
@@ -132,13 +134,13 @@ function SignalField() {
   return <div className="signal-field" aria-hidden="true"><span className="signal-orbit signal-orbit-a"></span><span className="signal-orbit signal-orbit-b"></span><span className="signal-core"></span><span className="signal-coordinate signal-coordinate-a">40.4168° N</span><span className="signal-coordinate signal-coordinate-b">DECISIÓN / CONTEXTO</span></div>;
 }
 
-function Hero() {
+function Hero({ onOpenCover }) {
   return <header className="journal-hero">
     <div className="journal-hero-kicker"><span>Cuadernos MEDLA</span><span>Edición abierta</span></div>
     <div className="journal-hero-main"><div className="journal-hero-copy">
       <p className="journal-overline">Notas para trabajar</p><h1>Antes de ejecutar,<br /><em>define qué debe cambiar.</em></h1>
       <p className="journal-hero-intro">Guías breves para ordenar una decisión antes de convertirla en contrato, proceso, sistema o campaña.</p>
-      <a className="text-action" href="#automatizar-sin-arrastrar-caos">Ir a la guía de portada <span aria-hidden="true">↘</span></a>
+      <button className="text-action" type="button" onClick={onOpenCover}>Abrir la guía de portada <span aria-hidden="true">↘</span></button>
     </div><SignalField /></div>
     <div className="journal-hero-foot"><span>01 — Índice de trabajo</span><a href="#indice">Explorar las guías <span aria-hidden="true">↓</span></a></div>
   </header>;
@@ -165,6 +167,8 @@ function GuideIndex({ guides, onOpen }) {
 
 function GuideReader({ guide, onClose, onNext }) {
   const dialogRef = useRef(null), closeRef = useRef(null);
+  const [progress, setProgress] = useState(0);
+  const [copyStatus, setCopyStatus] = useState("");
   useEffect(() => {
     if (!guide) return undefined;
     const oldOverflow = document.body.style.overflow;
@@ -183,16 +187,40 @@ function GuideReader({ guide, onClose, onNext }) {
     document.addEventListener("keydown", onKey);
     return () => { document.body.style.overflow = oldOverflow; background.forEach((element) => element.removeAttribute("inert")); document.removeEventListener("keydown", onKey); };
   }, [guide, onClose]);
+  useEffect(() => {
+    const reader = dialogRef.current;
+    if (!guide || !reader) return undefined;
+    setProgress(0);
+    setCopyStatus("");
+    const update = () => {
+      const max = reader.scrollHeight - reader.clientHeight;
+      setProgress(max > 0 ? Math.min(1, reader.scrollTop / max) : 1);
+    };
+    update();
+    reader.addEventListener("scroll", update, { passive: true });
+    return () => reader.removeEventListener("scroll", update);
+  }, [guide]);
+  const copyLink = async () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("guide", guide.id);
+    url.hash = "";
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      setCopyStatus("Enlace copiado");
+    } catch {
+      setCopyStatus("El enlace está en la barra del navegador");
+    }
+  };
   if (!guide) return null;
   return <div className="reader-shell" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
     <article ref={dialogRef} className="reader" role="dialog" aria-modal="true" aria-labelledby="reader-title">
       <header className="reader-head"><span className="reader-brand">Cuadernos / {guide.number}</span><button ref={closeRef} type="button" className="reader-close" onClick={onClose}>Cerrar <span aria-hidden="true">×</span></button></header>
-      <div className="reader-layout"><aside className="reader-aside"><span>{guide.category}</span><span>{guide.format}</span><span>{guide.duration} de lectura</span><div className="reader-progress" aria-hidden="true"><span></span></div></aside>
+      <div className="reader-layout"><aside className="reader-aside"><span>{guide.category}</span><span>{guide.format}</span><span>{guide.duration} de lectura</span><div className="reader-progress" aria-hidden="true"><span style={{ width: `${Math.round(progress * 100)}%` }}></span></div><small>{Math.round(progress * 100)}% leído</small></aside>
         <div className="reader-content"><p className="reader-eyebrow">Una guía para abrir la conversación</p><h2 id="reader-title">{guide.title}</h2><p className="reader-lead">{guide.intro}</p>
           <blockquote><span>Pregunta crítica</span><p>{guide.question}</p></blockquote>
           <div className="reader-sections">{guide.sections.map((section, index) => <section key={section[0]}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{section[0]}</h3><p>{section[1]}</p></div></section>)}</div>
           <div className="reader-takeaway"><span>Lo que debería quedar sobre la mesa</span><p>{guide.takeaway}</p></div>
-          <div className="reader-actions"><a href="contacto.html?context=cuadernos">Aplicar esta guía a un caso <span aria-hidden="true">↗</span></a><button type="button" onClick={onNext}>Siguiente guía <span aria-hidden="true">→</span></button></div>
+          <div className="reader-actions"><a href={`contacto.html?context=cuadernos&guide=${guide.id}`}>Aplicar esta guía a un caso <span aria-hidden="true">↗</span></a><button type="button" onClick={copyLink}>Copiar enlace <span aria-hidden="true">⧉</span></button><button type="button" onClick={onNext}>Siguiente guía <span aria-hidden="true">→</span></button></div><p className="reader-copy-status" role="status" aria-live="polite">{copyStatus}</p>
         </div>
       </div>
     </article>
@@ -214,13 +242,32 @@ function BlogFooter() {
 }
 
 function BlogApp() {
-  const [activeCategory, setActiveCategory] = useState("Todos"), [query, setQuery] = useState(""), [selected, setSelected] = useState(null);
+  const guideFromUrl = () => GUIDES.find((guide) => guide.id === new URLSearchParams(window.location.search).get("guide")) || null;
+  const [activeCategory, setActiveCategory] = useState("Todos"), [query, setQuery] = useState(""), [selected, setSelected] = useState(guideFromUrl);
   const lastTrigger = useRef(null);
   const filtered = useMemo(() => { const normalized = query.trim().toLocaleLowerCase("es"); return GUIDES.filter((guide) => (activeCategory === "Todos" || guide.category === activeCategory) && (!normalized || `${guide.title} ${guide.excerpt} ${guide.category} ${guide.format}`.toLocaleLowerCase("es").includes(normalized))); }, [activeCategory, query]);
-  const openGuide = (guide) => { lastTrigger.current = document.activeElement; setSelected(guide); };
-  const closeReader = () => { setSelected(null); window.requestAnimationFrame(() => lastTrigger.current && lastTrigger.current.focus && lastTrigger.current.focus()); };
-  const nextGuide = () => { const currentIndex = GUIDES.findIndex((guide) => guide.id === selected.id); setSelected(GUIDES[(currentIndex + 1) % GUIDES.length]); };
-  return <div className="journal-page"><a className="journal-skip" href="#indice">Saltar al índice</a><BlogNav /><main><Hero /><FilterBar active={activeCategory} onChange={setActiveCategory} query={query} setQuery={setQuery} resultCount={filtered.length} /><GuideIndex guides={filtered} onOpen={openGuide} /><EditorialStatement /><ConversationCTA /></main><BlogFooter /><GuideReader guide={selected} onClose={closeReader} onNext={nextGuide} /></div>;
+  useEffect(() => {
+    const onPopState = () => {
+      const guide = guideFromUrl();
+      setSelected(guide);
+      window.requestAnimationFrame(() => !guide && lastTrigger.current?.focus?.());
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+  const setGuideUrl = (guide, { replace = false, returnToIndex = window.history.state?.medlaGuideReturn === true } = {}) => {
+    const url = new URL(window.location.href);
+    if (guide) url.searchParams.set("guide", guide.id); else url.searchParams.delete("guide");
+    url.hash = "";
+    window.history[replace ? "replaceState" : "pushState"](guide ? { medlaGuide: guide.id, medlaGuideReturn: returnToIndex } : {}, "", url);
+  };
+  const openGuide = (guide) => { lastTrigger.current = document.activeElement; setGuideUrl(guide, { returnToIndex: true }); setSelected(guide); };
+  const closeReader = () => {
+    if (window.history.state?.medlaGuideReturn) window.history.back();
+    else { setGuideUrl(null, { replace: true }); setSelected(null); window.requestAnimationFrame(() => lastTrigger.current?.focus?.()); }
+  };
+  const nextGuide = () => { const currentIndex = GUIDES.findIndex((guide) => guide.id === selected.id); const next = GUIDES[(currentIndex + 1) % GUIDES.length]; setGuideUrl(next, { replace: true }); setSelected(next); };
+  return <div className="journal-page"><a className="journal-skip" href="#indice">Saltar al índice</a><BlogNav /><main><Hero onOpenCover={() => openGuide(GUIDES[0])} /><FilterBar active={activeCategory} onChange={setActiveCategory} query={query} setQuery={setQuery} resultCount={filtered.length} /><GuideIndex guides={filtered} onOpen={openGuide} /><EditorialStatement /><ConversationCTA /></main><BlogFooter /><GuideReader guide={selected} onClose={closeReader} onNext={nextGuide} /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<BlogApp />);

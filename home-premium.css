@@ -2027,7 +2027,7 @@ body.premium-home {
 .hp-ops-lab__topbar b {
   margin-left: 11px;
   padding: 4px 7px;
-  color: rgba(255,255,255,.4);
+  color: rgba(255,255,255,.62);
   border: 1px solid rgba(255,255,255,.1);
   font-size: 8px;
   font-weight: 500;
@@ -2071,7 +2071,7 @@ body.premium-home {
   padding: 0 12px;
   border: 0;
   border-right: 1px solid rgba(255,255,255,.08);
-  color: rgba(255,255,255,.38);
+  color: rgba(255,255,255,.62);
   background: rgba(255,255,255,.012);
   font-family: var(--hp-mono);
   font-size: 8px;
@@ -2079,7 +2079,7 @@ body.premium-home {
   transition: color .25s ease, background .25s ease;
 }
 .hp-ops-lab__tabs button:last-child { border-right: 0; }
-.hp-ops-lab__tabs button span { color: rgba(255,255,255,.2); }
+.hp-ops-lab__tabs button span { color: rgba(255,255,255,.48); }
 .hp-ops-lab__tabs button:hover { color: rgba(255,255,255,.78); background: rgba(255,255,255,.025); }
 .hp-ops-lab__tabs button.is-active {
   color: var(--hp-white);
@@ -2088,7 +2088,7 @@ body.premium-home {
 }
 .hp-ops-lab__tabs button.is-active span { color: var(--hp-signal); }
 .hp-ops-lab__context { padding: 22px 24px 20px; border-bottom: 1px solid rgba(255,255,255,.1); }
-.hp-ops-lab__context > div { display: flex; justify-content: space-between; gap: 20px; color: rgba(255,255,255,.29); font-family: var(--hp-mono); font-size: 8px; letter-spacing: .08em; }
+.hp-ops-lab__context > div { display: flex; justify-content: space-between; gap: 20px; color: rgba(255,255,255,.58); font-family: var(--hp-mono); font-size: 10px; letter-spacing: .08em; }
 .hp-ops-lab__context > div span:first-child { color: var(--hp-blueprint); }
 .hp-ops-lab__context h2 {
   max-width: 640px;
@@ -2112,9 +2112,9 @@ body.premium-home {
 .hp-ops-lab__label {
   display: block;
   margin-bottom: 12px;
-  color: rgba(255,255,255,.25);
+  color: rgba(255,255,255,.56);
   font-family: var(--hp-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: .13em;
 }
 .hp-ops-source {
@@ -2626,6 +2626,11 @@ body.premium-home {
 .hp-ops-lab__bus i:nth-child(2) { animation-delay: -.6s; }
 .hp-ops-lab__bus i:nth-child(3) { animation-delay: -1.2s; }
 .hp-ops-lab__bus i:nth-child(4) { animation-delay: -1.8s; }
+.hp-ops-lab.is-paused *,
+.hp-ops-lab.is-paused *::before,
+.hp-ops-lab.is-paused *::after,
+.hp-ops-lab.is-paused::before,
+.hp-ops-lab.is-paused::after { animation-play-state: paused !important; }
 @keyframes hp-data-bus {
   0%, 100% { border-color: rgba(139,199,238,.3); box-shadow: 0 0 0 rgba(139,199,238,0); }
   45% { border-color: var(--hp-signal); background: var(--hp-signal); box-shadow: 0 0 16px rgba(169,243,193,.42); }
@@ -4365,9 +4370,9 @@ body.premium-home {
   border-bottom: 1px solid rgba(8,10,15,.11);
 }
 .hp-handover__facts dt {
-  color: #858984;
+  color: #5f625f;
   font-family: var(--hp-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: .05em;
   text-transform: uppercase;
 }
@@ -4386,9 +4391,9 @@ body.premium-home {
   margin-top: auto;
   padding: 0 clamp(22px, 2.5vw, 38px);
   border-top: 1px solid rgba(8,10,15,.12);
-  color: #777b77;
+  color: #5f625f;
   font-family: var(--hp-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: .05em;
   text-transform: uppercase;
 }
@@ -4504,13 +4509,13 @@ body.premium-home {
   gap: 20px;
   padding: 0 24px;
   border-bottom: 1px solid rgba(8,10,15,.14);
-  color: #686d69;
+  color: #505551;
   font-family: var(--hp-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: .09em;
   text-transform: uppercase;
 }
-.hp-issue-picker legend small { color: #969992; font: inherit; }
+.hp-issue-picker legend small { color: #5f625f; font: inherit; }
 .hp-issue-picker ol { margin: 0; padding: 0; list-style: none; }
 .hp-issue-picker li { position: relative; }
 .hp-issue-picker__input {
@@ -4530,12 +4535,12 @@ body.premium-home {
   gap: 14px;
   padding: 0 24px;
   border-bottom: 1px solid rgba(8,10,15,.12);
-  color: #6d706c;
+  color: #565b57;
   cursor: pointer;
   transition: color .28s ease, background .28s ease, box-shadow .28s ease;
 }
 .hp-issue-picker label span {
-  color: #989a94;
+  color: #5f625f;
   font-family: var(--hp-mono);
   font-size: 9px;
 }
@@ -4687,9 +4692,9 @@ body.premium-home {
   position: relative;
   z-index: 1;
   margin-top: 18px;
-  color: rgba(255,255,255,.35);
+  color: rgba(255,255,255,.62);
   font-family: var(--hp-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: .04em;
 }
 

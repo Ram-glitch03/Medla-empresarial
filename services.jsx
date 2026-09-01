@@ -67,6 +67,49 @@ const SERVICES = [
   },
 ];
 
+const BLOCKERS = [
+  {
+    id: "operacion",
+    label: "El trabajo se atasca entre correos, hojas y aprobaciones",
+    title: "Primero hacemos visible el recorrido completo.",
+    text: "Mapeamos estados, responsables, datos y excepciones antes de conectar herramientas. Así sabemos qué automatizar y qué debe seguir siendo una decisión humana.",
+    services: ["digitalizacion", "automatizacion", "jotform"],
+    context: "digitalizacion",
+  },
+  {
+    id: "acuerdo",
+    label: "Hay un acuerdo, una sociedad o una obligación que desbloquear",
+    title: "El documento tiene que describir la operación real.",
+    text: "Reunimos hechos, límites comerciales y evidencia disponible para que la decisión jurídica no avance separada del trabajo que debe sostener.",
+    services: ["legal", "constitucion"],
+    context: "legal",
+  },
+  {
+    id: "capital",
+    label: "Necesitamos comparar una inversión o preparar financiación",
+    title: "Separamos datos, supuestos y condiciones de cierre.",
+    text: "Construimos escenarios trazables y una documentación que permita discutir la decisión sin convertir una proyección en una promesa.",
+    services: ["inversiones", "legal"],
+    context: "inversiones",
+  },
+  {
+    id: "ia",
+    label: "Queremos aplicar IA sin abrir una caja negra",
+    title: "La tarea manda; el modelo viene después.",
+    text: "Definimos fuentes, permisos, formato de salida, evaluación y ruta de escalado. Después conectamos el agente al proceso que realmente debe asistir.",
+    services: ["ia", "digitalizacion", "automatizacion"],
+    context: "ia",
+  },
+  {
+    id: "crecimiento",
+    label: "La captación no termina en un seguimiento claro",
+    title: "Unimos promesa, dato y próxima acción comercial.",
+    text: "Ordenamos el mensaje, el punto de entrada y el traspaso al CRM para que cada oportunidad conserve contexto y tenga responsable.",
+    services: ["social", "jotform", "automatizacion"],
+    context: "crecimiento",
+  },
+];
+
 function useMenu() {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef(null);
@@ -144,6 +187,38 @@ function ServicesHero() {
   </section>;
 }
 
+function DecisionRouter() {
+  const [active, setActive] = useState(0);
+  const current = BLOCKERS[active];
+  const recommended = current.services.map((id) => SERVICES.find((service) => service.id === id)).filter(Boolean);
+
+  return <section className="svc-router" aria-labelledby="router-title">
+    <div className="svc-router-head">
+      <p className="svc-kicker"><span>Orientador</span> / Empieza por el bloqueo</p>
+      <h2 id="router-title">No hace falta que sepas<br /><em>qué servicio pedir.</em></h2>
+      <p>Elige la frase que más se parece a tu situación. Te mostramos por dónde empezar y qué capacidades podrían intervenir después.</p>
+    </div>
+    <div className="svc-router-workbench">
+      <div className="svc-router-questions" role="tablist" aria-label="Bloqueos habituales">
+        {BLOCKERS.map((blocker, index) => <button key={blocker.id} id={`blocker-tab-${blocker.id}`} type="button" role="tab" aria-selected={active === index} aria-controls="blocker-panel" tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => {
+          if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+          event.preventDefault();
+          const next = event.key === "Home" ? 0 : event.key === "End" ? BLOCKERS.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + BLOCKERS.length) % BLOCKERS.length;
+          setActive(next);
+          event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next]?.focus();
+        }}><span>{String(index + 1).padStart(2, "0")}</span><strong>{blocker.label}</strong><i aria-hidden="true">→</i></button>)}
+      </div>
+      <article key={current.id} id="blocker-panel" className="svc-router-result" role="tabpanel" aria-labelledby={`blocker-tab-${current.id}`}>
+        <div className="svc-router-result-code"><span>RUTA / {String(active + 1).padStart(2, "0")}</span><i>Orientación inicial</i></div>
+        <h3>{current.title}</h3>
+        <p>{current.text}</p>
+        <div className="svc-router-capabilities"><span>Capacidades que pueden intervenir</span>{recommended.map((service) => <a key={service.id} href={service.href}><b>{service.num}</b>{service.label}<i aria-hidden="true">↗</i></a>)}</div>
+        <a className="svc-button svc-button-primary" href={`contacto.html?context=${current.context}`}>Continuar con este contexto <span>↗</span></a>
+      </article>
+    </div>
+  </section>;
+}
+
 function ServiceExplorer() {
   const [active, setActive] = useState(0);
   const [t, setT] = useState(0);
@@ -211,7 +286,7 @@ function ServicesFooter() {
 }
 
 function ServicesApp() {
-  return <div className="svc-page"><ServicesNav /><main id="main"><ServicesHero /><ServiceExplorer /><Orchestration /><ServicesCta /></main><ServicesFooter /></div>;
+  return <div className="svc-page"><ServicesNav /><main id="main"><ServicesHero /><DecisionRouter /><ServiceExplorer /><Orchestration /><ServicesCta /></main><ServicesFooter /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<ServicesApp />);

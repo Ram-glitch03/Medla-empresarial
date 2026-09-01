@@ -134,18 +134,31 @@ function CtNav() {
 }
 
 /* ─────────── Hero ─────────── */
-function CtHero() {
+function CtHero({ context }) {
   return (
     <section className="contacto-hero">
       <div className="container contacto-hero-inner">
-        <span className="eyebrow" style={{ justifyContent: "center" }}>— Contacto</span>
-        <h1 style={{ marginTop: 20 }}>Qué decisión necesitas tomar, <em>qué proceso mejorar o qué contrato revisar.</em></h1>
-        <p className="lead">
-          Lo revisa una persona del equipo para responder con contexto y proponer un siguiente paso concreto.
-        </p>
-        <div className="contacto-pulse">
-          <span className="dot"></span> Revisión humana · Contexto estructurado
+        <div className="contacto-hero-copy">
+          <span className="eyebrow">01 — Conversación inicial</span>
+          <h1>Cuéntanos qué está bloqueado. <em>No hace falta que lo tengas ordenado.</em></h1>
+          <p className="lead">
+            Una persona del equipo revisa el contexto y responde con las preguntas, el alcance o el siguiente paso que tenga sentido.
+          </p>
+          <div className="contacto-pulse">
+            <span className="dot"></span> Revisión humana · Sin respuesta automática
+          </div>
         </div>
+        <aside className="ct-brief" aria-label="Vista previa del contexto que recibirá MEDLA">
+          <header><span>MEDLA / BRIEF INICIAL</span><b>01</b></header>
+          <div className="ct-brief-status"><i></i><span>{context ? "Contexto recuperado" : "Preparado para completar"}</span></div>
+          <h2>{context?.label || "Una decisión por ordenar"}</h2>
+          <dl>
+            <div><dt>Punto de partida</dt><dd>{context ? "Conservado desde la página anterior" : "Lo describes en cuatro pasos breves"}</dd></div>
+            <div><dt>Primera revisión</dt><dd>Problema · momento · responsables</dd></div>
+            <div><dt>Respuesta</dt><dd>Siguiente paso con contexto</dd></div>
+          </dl>
+          <footer><span>Datos tratados con consentimiento</span><i>Madrid / ES</i></footer>
+        </aside>
       </div>
     </section>
   );
@@ -219,28 +232,68 @@ const ALCANCE_OPTIONS = [
 
 const CONTEXT_PRESETS = {
   operacion: {
+    label: "Operación y sistemas",
     alcance: ["Digitalización de procesos", "Automatización e integración"],
     notas: "Punto de partida: un proceso de aprobaciones manuales sin un estado ni un responsable claros.",
   },
   legal: {
+    label: "Asesoría legal empresarial",
     alcance: ["Asesoría legal corporativa"],
     notas: "Punto de partida: una decisión bloqueada por contratos, obligaciones o versiones dispersas.",
   },
   ia: {
+    label: "IA aplicada",
     alcance: ["IA aplicada"],
     notas: "Punto de partida: un caso de IA que aún no opera con fuentes, permisos y controles definidos.",
   },
   growth: {
+    label: "Posicionamiento, captación y CRM",
     alcance: ["Posicionamiento, captación y CRM"],
     notas: "Punto de partida: oportunidades comerciales sin responsable o próxima acción.",
   },
+  constitucion: {
+    label: "Constitución y estructura societaria",
+    alcance: ["Constitución / reestructura", "Asesoría legal corporativa"],
+    notas: "Punto de partida: hay que ordenar propiedad, administración, capital y reglas de decisión antes de operar o cambiar la estructura.",
+  },
+  inversiones: {
+    label: "Preparación financiera y de inversión",
+    alcance: ["Inversiones y capital", "Asesoría legal corporativa"],
+    notas: "Punto de partida: necesitamos comparar escenarios o preparar una decisión de financiación con datos y supuestos trazables.",
+  },
+  digitalizacion: {
+    label: "Digitalización de operaciones",
+    alcance: ["Digitalización de procesos"],
+    notas: "Punto de partida: la información vive en correos, hojas o herramientas que no comparten estados ni responsables.",
+  },
+  automatizacion: {
+    label: "Automatización de flujos",
+    alcance: ["Automatización e integración"],
+    notas: "Punto de partida: el equipo repite pasos previsibles o persigue aprobaciones que podrían quedar conectadas y registradas.",
+  },
+  crecimiento: {
+    label: "Posicionamiento, captación y CRM",
+    alcance: ["Posicionamiento, captación y CRM"],
+    notas: "Punto de partida: la captación no conserva contexto o no termina en una próxima acción comercial con responsable.",
+  },
+  jotform: {
+    label: "Jotform y flujos de datos",
+    alcance: ["Digitalización de procesos", "Automatización e integración"],
+    notas: "Punto de partida: la captura de datos genera errores, duplicados o trabajo manual antes de llegar al sistema y a la persona correctos.",
+  },
   cuadernos: {
+    label: "Aplicar una guía de Cuadernos",
     alcance: ["Aún no lo tengo claro"],
     notas: "Punto de partida: quiero aplicar una guía de Cuadernos MEDLA a un caso concreto.",
   },
 };
 
-const selectedContext = CONTEXT_PRESETS[new URLSearchParams(window.location.search).get("context")] || null;
+const requestParams = new URLSearchParams(window.location.search);
+const baseContext = CONTEXT_PRESETS[requestParams.get("context")] || null;
+const selectedContext = baseContext ? {
+  ...baseContext,
+  notas: requestParams.get("guide") ? `${baseContext.notas}\nGuía de referencia: ${requestParams.get("guide")}.` : baseContext.notas,
+} : null;
 
 const ETAPA_OPTIONS = [
   "Pre-constitución",
@@ -568,7 +621,7 @@ function CtForm({ pathId }) {
                 <button type="button" className="btn-link" onClick={back} disabled={step === 0 || sending}>← Anterior</button>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
                   {sendError && (
-                    <span role="alert" style={{ fontSize: 13, color: "#c0392b" }}>{sendError}</span>
+                    <div className="send-fallback" role="alert"><span>{sendError}</span><div><a href="mailto:info@medla-empresas.com">Enviar por email</a><a href="https://wa.me/34641576772" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></div></div>
                   )}
                   <button
                     type={step === totalSteps - 1 ? "submit" : "button"}
@@ -810,7 +863,7 @@ function ContactoApp() {
     <div className="contacto-page">
       <CtNav />
       <main id="contenido">
-        <CtHero />
+        <CtHero context={selectedContext} />
         <CtPaths active={path} onPick={setPath} />
         <CtForm pathId={path} />
         <CtInfo />

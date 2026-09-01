@@ -134,7 +134,7 @@ const SPECIALTIES = {
       lead: "Diseñamos automatizaciones que conectan los sistemas existentes, aplican reglas claras y dejan cada excepción en manos de la persona adecuada.",
       note: "Automatizamos después de entender el proceso, no antes.",
     },
-    context: "operacion",
+    context: "automatizacion",
     secondary: "Ver el flujo",
     scene: {
       mode: "flow",
@@ -195,7 +195,7 @@ const SPECIALTIES = {
       lead: "Ordenamos aportaciones, gobierno, documentación y trámites para que la estructura elegida refleje cómo va a funcionar realmente el proyecto.",
       note: "La secuencia concreta depende de la jurisdicción y de las características del caso.",
     },
-    context: "legal",
+    context: "constitucion",
     secondary: "Ordenar las decisiones",
     scene: {
       mode: "entity",
@@ -256,7 +256,7 @@ const SPECIALTIES = {
       lead: "Convertimos procesos repartidos entre hojas, correos y conocimiento informal en una solución conectada, documentada y mantenible.",
       note: "La tecnología se elige después de entender decisiones, usuarios y datos.",
     },
-    context: "operacion",
+    context: "digitalizacion",
     secondary: "Mapear el sistema",
     scene: {
       mode: "architecture",
@@ -317,7 +317,7 @@ const SPECIALTIES = {
       lead: "Organizamos objetivos, hipótesis, escenarios y documentación para que una decisión de inversión pueda discutirse con el mismo criterio por todas las partes.",
       note: "Alcance acotado a estructura, escenarios y documentación; no incluye recomendación financiera regulada ni intermediación.",
     },
-    context: "legal",
+    context: "inversiones",
     secondary: "Ver el alcance",
     scene: {
       mode: "scenarios",
@@ -378,7 +378,7 @@ const SPECIALTIES = {
       lead: "Conectamos propuesta, contenido, captación, CRM y seguimiento comercial para que el trabajo de comunicación continúe después del clic.",
       note: "El sistema se diseña alrededor del recorrido del cliente y de la capacidad real del equipo para atenderlo.",
     },
-    context: "growth",
+    context: "crecimiento",
     secondary: "Recorrer el sistema",
     scene: {
       mode: "growth",
@@ -439,7 +439,7 @@ const SPECIALTIES = {
       lead: "Diseñamos implementaciones sobre Jotform cuando encaja: captura, validación, enrutado, integraciones y seguimiento como un único proceso operativo.",
       note: "La herramienta es una pieza del sistema; el criterio de datos y la responsabilidad siguen perteneciendo al equipo.",
     },
-    context: "operacion",
+    context: "jotform",
     secondary: "Seguir el dato",
     scene: {
       mode: "intake",
@@ -641,6 +641,18 @@ function Navigation({ descriptor, context }) {
   );
 }
 
+function SceneInstrument({ scene, active }) {
+  return (
+    <div className={`sp-instrument sp-instrument--${scene.mode}`} aria-hidden="true">
+      <div className="sp-instrument__segments">
+        {scene.nodes.map((node, index) => <i className={active === index ? "is-active" : ""} key={node.label}><span>{node.label}</span></i>)}
+      </div>
+      <strong>{scene.mark}</strong>
+      <small>{scene.core}</small>
+    </div>
+  );
+}
+
 function SystemScene({ scene }) {
   const [active, setActive] = useState(0);
   const tabRefs = useRef([]);
@@ -664,15 +676,7 @@ function SystemScene({ scene }) {
         <span><i aria-hidden="true" /> Mapa de trabajo</span>
       </div>
       <div className="sp-scene__field">
-        <span className="sp-scene__ring sp-scene__ring--outer" aria-hidden="true" />
-        <span className="sp-scene__ring sp-scene__ring--inner" aria-hidden="true" />
-        <span className="sp-scene__axis sp-scene__axis--x" aria-hidden="true" />
-        <span className="sp-scene__axis sp-scene__axis--y" aria-hidden="true" />
-        <span className="sp-scene__trace" aria-hidden="true"><i /></span>
-        <div className="sp-scene__core" aria-hidden="true">
-          <span>{scene.mark}</span>
-          <small>{scene.core}</small>
-        </div>
+        <SceneInstrument scene={scene} active={active} />
         <div className="sp-scene__nodes" role="tablist" aria-label="Componentes del sistema">
           {scene.nodes.map((node, index) => (
             <button
