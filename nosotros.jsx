@@ -118,10 +118,10 @@ function Hero() {
           <span className="nos-kicker">Nosotros / Modelo de trabajo</span>
           <span>Madrid · España</span>
         </div>
-        <h1 id="nos-title">El trabajo complejo<br />necesita <em>una dirección clara.</em></h1>
+        <h1 id="nos-title">Un equipo para dirigir proyectos<br /><em>de negocio, legal y tecnología.</em></h1>
         <div className="nos-hero__bottom">
-          <p>Una decisión rara vez es solo legal, técnica o comercial. Coordinamos las disciplinas necesarias con prioridades, responsables y plazos compartidos.</p>
-          <a href="servicios.html">Ver ámbitos de trabajo <Arrow /></a>
+          <p>Coordinamos especialistas, prioridades y entregas para que el proyecto avance con un responsable claro en cada fase.</p>
+          <a href="#punto-de-partida">Ver cómo trabajamos <Arrow /></a>
         </div>
       </div>
       <div className="nos-hero__ticker" aria-hidden="true">
@@ -133,12 +133,12 @@ function Hero() {
 
 function OpeningStatement() {
   return (
-    <section className="nos-opening">
+    <section className="nos-opening" id="punto-de-partida">
       <div className="nos-shell nos-opening__inner">
         <span className="nos-section-code">01 / Punto de partida</span>
-        <p className="nos-opening__lead">Empezamos por la decisión.</p>
-        <p className="nos-opening__statement">Aclaramos <em>qué está bloqueado</em>, quién interviene y qué debe quedar resuelto antes de asignar disciplinas o herramientas.</p>
-        <div className="nos-opening__note"><span aria-hidden="true">→</span><p>El catálogo viene después: primero se delimitan el problema, la autoridad y las condiciones de cierre.</p></div>
+        <p className="nos-opening__lead">Empezamos por el problema.</p>
+        <p className="nos-opening__statement">Aclaramos <em>qué debe resolverse</em>, quién interviene y qué resultado necesita el equipo antes de asignar especialistas o herramientas.</p>
+        <div className="nos-opening__note"><span aria-hidden="true">→</span><p>Elegimos las áreas y las herramientas después de acordar prioridades, responsables y resultado.</p></div>
       </div>
     </section>
   );
@@ -155,8 +155,8 @@ function ResponsibilityDesk() {
       <div className="nos-shell">
         <div className="nos-responsibility__head">
           <span className="nos-section-code">02 / Quién responde</span>
-          <h2 id="responsibility-title">Aquí no se contrata<br /><em>una caja negra.</em></h2>
-          <p>Cada decisión tiene una función responsable, una versión de trabajo y una salida que puede revisarse.</p>
+          <h2 id="responsibility-title">Siempre sabrás<br /><em>quién responde de cada parte.</em></h2>
+          <p>Cada fase tiene un responsable, una versión de trabajo y una entrega que el cliente puede revisar.</p>
         </div>
         <div className="nos-responsibility__desk">
           <article className="nos-responsibility__record">
@@ -330,9 +330,9 @@ function Closing() {
       <div className="nos-closing__orbit" aria-hidden="true"><span /><span /><b>MEDLA</b></div>
       <div className="nos-shell nos-closing__inner">
         <span className="nos-kicker">Empezar por la pregunta</span>
-        <h2 id="closing-title">Cuéntanos qué decisión<br />está <em>bloqueada.</em></h2>
-        <p>Revisaremos la información contigo y te diremos qué disciplinas hacen falta, qué conviene resolver primero y cuál podría ser el siguiente paso.</p>
-        <div className="nos-closing__actions"><a className="nos-button nos-button--signal" href="contacto.html">Plantear un proyecto <Arrow /></a><a className="nos-button nos-button--quiet" href="servicios.html">Explorar servicios <Arrow /></a></div>
+        <h2 id="closing-title">Cuéntanos qué necesitas<br /><em>resolver.</em></h2>
+        <p>Revisaremos el proyecto contigo y te diremos qué áreas hacen falta, qué conviene priorizar y cuál es el siguiente paso.</p>
+        <div className="nos-closing__actions"><a className="nos-button nos-button--signal" href="contacto.html">Cuéntanos tu proyecto <Arrow /></a><a className="nos-button nos-button--quiet" href="servicios.html">Explorar servicios <Arrow /></a></div>
       </div>
     </section>
   );
@@ -357,7 +357,7 @@ function Footer() {
 }
 
 function NosotrosApp() {
-  return <div className="nos-page"><a className="nos-skip" href="#main-content">Saltar al contenido</a><NosNav /><main id="main-content"><Hero /><OpeningStatement /><ResponsibilityDesk /><Coordination /><Protocol /><Transfer /><Principles /><Closing /></main><Footer /></div>;
+  return <div className="nos-page"><a className="nos-skip" href="#main-content">Saltar al contenido</a><window.MedlaSiteHeader current="about" /><main id="main-content"><Hero /><OpeningStatement /><ResponsibilityDesk /><Coordination /><Protocol /><Transfer /><Principles /><Closing /></main><Footer /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<NosotrosApp />);

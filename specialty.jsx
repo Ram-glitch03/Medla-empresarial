@@ -4,12 +4,12 @@ const SPECIALTIES = {
   legal: {
     descriptor: "Asesoría legal empresarial",
     eyebrow: "Decisiones con marco jurídico",
-    accent: "#6f947a",
+    accent: "#79d2c5",
     hero: {
-      before: "El marco jurídico, ",
-      emphasis: "antes de que la decisión pese.",
+      before: "Asesoría legal para avanzar con ",
+      emphasis: "un marco claro.",
       after: "",
-      lead: "Revisamos el contexto, fijamos el alcance y convertimos contratos, acuerdos y obligaciones en decisiones que el equipo puede ejecutar.",
+      lead: "Revisamos contratos, acuerdos y obligaciones, explicamos los riesgos relevantes y dejamos preparado el siguiente paso.",
       note: "El encargo y la jurisdicción aplicable se confirman antes de intervenir.",
     },
     context: "legal",
@@ -59,7 +59,7 @@ const SPECIALTIES = {
       title: "Primero se confirma el encargo. Después se aplica el criterio.",
       body: "La página describe un método de trabajo, no una respuesta jurídica para un caso concreto. El servicio se delimita por materia, documentación disponible y jurisdicción aplicable; cuando hace falta un especialista externo, se identifica antes de actuar.",
     },
-    cta: { title: "Trae la decisión y los documentos que ya existen.", body: "La primera conversación sirve para entender el contexto, separar lo urgente de lo importante y definir el siguiente paso útil.", button: "Plantear el asunto" },
+    cta: { title: "Cuéntanos qué necesitas revisar.", body: "Comparte el objetivo y los documentos disponibles. Te indicaremos qué información falta y cómo plantear el trabajo.", button: "Solicitar una primera revisión" },
   },
 
   ia: {
@@ -67,10 +67,10 @@ const SPECIALTIES = {
     eyebrow: "IA integrada en el trabajo",
     accent: "#77a9bb",
     hero: {
-      before: "Agentes de IA que trabajan con ",
-      emphasis: "tus fuentes, reglas y permisos.",
+      before: "Agentes de IA conectados a ",
+      emphasis: "tus datos, herramientas y procesos.",
       after: "",
-      lead: "Diseñamos asistentes y agentes para tareas concretas: consultan información autorizada, proponen acciones y dejan trazabilidad para que el equipo conserve el control.",
+      lead: "Diseñamos e implantamos agentes para consultar información, preparar tareas y activar acciones con permisos, evaluación y revisión humana.",
       note: "Cada caso de uso define qué puede hacer el agente, qué debe validar una persona y qué queda fuera.",
     },
     context: "ia",
@@ -120,18 +120,18 @@ const SPECIALTIES = {
       title: "La autonomía se diseña. No se presupone.",
       body: "Definimos qué información puede usar el agente, qué acciones puede iniciar y cuáles requieren validación. El equipo conserva acceso al registro, a las reglas y al procedimiento de escalado.",
     },
-    cta: { title: "Empecemos por una tarea que hoy consume atención.", body: "Descríbenos qué recibe el equipo, qué decide y qué resultado necesita. Con eso podemos valorar si conviene un agente, una automatización o una solución más simple.", button: "Revisar un caso de IA" },
+    cta: { title: "Cuéntanos qué tarea quieres mejorar.", body: "Descríbenos qué recibe el equipo, qué resultado necesita y qué sistemas utiliza. Valoraremos si conviene un agente, una automatización o una solución más simple.", button: "Revisar el caso" },
   },
 
   automatizacion: {
     descriptor: "Automatización de procesos",
     eyebrow: "Flujos conectados y trazables",
-    accent: "#6f947a",
+    accent: "#79d2c5",
     hero: {
-      before: "Cada traspaso manual, convertido en ",
-      emphasis: "un flujo trazable.",
+      before: "Automatiza tareas y aprobaciones ",
+      emphasis: "sin perder el control.",
       after: "",
-      lead: "Diseñamos automatizaciones que conectan los sistemas existentes, aplican reglas claras y dejan cada excepción en manos de la persona adecuada.",
+      lead: "Conectamos herramientas, aplicamos reglas claras y dejamos cada excepción en manos de la persona adecuada.",
       note: "Automatizamos después de entender el proceso, no antes.",
     },
     context: "automatizacion",
@@ -181,7 +181,7 @@ const SPECIALTIES = {
       title: "Un paso automático sigue necesitando criterio y dueño.",
       body: "No ocultamos las excepciones ni dejamos reglas críticas enterradas en una integración. El proceso, sus permisos y el procedimiento de recuperación quedan documentados para el equipo.",
     },
-    cta: { title: "Cuéntanos dónde se atasca hoy el trabajo.", body: "Con una entrada, una decisión y una salida concretas podemos reconstruir el flujo y elegir el primer tramo que merece intervención.", button: "Revisar un proceso" },
+    cta: { title: "Muéstranos el proceso actual.", body: "Con una entrada, una salida y los principales bloqueos podemos localizar el primer tramo que merece automatizarse.", button: "Revisar el proceso" },
   },
 
   constitucion: {
@@ -189,10 +189,10 @@ const SPECIALTIES = {
     eyebrow: "Decisiones societarias de origen",
     accent: "#b79b59",
     hero: {
-      before: "Constituir la sociedad con ",
-      emphasis: "decisiones, documentos y responsables claros.",
+      before: "Una estructura societaria pensada ",
+      emphasis: "para operar y crecer.",
       after: "",
-      lead: "Ordenamos aportaciones, gobierno, documentación y trámites para que la estructura elegida refleje cómo va a funcionar realmente el proyecto.",
+      lead: "Ordenamos socios, aportaciones, gobierno, documentación y trámites para que la estructura refleje cómo funcionará el proyecto.",
       note: "La secuencia concreta depende de la jurisdicción y de las características del caso.",
     },
     context: "constitucion",
@@ -242,7 +242,7 @@ const SPECIALTIES = {
       title: "La estructura correcta depende del caso; la coordinación no.",
       body: "Confirmamos jurisdicción, participantes y actividad antes de definir el encargo. Los trámites, documentos y perfiles profesionales que intervienen pueden variar; se identifican expresamente en la propuesta de trabajo.",
     },
-    cta: { title: "Ordenemos las decisiones antes de iniciar los trámites.", body: "Cuéntanos quién participa, qué actividad se prevé y en qué jurisdicción se quiere constituir. Prepararemos las preguntas que conviene resolver primero.", button: "Plantear la constitución" },
+    cta: { title: "Cuéntanos cómo será la sociedad.", body: "Indica quién participa, qué actividad se prevé y en qué jurisdicción se quiere constituir. Prepararemos las preguntas que conviene resolver primero.", button: "Preparar la constitución" },
   },
 
   digitalizacion: {
@@ -250,8 +250,8 @@ const SPECIALTIES = {
     eyebrow: "Sistemas para el trabajo real",
     accent: "#77a9bb",
     hero: {
-      before: "El trabajo real de tu equipo, llevado a ",
-      emphasis: "un sistema que sí se puede operar.",
+      before: "Digitaliza la operación ",
+      emphasis: "sin trasladar el caos a otra herramienta.",
       after: "",
       lead: "Convertimos procesos repartidos entre hojas, correos y conocimiento informal en una solución conectada, documentada y mantenible.",
       note: "La tecnología se elige después de entender decisiones, usuarios y datos.",
@@ -303,7 +303,7 @@ const SPECIALTIES = {
       title: "La complejidad debe quedar explicada, no escondida.",
       body: "Documentamos decisiones, integraciones, permisos y procedimientos de operación. El objetivo es que el equipo entienda qué sostiene su sistema y pueda gobernar su evolución.",
     },
-    cta: { title: "Enséñanos cómo se hace hoy el trabajo.", body: "Una sesión sobre un caso real suele revelar más que una lista de funcionalidades. A partir de ahí definimos el primer recorrido que merece diseño.", button: "Revisar la operación" },
+    cta: { title: "Enséñanos cómo trabaja hoy el equipo.", body: "Revisaremos un caso real para identificar bloqueos, prioridades y el primer recorrido que merece diseño.", button: "Revisar la operación" },
   },
 
   inversiones: {
@@ -311,10 +311,10 @@ const SPECIALTIES = {
     eyebrow: "Decisiones antes del compromiso",
     accent: "#b79b59",
     hero: {
-      before: "Estructurar la decisión antes de ",
-      emphasis: "comprometer capital.",
+      before: "Evalúa una inversión con ",
+      emphasis: "datos, escenarios y documentación ordenados.",
       after: "",
-      lead: "Organizamos objetivos, hipótesis, escenarios y documentación para que una decisión de inversión pueda discutirse con el mismo criterio por todas las partes.",
+      lead: "Organizamos objetivos, supuestos y escenarios para que todas las partes puedan comparar alternativas sobre la misma información.",
       note: "Alcance acotado a estructura, escenarios y documentación; no incluye recomendación financiera regulada ni intermediación.",
     },
     context: "inversiones",
@@ -364,7 +364,7 @@ const SPECIALTIES = {
       title: "Estructura, escenarios y documentación. Nada de promesas de rentabilidad.",
       body: "Este servicio no comprende asesoramiento financiero regulado, recepción o transmisión de órdenes, intermediación, custodia ni recomendaciones individualizadas de compra o venta. Si el caso requiere perfiles autorizados, se identifica y coordina expresamente.",
     },
-    cta: { title: "Pongamos los supuestos sobre la mesa.", body: "Comparte el objetivo, la información disponible y la decisión que debe tomarse. La primera revisión servirá para delimitar qué análisis y documentación son útiles.", button: "Revisar la decisión" },
+    cta: { title: "Comparte la operación que quieres evaluar.", body: "Revisaremos el objetivo, la información disponible y los supuestos para delimitar qué análisis y documentación resultan útiles.", button: "Solicitar una primera revisión" },
   },
 
   crecimiento: {
@@ -372,10 +372,10 @@ const SPECIALTIES = {
     eyebrow: "Del mensaje al seguimiento comercial",
     accent: "#bd845f",
     hero: {
-      before: "Del posicionamiento a la oportunidad, ",
-      emphasis: "sin perder el seguimiento.",
+      before: "Convierte posicionamiento y captación en ",
+      emphasis: "oportunidades con seguimiento.",
       after: "",
-      lead: "Conectamos propuesta, contenido, captación, CRM y seguimiento comercial para que el trabajo de comunicación continúe después del clic.",
+      lead: "Conectamos propuesta, contenido, formularios y CRM para que cada oportunidad llegue con contexto, responsable y próxima acción.",
       note: "El sistema se diseña alrededor del recorrido del cliente y de la capacidad real del equipo para atenderlo.",
     },
     context: "crecimiento",
@@ -425,7 +425,7 @@ const SPECIALTIES = {
       title: "La comunicación termina cuando el equipo sabe qué hacer con la respuesta.",
       body: "No separamos redes, página, formulario y CRM como encargos inconexos. Definimos qué contexto viaja entre ellos y quién asume la siguiente acción.",
     },
-    cta: { title: "Revisemos una oportunidad desde el primer mensaje hasta el CRM.", body: "Trae la oferta, los canales actuales y la forma en que hoy se da seguimiento. Identificaremos dónde se pierde el contexto.", button: "Revisar el recorrido" },
+    cta: { title: "Revisemos tu recorrido comercial.", body: "Comparte la oferta, los canales actuales y cómo dais seguimiento. Identificaremos dónde se pierden oportunidades o información.", button: "Revisar captación y CRM" },
   },
 
   jotform: {
@@ -433,10 +433,10 @@ const SPECIALTIES = {
     eyebrow: "Formularios conectados a operación",
     accent: "#77a9bb",
     hero: {
-      before: "El formulario es solo la entrada. ",
-      emphasis: "El valor está en lo que ocurre después.",
+      before: "Formularios que activan ",
+      emphasis: "el siguiente paso del proceso.",
       after: "",
-      lead: "Diseñamos implementaciones sobre Jotform cuando encaja: captura, validación, enrutado, integraciones y seguimiento como un único proceso operativo.",
+      lead: "Diseñamos formularios y portales sobre Jotform con validaciones, lógica, integraciones y seguimiento para que cada respuesta llegue al sistema y a la persona correctos.",
       note: "La herramienta es una pieza del sistema; el criterio de datos y la responsabilidad siguen perteneciendo al equipo.",
     },
     context: "jotform",
@@ -486,7 +486,7 @@ const SPECIALTIES = {
       title: "Jotform cuando encaja. Otra solución cuando el proceso lo exige.",
       body: "No presentamos la plataforma como respuesta automática a cualquier captura. Primero definimos datos, decisiones, permisos e integraciones; después confirmamos si Jotform es la pieza adecuada y hasta dónde llega la implantación.",
     },
-    cta: { title: "Sigamos una respuesta desde el formulario hasta el cierre.", body: "Muéstranos qué se pregunta hoy, dónde llega la información y qué debe ocurrir después. Localizaremos los cortes del recorrido.", button: "Revisar el flujo" },
+    cta: { title: "Cuéntanos qué debe ocurrir después del envío.", body: "Muéstranos qué se pregunta, dónde llega la información y quién debe continuar el trabajo. Localizaremos los cortes del recorrido.", button: "Revisar el formulario" },
   },
 };
 
@@ -599,7 +599,7 @@ function Navigation({ descriptor, context }) {
           <a href="servicios.html">Servicios</a>
           <a href="#alcance">Alcance</a>
           <a href="#proceso">Proceso</a>
-          <a className="sp-nav__cta" href={`contacto.html?context=${context}`}>Conversar <Arrow diagonal /></a>
+          <a className="sp-nav__cta" href={`contacto.html?context=${context}`}>Contacto <Arrow diagonal /></a>
         </nav>
         <button
           ref={toggleRef}
@@ -676,7 +676,9 @@ function SystemScene({ scene }) {
         <span><i aria-hidden="true" /> Mapa de trabajo</span>
       </div>
       <div className="sp-scene__field">
-        <SceneInstrument scene={scene} active={active} />
+        <div className="sp-scene__visual">
+          <SceneInstrument scene={scene} active={active} />
+        </div>
         <div className="sp-scene__nodes" role="tablist" aria-label="Componentes del sistema">
           {scene.nodes.map((node, index) => (
             <button
@@ -717,7 +719,7 @@ function Hero({ config }) {
           <h1 id="page-title">{config.hero.before}<em>{config.hero.emphasis}</em>{config.hero.after}</h1>
           <p className="sp-hero__lead">{config.hero.lead}</p>
           <div className="sp-actions">
-            <a className="sp-button sp-button--signal" href={`contacto.html?context=${config.context}`}>Explícanos el caso <Arrow /></a>
+            <a className="sp-button sp-button--signal" href={`contacto.html?context=${config.context}`}>Cuéntanos tu caso <Arrow /></a>
             <a className="sp-button sp-button--ghost" href="#alcance">{config.secondary} <Arrow /></a>
           </div>
           <p className="sp-hero__note"><span aria-hidden="true">◌</span>{config.hero.note}</p>
@@ -779,9 +781,9 @@ function Scope({ scope }) {
     <section id="alcance" className="sp-scope" aria-labelledby="scope-title">
       <div className="sp-shell">
         <div className="sp-scope__head" data-reveal>
-          <div className="sp-kicker sp-kicker--light"><span>03</span>Alcance de intervención</div>
+          <div className="sp-kicker sp-kicker--light"><span>03</span>Qué incluye el servicio</div>
           <h2 id="scope-title">El trabajo se divide en frentes que pueden contratarse y revisarse por separado.</h2>
-          <p>Selecciona un frente para ver qué situación aborda, cómo se trabaja y qué deja preparado.</p>
+          <p>Selecciona un bloque para ver qué problema resuelve, qué hacemos y qué entregamos.</p>
         </div>
         <div className="sp-scope__workspace" data-reveal>
           <div className="sp-scope__tabs" role="tablist" aria-label="Frentes de trabajo">
@@ -943,10 +945,10 @@ function Footer({ descriptor, context }) {
         </div>
         <div className="sp-footer__links">
           <div><span>Explorar</span><a href="index.html">Inicio</a><a href="servicios.html">Servicios</a><a href="nosotros.html">Nosotros</a></div>
-          <div><span>Conversar</span><a href={`contacto.html?context=${context}`}>Contacto</a><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></div>
+          <div><span>Contacto</span><a href={`contacto.html?context=${context}`}>Solicitar diagnóstico</a><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></div>
           <div><span>Ubicación</span><p>Madrid · España</p><p>Trabajo coordinado de forma remota.</p></div>
         </div>
-        <div className="sp-footer__bottom"><span>© {new Date().getFullYear()} MEDLA</span><a href="privacidad.html">Privacidad</a><span>Alcance · Entrega · Traspaso</span></div>
+        <div className="sp-footer__bottom"><span>© {new Date().getFullYear()} MEDLA</span><a href="privacidad.html">Privacidad</a><span>Objetivos · Ejecución · Transferencia</span></div>
       </div>
     </footer>
   );
@@ -960,7 +962,7 @@ function App() {
 
   return (
     <div className="sp-site" style={{ "--sp-signal": config.accent }}>
-      <Navigation descriptor={config.descriptor} context={config.context} />
+      <window.MedlaSiteHeader current="services" context={config.context} />
       <main id="main-content">
         <Hero config={config} />
         <Signals problem={config.problem} />

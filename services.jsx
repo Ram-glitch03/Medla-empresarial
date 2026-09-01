@@ -168,21 +168,21 @@ function ServicesNav() {
 function Constellation() {
   const points = [[150, 74], [345, 58], [526, 120], [594, 255], [514, 392], [318, 430], [126, 378], [62, 222]];
   return <div className="svc-constellation" aria-hidden="true">
-    <svg viewBox="0 0 660 500"><defs><radialGradient id="svc-halo"><stop offset="0" stopColor="#a9f3c1" stopOpacity=".2" /><stop offset="1" stopColor="#a9f3c1" stopOpacity="0" /></radialGradient></defs>
+    <svg viewBox="0 0 660 500"><defs><radialGradient id="svc-halo"><stop offset="0" stopColor="#79d2c5" stopOpacity=".2" /><stop offset="1" stopColor="#79d2c5" stopOpacity="0" /></radialGradient></defs>
       <circle className="const-halo" cx="330" cy="250" r="178" fill="url(#svc-halo)" /><circle className="const-orbit const-orbit-a" cx="330" cy="250" r="190" /><circle className="const-orbit const-orbit-b" cx="330" cy="250" r="122" />
       {points.map(([x, y], index) => <g key={index}><line className="const-line" x1="330" y1="250" x2={x} y2={y} /><circle className="const-pulse" cx={x} cy={y} r="14" style={{ animationDelay: `${index * -0.38}s` }} /><circle className="const-node" cx={x} cy={y} r="4" /><text className="const-label" x={x + (x < 330 ? -17 : 17)} y={y - 14} textAnchor={x < 330 ? "end" : "start"}>{SERVICES[index].label}</text></g>)}
       <g className="const-core"><circle cx="330" cy="250" r="45" /><text x="330" y="246" textAnchor="middle">MEDLA</text><text x="330" y="264" textAnchor="middle">SYSTEM</text></g>
     </svg>
-    <div className="const-readout"><span>08 capacidades</span><span>01 expediente compartido</span></div>
+    <div className="const-readout"><span>08 áreas de trabajo</span><span>01 plan coordinado</span></div>
   </div>;
 }
 
 function ServicesHero() {
   return <section className="svc-hero" aria-labelledby="svc-title">
-    <div className="svc-hero-noise" /><div className="svc-hero-copy"><p className="svc-kicker"><span>Servicios</span> / Arquitectura empresarial</p>
-      <h1 id="svc-title">Una decisión.<br />Las disciplinas<br /><em>que necesita.</em></h1>
-      <p className="svc-hero-lead">MEDLA reúne trabajo jurídico, operativo, tecnológico y comercial alrededor del mismo problema. El objetivo no es vender más piezas: es evitar que se contradigan.</p>
-      <div className="svc-hero-actions"><a className="svc-button svc-button-primary" href="#explorador">Abrir el mapa <span>↓</span></a><a className="svc-text-link" href="contacto.html">Traer una decisión <span>↗</span></a></div>
+    <div className="svc-hero-noise" /><div className="svc-hero-copy"><p className="svc-kicker"><span>Servicios</span> / Consultoría multidisciplinar</p>
+      <h1 id="svc-title">Todo lo que necesita el proyecto.<br /><em>Un único equipo para coordinarlo.</em></h1>
+      <p className="svc-hero-lead">Integramos asesoría legal, operaciones, tecnología y crecimiento comercial para resolver el problema de principio a fin.</p>
+      <div className="svc-hero-actions"><a className="svc-button svc-button-primary" href="#explorador">Explorar servicios <span>↓</span></a><a className="svc-text-link" href="contacto.html">Cuéntanos tu proyecto <span>↗</span></a></div>
     </div><Constellation /><div className="svc-hero-index" aria-hidden="true">S / 08</div>
   </section>;
 }
@@ -196,7 +196,7 @@ function DecisionRouter() {
     <div className="svc-router-head">
       <p className="svc-kicker"><span>Orientador</span> / Empieza por el bloqueo</p>
       <h2 id="router-title">No hace falta que sepas<br /><em>qué servicio pedir.</em></h2>
-      <p>Elige la frase que más se parece a tu situación. Te mostramos por dónde empezar y qué capacidades podrían intervenir después.</p>
+      <p>Elige la frase que más se parece a tu situación. Te mostramos por dónde empezar y qué servicios podrían intervenir después.</p>
     </div>
     <div className="svc-router-workbench">
       <div className="svc-router-questions" role="tablist" aria-label="Bloqueos habituales">
@@ -257,36 +257,36 @@ function ServiceExplorer() {
     event.preventDefault(); choose(next, true);
   };
   return <section className="svc-explorer" id="explorador" aria-labelledby="explorer-title">
-    <div className="svc-section-intro"><p className="svc-kicker"><span>Mapa de capacidades</span> / Selecciona una disciplina</p><h2 id="explorer-title">Cada capacidad resuelve una parte.<br /><em>El expediente se comparte.</em></h2><p>Un frente puede activarse por separado. Si el encargo cruza varias áreas, documentos, responsables y decisiones avanzan sobre la misma versión.</p></div>
+    <div className="svc-section-intro"><p className="svc-kicker"><span>Mapa de servicios</span> / Selecciona un área</p><h2 id="explorer-title">Ocho áreas de trabajo.<br /><em>Un mismo proyecto.</em></h2><p>Cada servicio puede contratarse por separado. Si el proyecto cruza varias áreas, coordinamos responsables, documentos y entregas en un único plan.</p></div>
     <div className="svc-explorer-shell">
       <div className="svc-rail" role="tablist" aria-label="Servicios MEDLA" aria-orientation={horizontalRail ? "horizontal" : "vertical"}>
         {SERVICES.map((service, index) => <button key={service.id} id={`tab-${service.id}`} ref={(node) => { tabRefs.current[index] = node; }} type="button" className={index === active ? "is-active" : ""} role="tab" aria-selected={index === active} aria-controls="service-panel" tabIndex={index === active ? 0 : -1} onClick={() => choose(index)} onKeyDown={(event) => onTabKeyDown(event, index)}><span>{service.num}</span><strong>{service.label}</strong><i>↗</i></button>)}
       </div>
       <article key={current.id} className="svc-panel" id="service-panel" role="tabpanel" aria-labelledby={`tab-${current.id}`} tabIndex="0">
         <div className="svc-panel-top"><div className="svc-panel-title"><p>{current.num} / {current.label}</p><h3>{current.title}</h3><strong>{current.statement}</strong></div><div className="svc-scene" ref={visualRef} aria-hidden="true"><Scene t={t} /></div></div>
-        <dl className="svc-decision-flow"><div><dt>El bloqueo</dt><dd>{current.trigger}</dd></div><div><dt>La intervención</dt><dd>{current.intervention}</dd></div><div><dt>Lo que queda</dt><dd>{current.outcome}</dd></div></dl>
-        <div className="svc-panel-bottom"><ul aria-label="Ámbitos incluidos">{current.scope.map((item) => <li key={item}>{item}</li>)}</ul><a className="svc-button svc-button-dark" href={current.href}>Ver capacidad <span>↗</span></a></div>
+        <dl className="svc-decision-flow"><div><dt>El problema</dt><dd>{current.trigger}</dd></div><div><dt>El trabajo</dt><dd>{current.intervention}</dd></div><div><dt>El resultado</dt><dd>{current.outcome}</dd></div></dl>
+        <div className="svc-panel-bottom"><ul aria-label="Ámbitos incluidos">{current.scope.map((item) => <li key={item}>{item}</li>)}</ul><a className="svc-button svc-button-dark" href={current.href}>Ver servicio <span>↗</span></a></div>
       </article>
     </div>
   </section>;
 }
 
 function Orchestration() {
-  return <section className="svc-orchestration" aria-labelledby="orchestration-title"><div className="svc-orch-heading"><p className="svc-kicker"><span>Coordinación</span> / Un método visible</p><h2 id="orchestration-title">No basta con reunir especialistas. <em>Hay que diseñar el relevo.</em></h2></div>
-    <div className="svc-orch-track"><article><span>01</span><h3>Decisión</h3><p>Definimos qué debe ocurrir, qué puede bloquearlo y quién tiene la última palabra.</p></article><div className="svc-orch-signal"><i /><i /><i /></div><article><span>02</span><h3>Implantación</h3><p>Traducimos la decisión a documentación, herramientas, reglas y puntos de control.</p></article><div className="svc-orch-signal"><i /><i /><i /></div><article><span>03</span><h3>Traspaso</h3><p>Entregamos decisiones, manuales y responsables para que el equipo pueda operar y revisar el trabajo.</p></article></div>
+  return <section className="svc-orchestration" aria-labelledby="orchestration-title"><div className="svc-orch-heading"><p className="svc-kicker"><span>Coordinación</span> / Un método visible</p><h2 id="orchestration-title">Un proyecto coordinado <em>de principio a fin.</em></h2></div>
+    <div className="svc-orch-track"><article><span>01</span><h3>Diagnóstico</h3><p>Definimos qué debe ocurrir, qué puede bloquearlo y quién tiene la última palabra.</p></article><div className="svc-orch-signal"><i /><i /><i /></div><article><span>02</span><h3>Ejecución</h3><p>Traducimos la decisión a documentación, herramientas, reglas y puntos de control.</p></article><div className="svc-orch-signal"><i /><i /><i /></div><article><span>03</span><h3>Entrega</h3><p>Entregamos decisiones, manuales y responsables para que el equipo pueda operar y revisar el trabajo.</p></article></div>
   </section>;
 }
 
 function ServicesCta() {
-  return <section className="svc-cta" aria-labelledby="svc-cta-title"><div><p className="svc-kicker"><span>Siguiente paso</span> / Primera revisión</p><h2 id="svc-cta-title">Cuéntanos qué está bloqueado,<br /><em>quién interviene y qué debe quedar resuelto.</em></h2></div><div className="svc-cta-side"><p>Con esos datos podemos revisar qué capacidad hace falta, qué conviene priorizar y qué información necesitamos antes de empezar.</p><a className="svc-button svc-button-primary" href="contacto.html">Abrir conversación <span>↗</span></a></div></section>;
+  return <section className="svc-cta" aria-labelledby="svc-cta-title"><div><p className="svc-kicker"><span>Siguiente paso</span> / Primera revisión</p><h2 id="svc-cta-title">Cuéntanos tu proyecto.<br /><em>Te diremos por dónde empezar.</em></h2></div><div className="svc-cta-side"><p>Revisaremos el objetivo, las prioridades y las áreas necesarias para proponerte un siguiente paso claro.</p><a className="svc-button svc-button-primary" href="contacto.html">Solicitar diagnóstico <span>↗</span></a></div></section>;
 }
 
 function ServicesFooter() {
-  return <footer className="inner-footer"><a className="inner-footer-brand" href="index.html"><img src="logo.png" alt="MEDLA Empresas" /></a><div><span>Servicios</span><a href="servicios.html">Mapa de capacidades</a><a href="contacto.html">Plantear una decisión</a></div><div><span>Compañía</span><a href="nosotros.html">Cómo trabajamos</a><a href="blog.html">Cuadernos</a></div><div><span>Contacto</span><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a><a href="tel:+34641576772">+34 641 576 772</a></div><div className="inner-footer-base"><span>© 2026 MEDLA Empresas</span><a href="privacidad.html">Privacidad</a><span>Madrid · España</span></div></footer>;
+  return <footer className="inner-footer"><a className="inner-footer-brand" href="index.html"><img src="logo.png" alt="MEDLA Empresas" /></a><div><span>Servicios</span><a href="servicios.html">Mapa de servicios</a><a href="contacto.html">Cuéntanos tu proyecto</a></div><div><span>MEDLA</span><a href="nosotros.html">Cómo trabajamos</a><a href="blog.html">Insights</a></div><div><span>Contacto</span><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a><a href="tel:+34641576772">+34 641 576 772</a></div><div className="inner-footer-base"><span>© 2026 MEDLA Empresas</span><a href="privacidad.html">Privacidad</a><span>Madrid · España</span></div></footer>;
 }
 
 function ServicesApp() {
-  return <div className="svc-page"><ServicesNav /><main id="main"><ServicesHero /><DecisionRouter /><ServiceExplorer /><Orchestration /><ServicesCta /></main><ServicesFooter /></div>;
+  return <div className="svc-page"><window.MedlaSiteHeader current="services" /><main id="main"><ServicesHero /><DecisionRouter /><ServiceExplorer /><Orchestration /><ServicesCta /></main><ServicesFooter /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<ServicesApp />);

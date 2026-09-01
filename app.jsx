@@ -307,7 +307,7 @@ const handoverChapters = [
 
 const worldBridgeRoutes = [
   { id: "intake", number: "01", short: "Información", label: "Correos · documentos · bloqueos", color: "#56849a" },
-  { id: "dossier", number: "02", short: "Criterio", label: "Versión válida · criterio · decisión", color: "#557a61" },
+  { id: "dossier", number: "02", short: "Criterio", label: "Versión válida · criterio · decisión", color: "#126b6a" },
   { id: "action", number: "03", short: "Acción", label: "Responsable · plazo · siguiente paso", color: "#9d8246" }
 ];
 
@@ -343,7 +343,7 @@ function SignatureField({ id, light = false }) {
       <defs>
         <linearGradient id={gradient} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor={light ? "#080a0f" : "#8bc7ee"} stopOpacity="0" />
-          <stop offset=".28" stopColor={light ? "#080a0f" : "#a9f3c1"} stopOpacity=".68" />
+          <stop offset=".28" stopColor={light ? "#080a0f" : "#79d2c5"} stopOpacity=".68" />
           <stop offset=".72" stopColor={light ? "#4e5f4e" : "#d5b76c"} stopOpacity=".54" />
           <stop offset="1" stopColor={light ? "#080a0f" : "#8bc7ee"} stopOpacity="0" />
         </linearGradient>
@@ -535,8 +535,8 @@ function WorldBridgeSection() {
         <div className="hp-world-bridge__intro hp-container">
           <div className="hp-section-code" data-reveal>01 — Coordinación internacional</div>
           <div>
-            <h2 data-reveal>Cuando intervienen varios equipos, <em>la información no puede depender de un correo.</em></h2>
-            <p data-reveal>Un alta de proveedor puede mezclar un correo, un contrato y un bloqueo en el ERP. Reunimos ese contexto, fijamos la versión válida y dejamos la decisión con responsable, plazo y siguiente acción.</p>
+            <h2 data-reveal>Tres equipos. <em>Una sola versión del proyecto.</em></h2>
+            <p data-reveal>En un alta de proveedor coinciden personas, contratos y sistemas. Reunimos la información, coordinamos a los responsables y dejamos cada acción asignada con plazo y seguimiento.</p>
           </div>
         </div>
 
@@ -985,14 +985,14 @@ function Hero() {
             <small>Negocio / Legal / Software</small>
           </div>
           <h1 className="hp-hero__entrance hp-hero__entrance--two">
-            Cuando una decisión mezcla contratos, procesos y software, <em>MEDLA coordina el trabajo.</em>
+            Legal, operaciones y tecnología. <em>Un único equipo para resolver el proyecto.</em>
           </h1>
           <p className="hp-hero__lead hp-hero__entrance hp-hero__entrance--three">
-            Analizamos el bloqueo con el equipo y ejecutamos la parte necesaria: contratos, procesos, software, automatización o soporte comercial.
+            Definimos el problema, ejecutamos la solución y la dejamos lista para trabajar: contratos, procesos, software, automatización o crecimiento comercial.
           </p>
           <div className="hp-hero__actions hp-hero__entrance hp-hero__entrance--four">
-            <a className="hp-button hp-button--gold" href="contacto.html">Cuéntanos la decisión <Arrow /></a>
-            <a className="hp-button hp-button--quiet" href="#sistema">Explorar un caso <Arrow diagonal /></a>
+            <a className="hp-button hp-button--gold" href="contacto.html">Cuéntanos tu proyecto <Arrow /></a>
+            <a className="hp-button hp-button--quiet" href="nosotros.html">Ver cómo trabajamos <Arrow diagonal /></a>
           </div>
           <div className="hp-hero__principles hp-hero__entrance hp-hero__entrance--five">
             <div><span>01</span><strong>Diagnosticar</strong><small>Decisiones, esperas y riesgo</small></div>
@@ -1030,8 +1030,8 @@ function DecisionTrajectory({ caseId }) {
     <svg className="hp-decision-room__trajectory" viewBox="0 0 1000 390" preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <linearGradient id={`decision-gradient-${caseId}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#a9f3c1" stopOpacity=".12" />
-          <stop offset=".52" stopColor="#a9f3c1" stopOpacity=".84" />
+          <stop offset="0" stopColor="#79d2c5" stopOpacity=".12" />
+          <stop offset=".52" stopColor="#79d2c5" stopOpacity=".84" />
           <stop offset="1" stopColor="#d5b76c" stopOpacity=".38" />
         </linearGradient>
         <filter id={`decision-glow-${caseId}`} x="-100%" y="-100%" width="300%" height="300%">
@@ -1146,7 +1146,7 @@ function CapabilityGraphic({ item }) {
     <svg className="hp-capability-graphic" viewBox="0 0 680 420" aria-hidden="true">
       <defs>
         <linearGradient id={`capability-gradient-${item.n}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#a9f3c1" stopOpacity=".78" />
+          <stop offset="0" stopColor="#79d2c5" stopOpacity=".78" />
           <stop offset="1" stopColor="#8bc7ee" stopOpacity=".22" />
         </linearGradient>
       </defs>
@@ -1444,10 +1444,10 @@ function DifferenceSection() {
         <div className="hp-section-code" data-reveal>05 — Entrega y continuidad</div>
         <div className="hp-difference__statement" data-reveal>
           <div className="hp-difference__statement-copy">
-            <span>Condiciones de entrega</span>
-            <p>Cada decisión queda registrada; cada componente, documentado; cada incidencia, con una ruta de respuesta.</p>
+            <span>Entrega operativa</span>
+            <p>La solución queda documentada, con responsables y un proceso claro para operar, mantener y mejorar.</p>
           </div>
-          <h2>El proyecto no termina en una demo. <em>Termina con un sistema que tu equipo puede operar.</em></h2>
+          <h2>No entregamos una demo. <em>Entregamos una solución lista para trabajar.</em></h2>
         </div>
       </div>
       <div className="hp-stage-bleed">
@@ -1500,8 +1500,8 @@ function FinalCTA() {
             <span>06 — Primera conversación</span>
             <small>No hace falta que lo tengas ordenado</small>
           </div>
-          <h2 id="final-intake-title" data-reveal>¿Qué está frenando <em>al equipo?</em></h2>
-          <p data-reveal>Elige el caso más cercano. Abriremos el formulario con ese contexto ya preparado y podrás ajustarlo antes de enviarlo.</p>
+          <h2 id="final-intake-title" data-reveal>Cuéntanos qué necesita resolver <em>tu equipo.</em></h2>
+          <p data-reveal>Elige el caso más cercano. Prepararemos el formulario con ese punto de partida para que puedas revisarlo antes de enviarlo.</p>
         </header>
 
         <div className="hp-final-intake__panel" data-reveal>
@@ -1533,9 +1533,9 @@ function FinalCTA() {
             <p><i aria-hidden="true"></i> El contexto se puede revisar antes de enviarlo</p>
           </fieldset>
 
-          <aside className="hp-selected-brief" aria-label="Contexto seleccionado">
+          <aside className="hp-selected-brief" aria-label="Caso seleccionado">
             <header>
-              <span>Contexto {String(selectedIndex + 1).padStart(2, "0")} / {selectedIssue.id}</span>
+              <span>Caso {String(selectedIndex + 1).padStart(2, "0")} / {selectedIssue.id}</span>
               <div><i aria-hidden="true"></i> Preparado</div>
             </header>
             <div className="hp-selected-brief__copy" aria-live="polite" key={selectedIssue.id}>
@@ -1544,10 +1544,10 @@ function FinalCTA() {
               <p>{selectedIssue.description}</p>
             </div>
             <div className="hp-selected-brief__actions">
-              <a className="hp-selected-brief__primary" href={`contacto.html?context=${selectedIssue.id}`}>Continuar con este contexto <Arrow /></a>
+              <a className="hp-selected-brief__primary" href={`contacto.html?context=${selectedIssue.id}`}>Continuar con este caso <Arrow /></a>
               <a className="hp-selected-brief__secondary" href={`https://api.whatsapp.com/send/?phone=34641576772&text=${whatsappText}&type=phone_number&app_absent=0`} target="_blank" rel="noopener noreferrer">Escribir por WhatsApp <Arrow diagonal /></a>
             </div>
-            <small>Podrás revisar y editar el contexto antes de enviarlo.</small>
+            <small>Podrás revisar y editar el caso antes de enviarlo.</small>
           </aside>
         </div>
       </div>
@@ -1597,7 +1597,7 @@ function App() {
     <>
       <RevealController />
       <ScrollProgress />
-      <Nav />
+      <window.MedlaSiteHeader current="home" />
       <main id="contenido">
         <Hero />
         <SignalRail />

@@ -142,20 +142,20 @@ function CtHero({ context }) {
           <span className="eyebrow">01 — Conversación inicial</span>
           <h1>Cuéntanos qué está bloqueado. <em>No hace falta que lo tengas ordenado.</em></h1>
           <p className="lead">
-            Una persona del equipo revisa el contexto y responde con las preguntas, el alcance o el siguiente paso que tenga sentido.
+            Una persona del equipo revisará tu solicitud y te responderá con una recomendación clara sobre cómo avanzar.
           </p>
           <div className="contacto-pulse">
-            <span className="dot"></span> Revisión humana · Sin respuesta automática
+            <span className="dot"></span> Revisión humana desde el primer contacto
           </div>
         </div>
         <aside className="ct-brief" aria-label="Vista previa del contexto que recibirá MEDLA">
           <header><span>MEDLA / BRIEF INICIAL</span><b>01</b></header>
-          <div className="ct-brief-status"><i></i><span>{context ? "Contexto recuperado" : "Preparado para completar"}</span></div>
-          <h2>{context?.label || "Una decisión por ordenar"}</h2>
+          <div className="ct-brief-status"><i></i><span>{context ? "Tema seleccionado" : "Preparado para completar"}</span></div>
+          <h2>{context?.label || "Cuéntanos tu proyecto"}</h2>
           <dl>
-            <div><dt>Punto de partida</dt><dd>{context ? "Conservado desde la página anterior" : "Lo describes en cuatro pasos breves"}</dd></div>
+            <div><dt>Tema seleccionado</dt><dd>{context ? "Conservado desde la página anterior" : "Lo describes en cuatro pasos breves"}</dd></div>
             <div><dt>Primera revisión</dt><dd>Problema · momento · responsables</dd></div>
-            <div><dt>Respuesta</dt><dd>Siguiente paso con contexto</dd></div>
+            <div><dt>Respuesta</dt><dd>Alcance y siguiente paso</dd></div>
           </dl>
           <footer><span>Datos tratados con consentimiento</span><i>Madrid / ES</i></footer>
         </aside>
@@ -177,7 +177,7 @@ const PATHS = [
     id: "propuesta",
     icon: <IconMsg />,
     title: "Propuesta a medida",
-    desc: "Para equipos que ya tienen claro el alcance y necesitan una cotización detallada.",
+    desc: "Para equipos que ya tienen claro el alcance y necesitan una propuesta económica detallada.",
     meta: "Alcance a medida",
   },
   {
@@ -188,7 +188,7 @@ const PATHS = [
       </svg>
     ),
     title: "Colaboración profesional",
-    desc: "Despachos, firmas o fondos que quieren coordinar una oferta conjunta o integrar capacidades MEDLA.",
+    desc: "Despachos, firmas o fondos que quieren coordinar una oferta conjunta o integrar servicios MEDLA.",
     meta: "Oferta conjunta",
   },
 ];
@@ -221,7 +221,7 @@ function CtPaths({ active, onPick }) {
 /* ─────────── Multi-step Form ─────────── */
 const ALCANCE_OPTIONS = [
   "Asesoría legal corporativa",
-  "Constitución / reestructura",
+  "Constitución o reestructuración societaria",
   "Inversiones y capital",
   "Digitalización de procesos",
   "Automatización e integración",
@@ -253,7 +253,7 @@ const CONTEXT_PRESETS = {
   },
   constitucion: {
     label: "Constitución y estructura societaria",
-    alcance: ["Constitución / reestructura", "Asesoría legal corporativa"],
+    alcance: ["Constitución o reestructuración societaria", "Asesoría legal corporativa"],
     notas: "Punto de partida: hay que ordenar propiedad, administración, capital y reglas de decisión antes de operar o cambiar la estructura.",
   },
   inversiones: {
@@ -296,21 +296,21 @@ const selectedContext = baseContext ? {
 } : null;
 
 const ETAPA_OPTIONS = [
-  "Pre-constitución",
-  "Empresa emergente en ronda",
+  "Proyecto en fase de constitución",
+  "Startup en ronda de financiación",
   "Pyme en crecimiento",
-  "Empresa establecida",
-  "Grupo o holding",
+  "Empresa consolidada",
+  "Grupo empresarial o holding",
   "Otro",
 ];
 
 const PRESUPUESTO_LABELS = [
   { min: 0, max: 0, label: "A definir" },
-  { min: 1, max: 3, label: "1K – 3K" },
-  { min: 3, max: 8, label: "3K – 8K" },
-  { min: 8, max: 15, label: "8K – 15K" },
-  { min: 15, max: 30, label: "15K – 30K" },
-  { min: 30, max: 999, label: "30K+" },
+  { min: 1, max: 3, label: "1.000 – 3.000 €" },
+  { min: 3, max: 8, label: "3.000 – 8.000 €" },
+  { min: 8, max: 15, label: "8.000 – 15.000 €" },
+  { min: 15, max: 30, label: "15.000 – 30.000 €" },
+  { min: 30, max: 999, label: "Más de 30.000 €" },
 ];
 
 function CtForm({ pathId }) {
@@ -410,13 +410,13 @@ function CtForm({ pathId }) {
   const stepTitle = {
     diagnostico: "Diagnóstico inicial",
     propuesta: "Solicitud de propuesta",
-    alianza: "Alianza estratégica",
+    alianza: "Colaboración profesional",
   }[pathId];
 
   const stepHints = [
     "Qué necesitas",
     "Dónde estás",
-    "Rango de presupuesto",
+    "Presupuesto aproximado",
     "Tus datos",
   ];
 
@@ -427,7 +427,7 @@ function CtForm({ pathId }) {
           <aside className="form-side">
             <div className="form-side-top">
               <span className="eyebrow">— {stepTitle}</span>
-              <h3>Danos la información necesaria antes de responderte.</h3>
+              <h3>Cuéntanos lo esencial para preparar una primera respuesta útil.</h3>
               <p>Cuatro pasos breves para que podamos revisar el problema, el momento de la empresa y el alcance antes de responder.</p>
 
               <div className="form-side-steps">
@@ -466,7 +466,7 @@ function CtForm({ pathId }) {
               <div className="form-step">
                 <div>
                   <div className="step-label">Paso 1 · {stepHints[0]}</div>
-                  <h4 ref={questionRef} tabIndex="-1" id="contact-scope-question">¿En qué necesitas que te acompañemos? <span aria-hidden="true">*</span><span className="sr-only"> Selección obligatoria.</span></h4>
+                  <h4 ref={questionRef} tabIndex="-1" id="contact-scope-question">¿Qué necesitas resolver? <span aria-hidden="true">*</span><span className="sr-only"> Selección obligatoria.</span></h4>
                   <p id="contact-scope-hint" style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>
                     Selecciona todas las líneas relevantes. Si aún no lo tienes claro, no pasa nada.
                   </p>
@@ -516,15 +516,13 @@ function CtForm({ pathId }) {
               <div className="form-step">
                 <div>
                   <div className="step-label">Paso 3 · {stepHints[2]}</div>
-                  <h4 ref={questionRef} tabIndex="-1">¿Qué rango de presupuesto contemplas?</h4>
+                  <h4 ref={questionRef} tabIndex="-1">¿Qué presupuesto aproximado manejas?</h4>
                   <p style={{ color: "var(--text-mute)", fontSize: 14, marginTop: 8 }}>
                     Nos ayuda a orientar el alcance. Si aún no está definido, puedes indicarlo.
                   </p>
                 </div>
                 <div className="slider-wrap">
-                  <div className="slider-value">
-                    {data.presupuestoIdx > 0 && <em>€</em>} {PRESUPUESTO_LABELS[data.presupuestoIdx].label}
-                  </div>
+                  <div className="slider-value">{PRESUPUESTO_LABELS[data.presupuestoIdx].label}</div>
                   <input
                     type="range"
                     aria-label="Rango de presupuesto"
@@ -537,14 +535,14 @@ function CtForm({ pathId }) {
                   />
                   <div className="slider-ticks">
                     <span>A definir</span>
-                    <span>1–3K</span>
-                    <span>3–8K</span>
-                    <span>8–15K</span>
-                    <span>15–30K</span>
-                    <span>30K+</span>
+                    <span>1–3 mil €</span>
+                    <span>3–8 mil €</span>
+                    <span>8–15 mil €</span>
+                    <span>15–30 mil €</span>
+                    <span>30 mil €+</span>
                   </div>
                   <div className="slider-note">
-                    <p><span>Referencia inicial</span> No es una cotización ni compromete un alcance.</p>
+                    <p><span>Referencia inicial</span> No es una propuesta económica ni compromete un alcance.</p>
                     <p><span>Antes de empezar</span> Entregables, calendario y condiciones quedan por escrito.</p>
                   </div>
                 </div>
@@ -749,8 +747,8 @@ const FAQS = [
     a: "El trabajo puede coordinarse de forma remota. La disponibilidad y, cuando aplique, la jurisdicción y los responsables locales se confirman durante la revisión inicial.",
   },
   {
-    q: "¿Puedo activar una sola capacidad?",
-    a: "Sí. Cada capacidad puede abordarse por separado. Cuando el problema cruza varias disciplinas, proponemos cómo coordinarlas y quién responde por cada parte.",
+    q: "¿Puedo contratar un solo servicio?",
+    a: "Sí. Cada servicio puede abordarse por separado. Cuando el proyecto cruza varias áreas, proponemos cómo coordinarlas y quién responde por cada parte.",
   },
   {
     q: "¿Cómo se acuerdan las condiciones?",
@@ -861,7 +859,7 @@ function ContactoApp() {
   const [path, setPath] = useState("diagnostico");
   return (
     <div className="contacto-page">
-      <CtNav />
+      <window.MedlaSiteHeader current="contact" />
       <main id="contenido">
         <CtHero context={selectedContext} />
         <CtPaths active={path} onPick={setPath} />

@@ -1,6 +1,7 @@
 import { build } from "esbuild";
 
 const javascript = [
+  { entryPoints: ["site-shell.jsx"], outfile: "site-shell.js" },
   { entryPoints: ["app.jsx"], outfile: "app.js" },
   { entryPoints: ["contacto.jsx"], outfile: "contacto.js" },
   { entryPoints: ["servicios-entry.jsx"], outfile: "servicios.js", bundle: true },
@@ -10,6 +11,7 @@ const javascript = [
 ];
 
 const styles = [
+  { entryPoints: ["site-shell.css"], outfile: "site-shell.min.css" },
   { entryPoints: ["home-premium.css"], outfile: "home-premium.min.css" },
   { entryPoints: ["specialty.css"], outfile: "specialty.min.css" },
   { entryPoints: ["privacy-entry.css"], outfile: "privacy.min.css", bundle: true },
@@ -30,4 +32,4 @@ await Promise.all([
   })),
 ]);
 
-process.stdout.write("build: ok (6 bundles JS, 3 bundles CSS)\n");
+process.stdout.write("build: ok (7 bundles JS, 4 bundles CSS)\n");

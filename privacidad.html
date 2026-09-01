@@ -15,21 +15,13 @@
   <meta property="og:image" content="https://www.medla-empresas.com/assets/medla-social-preview.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="privacy.min.css?v=3" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="privacy.min.css?v=4" />
+  <link rel="stylesheet" href="site-shell.min.css?v=2" />
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
-  <header class="privacy-nav">
-    <a class="privacy-brand" href="index.html" aria-label="MEDLA — Inicio"><img src="logo.png" alt="" /></a>
-    <nav aria-label="Navegación principal">
-      <a href="servicios.html">Servicios</a>
-      <a href="nosotros.html">Nosotros</a>
-      <a href="blog.html">Cuadernos</a>
-      <a href="contacto.html">Contacto</a>
-    </nav>
-    <a class="privacy-back" href="contacto.html">Volver al contacto <span>↗</span></a>
-  </header>
+  <div data-medla-header></div>
 
   <main id="contenido">
     <section class="privacy-hero">
@@ -73,7 +65,7 @@
         <section id="datos">
           <span>02</span>
           <div><h2>Qué datos tratamos</h2><p>El formulario recoge el tipo de consulta, alcance, etapa de la empresa y rango de presupuesto, además de nombre y correo electrónico. Empresa, teléfono y notas son opcionales. También registramos la fecha de envío y la aceptación de esta política.</p>
-            <p>La dirección de red se utiliza temporalmente en la infraestructura de MEDLA para limitar intentos automatizados. No se incorpora al mensaje remitido a HighLevel / LeadConnector.</p>
+            <p>La dirección IP se utiliza temporalmente en la infraestructura de MEDLA para limitar intentos automatizados. No se incorpora al mensaje remitido a HighLevel / LeadConnector.</p>
             <p>No pedimos categorías especiales de datos. Evita incluir información médica, ideológica, biométrica u otros datos especialmente protegidos en el campo de notas.</p>
           </div>
         </section>
@@ -141,5 +133,8 @@
     <a class="privacy-mail" href="mailto:info@medla-empresas.com?subject=Protecci%C3%B3n%20de%20datos">Escribir a privacidad <span>↗</span></a>
     <div><span>© 2026 MEDLA Empresas</span><span>Madrid · España</span></div>
   </footer>
+  <script src="assets/vendor/react.production.min.js"></script>
+  <script src="assets/vendor/react-dom.production.min.js"></script>
+  <script src="site-shell.js?v=2"></script>
 </body>
 </html>

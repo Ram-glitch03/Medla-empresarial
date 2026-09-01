@@ -138,9 +138,9 @@ function Hero({ onOpenCover }) {
   return <header className="journal-hero">
     <div className="journal-hero-kicker"><span>Cuadernos MEDLA</span><span>Edición abierta</span></div>
     <div className="journal-hero-main"><div className="journal-hero-copy">
-      <p className="journal-overline">Notas para trabajar</p><h1>Antes de ejecutar,<br /><em>define qué debe cambiar.</em></h1>
-      <p className="journal-hero-intro">Guías breves para ordenar una decisión antes de convertirla en contrato, proceso, sistema o campaña.</p>
-      <button className="text-action" type="button" onClick={onOpenCover}>Abrir la guía de portada <span aria-hidden="true">↘</span></button>
+      <p className="journal-overline">Guías para aplicar</p><h1>Ideas prácticas para<br /><em>tomar mejores decisiones.</em></h1>
+      <p className="journal-hero-intro">Guías breves para ordenar procesos, contratos, datos y proyectos antes de invertir tiempo y presupuesto.</p>
+      <button className="text-action" type="button" onClick={onOpenCover}>Leer la guía destacada <span aria-hidden="true">↘</span></button>
     </div><SignalField /></div>
     <div className="journal-hero-foot"><span>01 — Índice de trabajo</span><a href="#indice">Explorar las guías <span aria-hidden="true">↓</span></a></div>
   </header>;
@@ -148,10 +148,10 @@ function Hero({ onOpenCover }) {
 
 function FilterBar({ active, onChange, query, setQuery, resultCount }) {
   return <section className="journal-controls" aria-label="Filtrar guías">
-    <div className="journal-section-index"><span>Índice</span><span>{String(resultCount).padStart(2, "0")} piezas</span></div>
+    <div className="journal-section-index"><span>Índice</span><span>{String(resultCount).padStart(2, "0")} guías</span></div>
     <div className="journal-control-row"><div className="journal-filters" role="group" aria-label="Filtrar por disciplina">
       {CATEGORIES.map((category) => <button type="button" key={category} className={active === category ? "is-active" : ""} aria-pressed={active === category} onClick={() => onChange(category)}>{category}</button>)}
-    </div><label className="journal-search"><span className="sr-only">Buscar en las guías</span><span aria-hidden="true">⌕</span><input type="search" placeholder="Buscar una decisión" value={query} onChange={(event) => setQuery(event.target.value)} /></label></div>
+    </div><label className="journal-search"><span className="sr-only">Buscar en las guías</span><span aria-hidden="true">⌕</span><input type="search" placeholder="Buscar por tema" value={query} onChange={(event) => setQuery(event.target.value)} /></label></div>
   </section>;
 }
 
@@ -228,7 +228,7 @@ function GuideReader({ guide, onClose, onNext }) {
 }
 
 function EditorialStatement() {
-  return <section className="editorial-statement"><div className="statement-label">02 — Nota editorial</div><div className="statement-copy"><p>No presentamos estas piezas como artículos publicados, casos de cliente ni asesoramiento profesional.</p><h2>Son puntos de partida para llegar a la conversación con <em>la pregunta y los límites mejor definidos.</em></h2></div><div className="statement-mark" aria-hidden="true">M<span>/</span>06</div></section>;
+  return <section className="editorial-statement"><div className="statement-label">02 — Nota editorial</div><div className="statement-copy"><p>Contenido general para preparar mejor tus decisiones. No sustituye asesoramiento jurídico, financiero o técnico adaptado a tu caso.</p><h2>Una buena decisión empieza con <em>la pregunta y los límites bien definidos.</em></h2></div><div className="statement-mark" aria-hidden="true">M<span>/</span>06</div></section>;
 }
 
 function ConversationCTA() {
@@ -241,33 +241,105 @@ function BlogFooter() {
     <div className="journal-footer-bottom"><span>© 2026 MEDLA Empresas</span><span>Cuadernos / Edición abierta</span></div></footer>;
 }
 
+const BLOG_HISTORY_STATE = "medlaBlog";
+
+function createBlogEntryId() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+}
+
+function readBlogHistoryState(state = window.history.state) {
+  const blogState = state && typeof state === "object" ? state[BLOG_HISTORY_STATE] : null;
+  return blogState?.version === 1 ? blogState : null;
+}
+
 function BlogApp() {
   const guideFromUrl = () => GUIDES.find((guide) => guide.id === new URLSearchParams(window.location.search).get("guide")) || null;
   const [activeCategory, setActiveCategory] = useState("Todos"), [query, setQuery] = useState(""), [selected, setSelected] = useState(guideFromUrl);
   const lastTrigger = useRef(null);
+  const activeIndexEntry = useRef(null);
+  const readerOrigin = useRef(null);
   const filtered = useMemo(() => { const normalized = query.trim().toLocaleLowerCase("es"); return GUIDES.filter((guide) => (activeCategory === "Todos" || guide.category === activeCategory) && (!normalized || `${guide.title} ${guide.excerpt} ${guide.category} ${guide.format}`.toLocaleLowerCase("es").includes(normalized))); }, [activeCategory, query]);
+
+  const replaceBlogHistoryState = (blogState, url = window.location.href) => {
+    const currentState = window.history.state && typeof window.history.state === "object" ? window.history.state : {};
+    window.history.replaceState({ ...currentState, [BLOG_HISTORY_STATE]: { version: 1, ...blogState } }, "", url);
+  };
+
+  const setGuideUrl = (guide, { replace = false, origin = "direct", indexEntryId = null } = {}) => {
+    const url = new URL(window.location.href);
+    if (guide) url.searchParams.set("guide", guide.id); else url.searchParams.delete("guide");
+    url.hash = "";
+    const currentState = window.history.state && typeof window.history.state === "object" ? window.history.state : {};
+    const blogState = guide
+      ? { version: 1, view: "reader", guideId: guide.id, origin, indexEntryId: origin === "index" ? indexEntryId : null }
+      : { version: 1, view: "index", entryId: indexEntryId || createBlogEntryId() };
+    window.history[replace ? "replaceState" : "pushState"]({ ...currentState, [BLOG_HISTORY_STATE]: blogState }, "", url);
+  };
+
   useEffect(() => {
-    const onPopState = () => {
+    const syncReaderOrigin = (guide, state = window.history.state) => {
+      const blogState = readBlogHistoryState(state);
+      const openedFromIndex = Boolean(guide && blogState?.view === "reader" && blogState.guideId === guide.id && blogState.origin === "index" && blogState.indexEntryId);
+      readerOrigin.current = guide ? (openedFromIndex ? "index" : "direct") : null;
+      activeIndexEntry.current = openedFromIndex ? blogState.indexEntryId : (!guide && blogState?.view === "index" ? blogState.entryId : null);
+    };
+
+    const initialGuide = guideFromUrl();
+    const initialState = readBlogHistoryState();
+    if (initialGuide) {
+      const openedFromIndex = initialState?.view === "reader" && initialState.guideId === initialGuide.id && initialState.origin === "index" && initialState.indexEntryId;
+      replaceBlogHistoryState({ view: "reader", guideId: initialGuide.id, origin: openedFromIndex ? "index" : "direct", indexEntryId: openedFromIndex ? initialState.indexEntryId : null });
+    } else {
+      replaceBlogHistoryState({ view: "index", entryId: initialState?.view === "index" && initialState.entryId ? initialState.entryId : createBlogEntryId() });
+    }
+    syncReaderOrigin(initialGuide);
+
+    const onPopState = (event) => {
       const guide = guideFromUrl();
+      syncReaderOrigin(guide, event.state);
       setSelected(guide);
       window.requestAnimationFrame(() => !guide && lastTrigger.current?.focus?.());
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
-  const setGuideUrl = (guide, { replace = false, returnToIndex = window.history.state?.medlaGuideReturn === true } = {}) => {
-    const url = new URL(window.location.href);
-    if (guide) url.searchParams.set("guide", guide.id); else url.searchParams.delete("guide");
-    url.hash = "";
-    window.history[replace ? "replaceState" : "pushState"](guide ? { medlaGuide: guide.id, medlaGuideReturn: returnToIndex } : {}, "", url);
+
+  const openGuide = (guide) => {
+    lastTrigger.current = document.activeElement;
+    const currentState = readBlogHistoryState();
+    const indexEntryId = currentState?.view === "index" && currentState.entryId ? currentState.entryId : (activeIndexEntry.current || createBlogEntryId());
+    if (currentState?.view !== "index" || currentState.entryId !== indexEntryId) replaceBlogHistoryState({ view: "index", entryId: indexEntryId });
+    activeIndexEntry.current = indexEntryId;
+    readerOrigin.current = "index";
+    setGuideUrl(guide, { origin: "index", indexEntryId });
+    setSelected(guide);
   };
-  const openGuide = (guide) => { lastTrigger.current = document.activeElement; setGuideUrl(guide, { returnToIndex: true }); setSelected(guide); };
+
   const closeReader = () => {
-    if (window.history.state?.medlaGuideReturn) window.history.back();
-    else { setGuideUrl(null, { replace: true }); setSelected(null); window.requestAnimationFrame(() => lastTrigger.current?.focus?.()); }
+    const currentState = readBlogHistoryState();
+    const canReturnToIndex = readerOrigin.current === "index" && currentState?.view === "reader" && currentState.origin === "index" && currentState.indexEntryId === activeIndexEntry.current;
+    if (canReturnToIndex) {
+      window.history.back();
+      return;
+    }
+    const indexEntryId = createBlogEntryId();
+    setGuideUrl(null, { replace: true, indexEntryId });
+    activeIndexEntry.current = indexEntryId;
+    readerOrigin.current = null;
+    setSelected(null);
+    window.requestAnimationFrame(() => lastTrigger.current?.focus?.());
   };
-  const nextGuide = () => { const currentIndex = GUIDES.findIndex((guide) => guide.id === selected.id); const next = GUIDES[(currentIndex + 1) % GUIDES.length]; setGuideUrl(next, { replace: true }); setSelected(next); };
-  return <div className="journal-page"><a className="journal-skip" href="#indice">Saltar al índice</a><BlogNav /><main><Hero onOpenCover={() => openGuide(GUIDES[0])} /><FilterBar active={activeCategory} onChange={setActiveCategory} query={query} setQuery={setQuery} resultCount={filtered.length} /><GuideIndex guides={filtered} onOpen={openGuide} /><EditorialStatement /><ConversationCTA /></main><BlogFooter /><GuideReader guide={selected} onClose={closeReader} onNext={nextGuide} /></div>;
+
+  const nextGuide = () => {
+    const currentIndex = GUIDES.findIndex((guide) => guide.id === selected.id);
+    const next = GUIDES[(currentIndex + 1) % GUIDES.length];
+    const currentState = readBlogHistoryState();
+    const openedFromIndex = readerOrigin.current === "index" && currentState?.view === "reader" && currentState.origin === "index" && currentState.indexEntryId === activeIndexEntry.current;
+    setGuideUrl(next, { replace: true, origin: openedFromIndex ? "index" : "direct", indexEntryId: openedFromIndex ? currentState.indexEntryId : null });
+    readerOrigin.current = openedFromIndex ? "index" : "direct";
+    setSelected(next);
+  };
+  return <div className="journal-page"><a className="journal-skip" href="#indice">Saltar al índice</a><window.MedlaSiteHeader current="insights" /><main><Hero onOpenCover={() => openGuide(GUIDES[0])} /><FilterBar active={activeCategory} onChange={setActiveCategory} query={query} setQuery={setQuery} resultCount={filtered.length} /><GuideIndex guides={filtered} onOpen={openGuide} /><EditorialStatement /><ConversationCTA /></main><BlogFooter /><GuideReader guide={selected} onClose={closeReader} onNext={nextGuide} /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<BlogApp />);
