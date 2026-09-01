@@ -254,11 +254,55 @@ const decisionCases = [
   }
 ];
 
-const buildStandard = [
-  { layer: "Decisiones", clarity: "Qué se ha priorizado y por qué", owned: "Responsable, criterio y próxima revisión" },
-  { layer: "Desarrollo", clarity: "Qué hace la solución y qué no", owned: "Configuración, integraciones y repositorio entregados" },
-  { layer: "Control", clarity: "Cómo se detecta un problema", owned: "Estados, alertas e historial" },
-  { layer: "Continuidad", clarity: "Quién puede mantenerlo", owned: "Manual, responsables y criterios de cambio" }
+const handoverChapters = [
+  {
+    id: "decision",
+    number: "01",
+    label: "Decisión",
+    title: "Aprobar el alta cuando llegue el certificado fiscal vigente.",
+    description: "La condición, el responsable y el plazo quedan registrados para que la decisión no vuelva a una cadena de correos.",
+    facts: [
+      ["Responsable", "Dirección de Operaciones"],
+      ["Plazo", "Viernes · 12:00"],
+      ["Próxima acción", "Validar y registrar el alta"]
+    ]
+  },
+  {
+    id: "system",
+    number: "02",
+    label: "Sistema",
+    title: "Un flujo único desde la recepción documental hasta el ERP.",
+    description: "La solución entregada define alcance, fuentes y destino de cada dato; también deja visibles sus límites.",
+    facts: [
+      ["Alcance", "Captura, validación y sincronización"],
+      ["Versión", "Entrega 1.4"],
+      ["Repositorio", "Proveedores / Alta"]
+    ]
+  },
+  {
+    id: "control",
+    number: "03",
+    label: "Control",
+    title: "Cada incidencia tiene estado, alerta e historial.",
+    description: "El equipo puede saber qué se ha detenido, desde cuándo y quién debe intervenir sin pedir una reconstrucción manual.",
+    facts: [
+      ["Estados", "Recibido · Revisión · Aprobado · Registrado"],
+      ["Alertas", "Documento vencido · Plazo superado"],
+      ["Historial", "8 hitos registrados"]
+    ]
+  },
+  {
+    id: "continuity",
+    number: "04",
+    label: "Continuidad",
+    title: "El equipo recibe el criterio para operar y cambiar el sistema.",
+    description: "La entrega incluye responsables, documentación y una primera revisión para que el conocimiento no dependa del proveedor.",
+    facts: [
+      ["Operación", "Operaciones + Sistemas"],
+      ["Documentación", "Manual y criterios de cambio"],
+      ["Revisión", "30 días después de la entrega"]
+    ]
+  }
 ];
 
 const worldBridgeRoutes = [
@@ -1219,71 +1263,166 @@ function OperatingModelSection() {
 }
 
 function TransferScene() {
-  const [ordered, setOrdered] = useState(false);
+  const [activeChapter, setActiveChapter] = useState(0);
+  const [entered, setEntered] = useState(false);
   const rootRef = useRef(null);
   const reducedMotion = useReducedMotion();
-  const fragments = [
-    "contrato_v7_final.pdf",
-    "¿quién lo aprueba?",
-    "Excel de compras",
-    "pendiente desde el martes",
-    "email sin responder",
-    "datos duplicados"
+  const sources = [
+    {
+      channel: "Email / equipo local",
+      title: "¿Quién valida las condiciones?",
+      status: "Sin responsable asignado"
+    },
+    {
+      channel: "Documento / proveedor",
+      title: "Contrato_proveedor_v7.pdf",
+      status: "Versión pendiente de confirmar"
+    },
+    {
+      channel: "ERP / Compras",
+      title: "Alta bloqueada",
+      status: "Falta certificado fiscal"
+    }
   ];
+  const chapter = handoverChapters[activeChapter];
 
   useEffect(() => {
     if (reducedMotion) {
-      setOrdered(true);
+      setEntered(true);
       return undefined;
     }
     const node = rootRef.current;
-    if (!node || !("IntersectionObserver" in window)) return undefined;
+    if (!node || !("IntersectionObserver" in window)) {
+      setEntered(true);
+      return undefined;
+    }
     const observer = new IntersectionObserver((entries) => {
       if (!entries[0]?.isIntersecting) return;
-      window.setTimeout(() => setOrdered(true), 350);
+      setEntered(true);
       observer.disconnect();
-    }, { threshold: .38 });
+    }, { threshold: .24 });
     observer.observe(node);
     return () => observer.disconnect();
   }, [reducedMotion]);
 
+  const handleChapterKey = (event, index) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    let next = index;
+    if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = handoverChapters.length - 1;
+    else next = (index + (event.key === "ArrowRight" ? 1 : -1) + handoverChapters.length) % handoverChapters.length;
+    setActiveChapter(next);
+    event.currentTarget.closest('[role="tablist"]')?.querySelectorAll('[role="tab"]')[next]?.focus();
+  };
+
   return (
-    <div ref={rootRef} className={`hp-transfer-scene ${ordered ? "is-ordered" : ""}`}>
-      <div className="hp-transfer-scene__head">
-        <div><i></i><span>{ordered ? "TRABAJO ORDENADO" : "PUNTO DE PARTIDA"}</span></div>
-        <button type="button" aria-pressed={ordered} onClick={() => setOrdered(!ordered)}>
-          <span><i></i></span>{ordered ? "Volver al punto de partida" : "Ver el resultado"}
-        </button>
-      </div>
+    <div ref={rootRef} className={`hp-transfer-scene hp-handover ${entered ? "is-entered" : ""}`}>
+      <header className="hp-handover__head">
+        <div className="hp-handover__case">
+          <i aria-hidden="true"></i>
+          <span>Ejemplo de entrega</span>
+          <strong>Alta de proveedor internacional</strong>
+        </div>
+        <div className="hp-handover__status"><i aria-hidden="true"></i> Entrega aceptada</div>
+      </header>
 
-      <div className="hp-transfer-scene__canvas">
-        <SignatureField id="transfer" light />
-        <div className="hp-transfer-scene__fragments" aria-hidden={ordered}>
-          {fragments.map((fragment, index) => <span key={fragment} style={{ "--fragment": index }}>{fragment}</span>)}
+      <div className="hp-handover__layout">
+        <aside className="hp-handover__sources" aria-labelledby="handover-sources-title">
+          <header>
+            <div>
+              <span>01 / Información recibida</span>
+              <h3 id="handover-sources-title">Tres fuentes. Dos bloqueos.</h3>
+            </div>
+            <small>Entrada</small>
+          </header>
+          <ol>
+            {sources.map((source, index) => (
+              <li className="hp-handover__source" key={source.channel} style={{ "--source": index }}>
+                <div><span>{source.channel}</span><b>0{index + 1}</b></div>
+                <strong>{source.title}</strong>
+                <p><i aria-hidden="true"></i>{source.status}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="hp-handover__blocker"><i aria-hidden="true"></i> Contexto incompleto · decisión detenida</div>
+        </aside>
+
+        <div className="hp-handover__rail" aria-hidden="true">
+          <span>Reunir · validar · asignar</span>
+          <i></i>
+          <b>MEDLA</b>
         </div>
 
-        <div className="hp-transfer-scene__core">
-          <span>MEDLA</span>
-          <strong>{ordered ? "Proceso documentado" : "Trabajo disperso"}</strong>
-          <small>{ordered ? "Responsables, criterio y control" : "Archivos, mensajes y decisiones sueltas"}</small>
-        </div>
+        <article className="hp-handover__dossier" aria-labelledby="handover-title">
+          <header className="hp-handover__folio">
+            <div>
+              <span>MEDLA / Expediente de entrega</span>
+              <strong>Folio 06 · versión 1.4</strong>
+            </div>
+            <div className="hp-handover__seal"><i aria-hidden="true"></i> Validado</div>
+          </header>
 
-        <div className="hp-transfer-scene__outcomes">
-          {buildStandard.map((row, index) => (
-            <article key={row.layer} style={{ "--outcome": index }}>
-              <span>0{index + 1}</span>
-              <small>{row.layer}</small>
-              <strong>{row.clarity}</strong>
-              <p>{row.owned}</p>
-            </article>
-          ))}
-        </div>
+          <div className="hp-handover__title">
+            <span>Resultado operativo</span>
+            <h3 id="handover-title">Alta de proveedor internacional</h3>
+            <p>Una sola versión para decidir, ejecutar y revisar.</p>
+          </div>
+
+          <div className="hp-handover__tabs" role="tablist" aria-label="Contenido del expediente">
+            {handoverChapters.map((item, index) => (
+              <button
+                type="button"
+                role="tab"
+                id={`handover-tab-${item.id}`}
+                aria-controls="handover-panel"
+                aria-selected={activeChapter === index}
+                tabIndex={activeChapter === index ? 0 : -1}
+                className={activeChapter === index ? "is-active" : ""}
+                onClick={() => setActiveChapter(index)}
+                onKeyDown={(event) => handleChapterKey(event, index)}
+                key={item.id}
+              >
+                <span>{item.number}</span>
+                <strong>{item.label}</strong>
+                <i aria-hidden="true"></i>
+              </button>
+            ))}
+          </div>
+
+          <div
+            className="hp-handover__panel"
+            id="handover-panel"
+            role="tabpanel"
+            aria-labelledby={`handover-tab-${chapter.id}`}
+            aria-live="polite"
+            key={chapter.id}
+          >
+            <div className="hp-handover__panel-copy">
+              <span>{chapter.number} / {chapter.label}</span>
+              <h4>{chapter.title}</h4>
+              <p>{chapter.description}</p>
+            </div>
+            <dl className="hp-handover__facts">
+              {chapter.facts.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <footer className="hp-handover__dossier-foot">
+            <span>Versión 1.4</span><i></i><span>Responsable asignado</span><i></i><span>Revisión registrada</span>
+          </footer>
+        </article>
       </div>
 
-      <div className="hp-transfer-scene__foot">
-        <span>Criterio de entrega</span>
-        <p>Entregamos responsables, documentación y criterios de cambio para que el equipo pueda operar y ampliar la solución.</p>
-      </div>
+      <footer className="hp-handover__proof">
+        <span>Criterio de cierre</span>
+        <p><b>Decisión registrada</b><i></i><b>Documentación entregada</b><i></i><b>Control transferido</b></p>
+      </footer>
     </div>
   );
 }
@@ -1293,10 +1432,13 @@ function DifferenceSection() {
     <section className="hp-difference hp-section" id="resultado">
       <LightMotionField variant="three" />
       <div className="hp-container">
-        <div className="hp-section-code" data-reveal>05 — Qué queda al terminar</div>
+        <div className="hp-section-code" data-reveal>05 — Entrega y continuidad</div>
         <div className="hp-difference__statement" data-reveal>
-          <span>Condiciones de entrega</span>
-          <h2>Las decisiones, la documentación y el control <em>quedan en tu equipo.</em></h2>
+          <div className="hp-difference__statement-copy">
+            <span>Condiciones de entrega</span>
+            <p>Cada decisión queda registrada; cada componente, documentado; cada incidencia, con una ruta de respuesta.</p>
+          </div>
+          <h2>El proyecto no termina en una demo. <em>Termina con un sistema que tu equipo puede operar.</em></h2>
         </div>
       </div>
       <div className="hp-stage-bleed">
@@ -1308,66 +1450,96 @@ function DifferenceSection() {
 
 function FinalCTA() {
   const issues = [
-    { id: "operacion", label: "Aprobaciones y tareas manuales", summary: "un proceso de aprobaciones manuales sin un estado ni un responsable claros" },
-    { id: "legal", label: "Un contrato o riesgo legal", summary: "una decisión bloqueada por contratos, obligaciones o versiones dispersas" },
-    { id: "ia", label: "IA que no pasa de la prueba", summary: "un caso de IA que aún no opera con fuentes, permisos y controles definidos" },
-    { id: "growth", label: "Ventas sin seguimiento claro", summary: "oportunidades comerciales sin responsable o próxima acción" }
+    {
+      id: "operacion",
+      label: "Un proceso depende de demasiadas aprobaciones",
+      title: "Aprobaciones y tareas manuales",
+      description: "Hay tareas sin responsable, estado o un criterio común para avanzar.",
+      summary: "un proceso de aprobaciones manuales sin un estado ni un responsable claros"
+    },
+    {
+      id: "legal",
+      label: "Un contrato está frenando una decisión",
+      title: "Contrato o riesgo legal",
+      description: "Las obligaciones, versiones o responsables no están suficientemente claros para decidir.",
+      summary: "una decisión bloqueada por contratos, obligaciones o versiones dispersas"
+    },
+    {
+      id: "ia",
+      label: "Un piloto de IA no llega a operación",
+      title: "IA sin pasar de la prueba",
+      description: "El caso de uso existe, pero todavía faltan fuentes, permisos o controles para ponerlo a trabajar.",
+      summary: "un caso de IA que aún no opera con fuentes, permisos y controles definidos"
+    },
+    {
+      id: "growth",
+      label: "Las oportunidades pierden seguimiento",
+      title: "Seguimiento comercial",
+      description: "La actividad comercial no deja una próxima acción, una prioridad o una lectura común para dirección.",
+      summary: "oportunidades comerciales sin responsable o próxima acción"
+    }
   ];
   const [selectedIssue, setSelectedIssue] = useState(issues[0]);
+  const selectedIndex = issues.findIndex((issue) => issue.id === selectedIssue.id);
   const whatsappText = encodeURIComponent(`Hola, quiero hablar con MEDLA. Mi punto de partida es: ${selectedIssue.summary}.`);
-  const handleIssueKey = (event, index) => {
-    if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
-    event.preventDefault();
-    let next = index;
-    if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = issues.length - 1;
-    else next = (index + (["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1) + issues.length) % issues.length;
-    setSelectedIssue(issues[next]);
-    event.currentTarget.parentElement.querySelectorAll('[role="radio"]')[next]?.focus();
-  };
 
   return (
-    <section className="hp-final-cta hp-section" id="contacto">
-      <div className="hp-stage-bleed hp-stage-bleed--flush">
-        <div className="hp-final-cta__card">
-          <SignatureField id="cta" light />
-          <div className="hp-final-cta__content">
-            <div className="hp-kicker hp-kicker--dark" data-reveal>
-              <span>06 — Primera conversación</span>
-              <small>Empezamos por un caso concreto</small>
-            </div>
-            <h2 data-reveal>Empecemos por <em>una decisión concreta.</em></h2>
-            <p data-reveal>Selecciona el punto de partida. Lo añadiremos al formulario para que no tengas que empezar desde cero.</p>
-            <div className="hp-final-cta__actions" data-reveal>
-              <a className="hp-button hp-button--ink" href={`contacto.html?context=${selectedIssue.id}`}>Continuar con este tema <Arrow /></a>
-              <a className="hp-button hp-button--light-quiet" href={`https://api.whatsapp.com/send/?phone=34641576772&text=${whatsappText}&type=phone_number&app_absent=0`} target="_blank" rel="noopener noreferrer">WhatsApp <Arrow diagonal /></a>
-            </div>
+    <section className="hp-final-cta hp-final-intake hp-section" id="contacto" aria-labelledby="final-intake-title">
+      <div className="hp-container hp-final-intake__inner">
+        <header className="hp-final-intake__intro">
+          <div className="hp-kicker hp-final-intake__kicker" data-reveal>
+            <span>06 — Primera conversación</span>
+            <small>No necesitas preparar un briefing</small>
           </div>
-          <div className="hp-brief-composer" data-reveal style={{ "--delay": "100ms" }}>
-            <div className="hp-brief-composer__head"><span>¿POR DÓNDE EMPEZAMOS?</span><span>{String(issues.findIndex((issue) => issue.id === selectedIssue.id) + 1).padStart(2, "0")} / 04</span></div>
-            <div className="hp-brief-composer__options" role="radiogroup" aria-label="Punto de partida">
+          <h2 id="final-intake-title" data-reveal>¿Qué está frenando <em>al equipo?</em></h2>
+          <p data-reveal>Elige el caso más cercano. Abriremos el formulario con ese contexto ya preparado y podrás ajustarlo antes de enviarlo.</p>
+        </header>
+
+        <div className="hp-final-intake__panel" data-reveal>
+          <fieldset className="hp-issue-picker">
+            <legend>
+              <span>Selecciona un punto de partida</span>
+              <small>{String(selectedIndex + 1).padStart(2, "0")} / 04</small>
+            </legend>
+            <ol>
               {issues.map((issue, index) => (
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={selectedIssue.id === issue.id}
-                  tabIndex={selectedIssue.id === issue.id ? 0 : -1}
-                  className={selectedIssue.id === issue.id ? "is-selected" : ""}
-                  onClick={() => setSelectedIssue(issue)}
-                  onKeyDown={(event) => handleIssueKey(event, index)}
-                  key={issue.id}
-                >
-                  <span>0{index + 1}</span>{issue.label}<i></i>
-                </button>
+                <li key={issue.id}>
+                  <input
+                    className="hp-issue-picker__input"
+                    type="radio"
+                    id={`issue-${issue.id}`}
+                    name="medla-start"
+                    value={issue.id}
+                    checked={selectedIssue.id === issue.id}
+                    onChange={() => setSelectedIssue(issue)}
+                  />
+                  <label htmlFor={`issue-${issue.id}`}>
+                    <span>0{index + 1}</span>
+                    <strong>{issue.label}</strong>
+                    <i aria-hidden="true"></i>
+                  </label>
+                </li>
               ))}
+            </ol>
+            <p><i aria-hidden="true"></i> El contexto se puede revisar antes de enviarlo</p>
+          </fieldset>
+
+          <aside className="hp-selected-brief" aria-label="Contexto seleccionado">
+            <header>
+              <span>Contexto {String(selectedIndex + 1).padStart(2, "0")} / {selectedIssue.id}</span>
+              <div><i aria-hidden="true"></i> Preparado</div>
+            </header>
+            <div className="hp-selected-brief__copy" aria-live="polite" key={selectedIssue.id}>
+              <span>Punto de partida</span>
+              <h3>{selectedIssue.title}</h3>
+              <p>{selectedIssue.description}</p>
             </div>
-            <div className="hp-brief-composer__summary" aria-live="polite">
-              <span>PUNTO DE PARTIDA</span>
-              <p>“Nuestro punto de partida es {selectedIssue.summary}.”</p>
-              <div><i></i> Se añadirá al formulario</div>
+            <div className="hp-selected-brief__actions">
+              <a className="hp-selected-brief__primary" href={`contacto.html?context=${selectedIssue.id}`}>Continuar con este contexto <Arrow /></a>
+              <a className="hp-selected-brief__secondary" href={`https://api.whatsapp.com/send/?phone=34641576772&text=${whatsappText}&type=phone_number&app_absent=0`} target="_blank" rel="noopener noreferrer">Escribir por WhatsApp <Arrow diagonal /></a>
             </div>
-          </div>
-          <div className="hp-final-cta__note">Información preparada desde el inicio · Siguiente paso definido con el equipo</div>
+            <small>Podrás revisar y editar el contexto antes de enviarlo.</small>
+          </aside>
         </div>
       </div>
     </section>
