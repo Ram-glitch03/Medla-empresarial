@@ -36,7 +36,7 @@ const MEDLA_MAP = [
     links: [
       ["Posicionamiento, captación y CRM", "redes-sociales.html"],
       ["Mapa de servicios", "servicios.html"],
-      ["Solicitar diagnóstico", "contacto.html?path=diagnostico"],
+      ["Plantear un proyecto", "contacto.html?path=diagnostico"],
     ],
   },
   {
@@ -81,7 +81,7 @@ const MEDLA_FOOTER_GROUPS = [
     title: "MEDLA",
     links: [
       ["Cómo trabajamos", "nosotros.html"],
-      ["Solicitar diagnóstico", "contacto.html?path=diagnostico"],
+      ["Plantear un proyecto", "contacto.html?path=diagnostico"],
       ["Privacidad", "privacidad.html"],
     ],
   },
@@ -170,7 +170,7 @@ function MedlaSiteHeader({ current = "", context = "", ctaHref = "" }) {
         </nav>
 
         <div className="medla-site-actions">
-          <a className="medla-site-cta" href={resolvedCta} aria-current={current === "contact" ? "page" : undefined}>Solicitar diagnóstico <ShellArrow /></a>
+          <a className="medla-site-cta" href={resolvedCta} aria-current={current === "contact" ? "page" : undefined}>Plantear un proyecto <ShellArrow /></a>
           <button ref={triggerRef} className="medla-site-map-trigger" type="button" aria-label={open ? "Cerrar mapa del sitio" : "Abrir mapa del sitio"} aria-expanded={open} aria-controls="medla-site-map" onClick={() => setOpen(true)}>
             <span>Mapa</span><ShellMenuIcon />
           </button>
@@ -191,7 +191,7 @@ function MedlaSiteHeader({ current = "", context = "", ctaHref = "" }) {
             <p>Mapa MEDLA</p>
             <h2>Un punto de entrada.<br /><em>Todo lo necesario para avanzar.</em></h2>
             <span>Elige el área que necesitas desbloquear. Si el problema cruza varias, coordinamos el trabajo desde un único plan.</span>
-            <a href={resolvedCta} onClick={close}>Solicitar diagnóstico <ShellArrow /></a>
+            <a href={resolvedCta} onClick={close}>Plantear un proyecto <ShellArrow /></a>
           </section>
 
           <nav className="medla-site-map__routes" aria-label="Áreas y páginas de MEDLA">
@@ -216,18 +216,18 @@ function MedlaSiteFooter({ current = "", context = "" }) {
       ? `contacto.html?context=${encodeURIComponent(context)}`
       : "contacto.html?path=diagnostico";
 
-  return <footer className="medla-site-footer">
+  return <footer className={`medla-site-footer${current === "home" ? " is-home-compact" : ""}`}>
     <div className="medla-site-footer__shell">
       <div className="medla-site-footer__opening">
         <div className="medla-site-footer__identity">
           <a href="index.html" aria-label="MEDLA Empresas, inicio"><img src="logo.png" alt="" /></a>
-          <p>Consultoría y desarrollo para proyectos que cruzan negocio, legal, operaciones y tecnología.</p>
+          <p>Dirección e implantación para proyectos que cruzan negocio, legal, operaciones y tecnología.</p>
         </div>
         <div className="medla-site-footer__conversation">
-          <span>Primera conversación</span>
-          <h2>Cuéntanos qué necesitas <em>resolver.</em></h2>
-          <p>No hace falta que el problema esté ordenado. Empezamos por entender el bloqueo y te indicamos el siguiente paso.</p>
-          <a href={ctaHref}>Solicitar diagnóstico <ShellArrow /></a>
+          <span>Conversación de encaje</span>
+          <h2>¿Es un proyecto <em>para MEDLA?</em></h2>
+          <p>Cuéntanos la decisión, las áreas implicadas y qué debería quedar funcionando. Te indicaremos el encaje y el siguiente paso.</p>
+          <a href={ctaHref}>Plantear un proyecto <ShellArrow /></a>
         </div>
       </div>
 

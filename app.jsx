@@ -4,67 +4,57 @@ const { useEffect, useReducer, useRef, useState } = React;
 const capabilities = [
   {
     n: "01",
-    eyebrow: "Legal y estructura",
-    title: "Decidir con una base jurídica clara",
-    desc: "Ordenamos contratos, estructura societaria y financiación para que la decisión pueda avanzar con riesgos, responsables y próximos pasos visibles.",
+    eyebrow: "Decisión crítica",
+    title: "Una decisión importante está bloqueada entre varias áreas",
+    desc: "Reunimos contratos, riesgos, datos y responsables para que dirección pueda comparar opciones y aprobar un mandato ejecutable.",
     href: "asesoria-legal.html",
     className: "hp-capability--lead",
-    signal: "Legal y estructura",
-    deliverables: ["Contratos", "Societario", "Financiación"]
+    signal: "Decisión bloqueada",
+    deliverables: ["Criterio ejecutivo", "Escenarios", "Mandato"]
   },
   {
     n: "02",
-    eyebrow: "Operaciones y sistemas",
-    title: "Procesos que el equipo puede seguir y medir",
-    desc: "Rediseñamos procesos, conectamos herramientas y automatizamos tareas para que cada caso tenga estado, responsable y criterio de control.",
+    eyebrow: "Operación que no escala",
+    title: "La empresa ha crecido más rápido que su forma de operar",
+    desc: "Rediseñamos el flujo, conectamos los sistemas y fijamos responsables, control y métricas para que la operación deje de depender de seguimiento manual.",
     href: "digitalizacion.html",
     className: "hp-capability--dark",
-    signal: "Operación con control",
-    deliverables: ["Procesos", "Datos", "Automatización"]
+    signal: "Operación crítica",
+    deliverables: ["Modelo operativo", "Automatización", "Control"]
   },
   {
     n: "03",
-    eyebrow: "IA e integraciones",
-    title: "Inteligencia artificial dentro del trabajo real",
-    desc: "Desarrollamos asistentes y flujos conectados a fuentes autorizadas, con permisos, revisión humana y una función concreta dentro de la operación.",
+    eyebrow: "Tecnología sin adopción",
+    title: "Una inversión tecnológica no consigue llegar a producción",
+    desc: "Acotamos el caso, resolvemos datos, permisos e integración y lo implantamos dentro del trabajo real, con revisión humana y criterios de mejora.",
     href: "agentes.html",
     className: "",
-    signal: "IA aplicada",
-    deliverables: ["Fuentes", "Agentes", "Integraciones"]
-  },
-  {
-    n: "04",
-    eyebrow: "Posicionamiento y CRM",
-    title: "Una lectura común desde la captación hasta la venta",
-    desc: "Alineamos oferta, captación, CRM y seguimiento para que cada oportunidad tenga contexto, prioridad, responsable y próxima acción.",
-    href: "redes-sociales.html",
-    className: "hp-capability--accent",
-    signal: "Sistema comercial",
-    deliverables: ["Oferta", "Captación", "Seguimiento"]
+    signal: "Inversión bloqueada",
+    deliverables: ["Caso priorizado", "Sistema implantado", "Adopción"]
   }
 ];
 
 const operatingModel = [
   {
     n: "01",
-    label: "Primera revisión",
-    title: "Entender antes de proponer",
-    desc: "Hablamos con las personas implicadas, revisamos datos y documentación e identificamos decisiones, dependencias, riesgos y tiempos de espera.",
-    output: "Diagnóstico y prioridades acordadas"
+    label: "Sesión de encaje",
+    title: "Confirmar si el proyecto merece un mandato",
+    desc: "Revisamos la decisión, las áreas implicadas, la urgencia y el acceso necesario para determinar si MEDLA puede asumir la dirección del conjunto.",
+    output: "Recomendación de encaje y siguiente paso"
   },
   {
     n: "02",
-    label: "Diseño",
-    title: "Acordar alcance y responsables",
-    desc: "Definimos qué se hará, qué no, quién decide, cuánto esfuerzo requiere y cómo comprobaremos el resultado.",
-    output: "Plan de trabajo y calendario"
+    label: "Mandato ejecutivo",
+    title: "Fijar alcance, gobierno y criterio de éxito",
+    desc: "Acordamos qué debe cambiar, quién decide, qué queda fuera, cómo trabajarán los especialistas y con qué evidencia se dará el proyecto por resuelto.",
+    output: "Mandato, responsables y calendario acordados"
   },
   {
     n: "03",
-    label: "Desarrollo y entrega",
-    title: "Implantar, probar y transferir",
-    desc: "Construimos con el equipo, validamos los casos críticos y entregamos configuración, documentación y criterios de mantenimiento.",
-    output: "Solución implantada, probada y documentada"
+    label: "Implantación y transferencia",
+    title: "Convertir el mandato en capacidad operativa",
+    desc: "Coordinamos la ejecución, resolvemos dependencias, probamos los casos críticos y transferimos sistema, documentación y control al equipo.",
+    output: "Solución operativa y control transferido"
   }
 ];
 
@@ -110,24 +100,23 @@ const demoScenarios = [
     trace: ["Solicitud detectada", "Política validada", "Dirección notificada", "Sistemas sincronizados"]
   },
   {
-    id: "knowledge",
-    code: "CASO 03 / CONOCIMIENTO",
-    tab: "Conocimiento",
-    title: "Un asistente que responde solo con información autorizada.",
-    summary: "Busca en la documentación interna, cita la fuente y respeta los permisos de cada persona.",
+    id: "mandate",
+    code: "MANDATO / PROYECTO TRANSVERSAL",
+    tab: "Dirección",
+    title: "Una decisión compleja, convertida en un mandato listo para ejecutar.",
+    summary: "MEDLA reúne el criterio jurídico, operativo y técnico; fija la decisión y la traduce en responsables, sistema y control.",
     sources: [
-      { name: "ARCHIVO", value: "Base documental" },
-      { name: "ACCESO", value: "Roles y permisos" },
-      { name: "CONSULTA", value: "Pregunta interna" }
+      { name: "LEGAL", value: "Riesgos y obligaciones" },
+      { name: "OPERACIÓN", value: "Capacidad y responsables" },
+      { name: "TECNOLOGÍA", value: "Datos y dependencias" }
     ],
     stages: [
-      { name: "Permiso", detail: "Identidad verificada", code: "auth.scope" },
-      { name: "Búsqueda", detail: "Contexto relevante", code: "index.retrieve" },
-      { name: "Respuesta", detail: "Síntesis con fuentes", code: "answer.ground" },
-      { name: "Control", detail: "Evaluación registrada", code: "quality.log" }
+      { name: "Alinear", detail: "Hechos y criterio común", code: "mandate.align" },
+      { name: "Decidir", detail: "Alcance y gobierno", code: "mandate.decide" },
+      { name: "Implantar", detail: "Sistema y transferencia", code: "mandate.deliver" }
     ],
-    output: { title: "Respuesta comprobable", detail: "Fuente, permiso y registro de uso" },
-    trace: ["Usuario autorizado", "Fuentes recuperadas", "Respuesta generada", "Control registrado"]
+    output: { title: "Proyecto listo para avanzar", detail: "Decisión, responsables y criterio de aceptación" },
+    trace: ["Hechos reunidos", "Mandato acordado", "Implantación preparada"]
   },
   {
     id: "growth",
@@ -494,38 +483,38 @@ function WorldBridgeSection() {
         <div className="hp-world-bridge__intro hp-container">
           <div className="hp-section-code" data-reveal>02 — Caso de coordinación</div>
           <div>
-            <h2 data-reveal>Tres equipos. <em>Una sola versión del proyecto.</em></h2>
-            <p data-reveal>En un alta de proveedor coinciden personas, contratos y sistemas. Reunimos la información, coordinamos a los responsables y dejamos cada acción asignada con plazo y seguimiento.</p>
+            <h2 data-reveal>Una decisión de dirección. <em>Una ejecución compartida.</em></h2>
+            <p data-reveal>Cuando una iniciativa afecta a estrategia, contratos, operación y sistemas, MEDLA convierte criterios separados en un mandato común y una implantación con responsables.</p>
           </div>
         </div>
 
-        <div className="hp-world-bridge__flow hp-container" aria-label="Ejemplo ilustrativo de cómo MEDLA convierte información dispersa en una acción asignada">
+        <div className="hp-world-bridge__flow hp-container" aria-label="Ejemplo ilustrativo de cómo MEDLA convierte una expansión empresarial en un mandato ejecutable">
           <header className="hp-world-bridge__flow-head">
             <span>Ejemplo ilustrativo</span>
-            <strong>Alta de un proveedor internacional</strong>
+            <strong>Expansión a un nuevo mercado</strong>
           </header>
 
           <div className="hp-world-bridge__scene">
             <article className="hp-world-bridge__source" id="bridge-phase-intake">
               <header>
                 <span>01 / Información de partida</span>
-                <h3>La información llega separada</h3>
+                <h3>El proyecto llega fragmentado</h3>
               </header>
               <ul>
                 <li>
-                  <span>Correo / equipo local</span>
-                  <strong>¿Quién valida las condiciones?</strong>
-                  <small>Sin responsable asignado</small>
+                  <span>Dirección / estrategia</span>
+                  <strong>¿Qué modelo de entrada?</strong>
+                  <small>Tres escenarios sin criterio común</small>
                 </li>
                 <li>
-                  <span>Documento / proveedor</span>
-                  <strong>Contrato_proveedor_v7.pdf</strong>
-                  <small>Versión pendiente de confirmar</small>
+                  <span>Legal / acuerdos</span>
+                  <strong>Acuerdo_operador_v5.pdf</strong>
+                  <small>Riesgos y obligaciones pendientes</small>
                 </li>
                 <li>
-                  <span>ERP / administración</span>
-                  <strong>Alta bloqueada</strong>
-                  <small>Falta documentación fiscal</small>
+                  <span>Operación / sistemas</span>
+                  <strong>Modelo operativo incompleto</strong>
+                  <small>Responsables y datos por definir</small>
                 </li>
               </ul>
             </article>
@@ -537,20 +526,20 @@ function WorldBridgeSection() {
             <article className="hp-world-bridge__dossier" id="bridge-phase-dossier">
               <header>
                 <span>MEDLA / Expediente único</span>
-                <strong>Alta de proveedor</strong>
+                <strong>Expansión / mercado objetivo</strong>
               </header>
               <dl>
                 <div>
                   <dt>Versión válida</dt>
-                  <dd>Contrato v7</dd>
+                  <dd>Escenario B / socio local</dd>
                 </div>
                 <div>
                   <dt>Condición para continuar</dt>
-                  <dd>Certificado fiscal vigente</dd>
+                  <dd>Control contractual e integración operativa</dd>
                 </div>
                 <div>
                   <dt>Decisión identificada</dt>
-                  <dd>Validar condiciones comerciales</dd>
+                  <dd>Aprobar modelo de entrada</dd>
                 </div>
               </dl>
               <p>Hechos reunidos <i></i> criterio aplicado <i></i> decisión visible</p>
@@ -563,20 +552,20 @@ function WorldBridgeSection() {
             <article className="hp-world-bridge__result" id="bridge-phase-action">
               <header>
                 <span>03 / Resultado</span>
-                <h3>La decisión ya tiene dueño</h3>
+                <h3>La ejecución ya tiene dirección</h3>
               </header>
               <dl>
                 <div>
                   <dt>Responsable</dt>
-                  <dd>Dirección de Operaciones</dd>
+                  <dd>Dirección General</dd>
                 </div>
                 <div>
                   <dt>Plazo</dt>
-                  <dd>Viernes · 12:00</dd>
+                  <dd>Próximo comité</dd>
                 </div>
                 <div>
                   <dt>Próxima acción</dt>
-                  <dd>Aprobar condiciones y registrar el alta</dd>
+                  <dd>Aprobar mandato e iniciar implantación</dd>
                 </div>
               </dl>
               <p><i></i> Listo para ejecutar</p>
@@ -785,9 +774,12 @@ function Nav() {
 function demoReducer(state, action) {
   switch (action.type) {
     case "SELECT": return { scenario: action.index, step: 0, running: true };
-    case "ADVANCE": return { ...state, step: (state.step + 1) % 4 };
+    case "ADVANCE": return state.step >= action.total - 1
+      ? { ...state, running: false }
+      : { ...state, step: state.step + 1 };
     case "TOGGLE": return { ...state, running: !state.running };
-    case "FINISH": return { ...state, step: 3, running: false };
+    case "FINISH": return { ...state, step: action.step, running: false };
+    case "RESET": return { ...state, step: 0, running: true };
     default: return state;
   }
 }
@@ -814,39 +806,35 @@ function MedlaOpsLab() {
 
   useEffect(() => {
     if (reducedMotion) {
-      dispatch({ type: "FINISH" });
+      dispatch({ type: "FINISH", step: demo.stages.length - 1 });
       return undefined;
     }
     if (!state.running || !isVisible) return undefined;
-    const timer = window.setInterval(() => dispatch({ type: "ADVANCE" }), 1500);
+    const timer = window.setInterval(() => dispatch({ type: "ADVANCE", total: demo.stages.length }), 1900);
     return () => window.clearInterval(timer);
-  }, [state.running, state.scenario, isVisible, reducedMotion]);
+  }, [state.running, state.scenario, isVisible, reducedMotion, demo.stages.length]);
 
   const paused = !state.running || !isVisible || reducedMotion;
-  const moveLight = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty("--mx", `${((event.clientX - rect.left) / rect.width) * 100}%`);
-    event.currentTarget.style.setProperty("--my", `${((event.clientY - rect.top) / rect.height) * 100}%`);
-  };
+  const completed = state.step === demo.stages.length - 1 && !state.running;
 
   return (
-    <div ref={labRef} className={`hp-ops-lab${paused ? " is-paused" : ""}`} onPointerMove={moveLight} aria-label="Demostración interactiva de un sistema MEDLA">
+    <div ref={labRef} className={`hp-ops-lab${paused ? " is-paused" : ""}`} aria-label="Demostración interactiva de cómo MEDLA convierte información transversal en un mandato ejecutable">
       <div className="hp-ops-lab__topbar">
-        <div><span>M/</span> SISTEMA MEDLA</div>
-        <button type="button" onClick={() => dispatch({ type: "TOGGLE" })} aria-label={state.running ? "Pausar simulación" : "Reanudar simulación"}>
-          <i className={state.running ? "is-live" : ""}></i>{state.running ? "EN CURSO" : "PAUSA"}
+        <div><span>M/</span> DIRECCIÓN DE PROYECTO</div>
+        <button type="button" onClick={() => dispatch({ type: completed ? "RESET" : "TOGGLE" })} aria-label={completed ? "Repetir demostración" : state.running ? "Pausar demostración" : "Reanudar demostración"}>
+          <i className={state.running ? "is-live" : ""}></i>{state.running ? "EN CURSO" : completed ? "REPETIR" : "PAUSA"}
         </button>
       </div>
 
       <div id="ops-panel" className="hp-ops-lab__context" aria-label="Ejemplo ilustrativo con datos ficticios">
-        <div><span>{demo.code}</span><span>Datos ficticios</span></div>
+        <div><span>{demo.code}</span><span>Escenario ilustrativo</span></div>
         <h2>{demo.title}</h2>
         <p>{demo.summary}</p>
       </div>
 
       <div className="hp-ops-lab__diagram">
         <div className="hp-ops-lab__column hp-ops-lab__sources">
-          <span className="hp-ops-lab__label">ENTRADAS</span>
+          <span className="hp-ops-lab__label">SEÑALES</span>
           {demo.sources.map((source, index) => (
             <div className={`hp-ops-source ${state.step >= index ? "is-online" : ""}`} key={source.name}>
               <i></i><div><b>{source.name}</b><small>{source.value}</small></div>
@@ -859,7 +847,7 @@ function MedlaOpsLab() {
         </div>
 
         <div className="hp-ops-lab__column hp-ops-lab__pipeline">
-          <span className="hp-ops-lab__label">PROCESO</span>
+          <span className="hp-ops-lab__label">DIRECCIÓN MEDLA</span>
           {demo.stages.map((stage, index) => (
             <div className={`hp-ops-stage ${state.step === index ? "is-active" : ""} ${state.step > index ? "is-complete" : ""}`} key={stage.code}>
               <span>0{index + 1}</span>
@@ -869,9 +857,9 @@ function MedlaOpsLab() {
         </div>
 
         <div className="hp-ops-lab__column hp-ops-lab__result">
-          <span className="hp-ops-lab__label">SALIDA</span>
-          <div className={state.step === 3 ? "is-ready" : ""}>
-            <span>{state.step === 3 ? "LISTO" : "PROCESANDO"}</span>
+          <span className="hp-ops-lab__label">RESULTADO</span>
+          <div className={state.step === demo.stages.length - 1 ? "is-ready" : ""}>
+            <span>{state.step === demo.stages.length - 1 ? "LISTO" : "EN PROCESO"}</span>
             <strong>{demo.output.title}</strong>
             <small>{demo.output.detail}</small>
           </div>
@@ -883,34 +871,27 @@ function MedlaOpsLab() {
 }
 
 function Hero() {
-  const moveField = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const dx = (((event.clientX - rect.left) / rect.width) - .5) * 22;
-    const dy = (((event.clientY - rect.top) / rect.height) - .5) * 18;
-    event.currentTarget.style.setProperty("--field-x", `${dx}px`);
-    event.currentTarget.style.setProperty("--field-y", `${dy}px`);
-  };
-
   return (
-    <header className="hp-hero" onPointerMove={moveField}>
+    <header className="hp-hero">
       <SignatureField id="hero" />
       <div className="hp-hero__ambient" aria-hidden="true"></div>
       <div className="hp-container hp-hero__inner">
         <div className="hp-hero__copy">
           <div className="hp-kicker hp-hero__entrance hp-hero__entrance--one">
-            <span>Consultoría y desarrollo · Madrid</span>
-            <small>Fundadores / Pymes / Dirección</small>
+            <span>Dirección e implantación · Madrid</span>
+            <small>Proyectos críticos / Mandatos transversales</small>
           </div>
           <h1 className="hp-hero__entrance hp-hero__entrance--two">
-            Legal, operaciones y tecnología. <em>Un único equipo para resolver el proyecto.</em>
+            Los proyectos que cruzan varias áreas <em>necesitan una sola dirección.</em>
           </h1>
           <p className="hp-hero__lead hp-hero__entrance hp-hero__entrance--three">
-            Ordenamos contratos, procesos y sistemas; implantamos la solución y la dejamos documentada para que tu equipo pueda operarla.
+            MEDLA dirige proyectos donde contratos, operaciones, datos y tecnología dependen entre sí. Definimos la decisión, coordinamos a los especialistas e implantamos una solución que tu equipo puede operar y mantener.
           </p>
           <div className="hp-hero__actions hp-hero__entrance hp-hero__entrance--four">
-            <a className="hp-button hp-button--gold" href="contacto.html">Solicitar diagnóstico <Arrow /></a>
-            <a className="hp-button hp-button--quiet" href="nosotros.html">Ver cómo trabajamos <Arrow diagonal /></a>
+            <a className="hp-button hp-button--gold" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a>
+            <a className="hp-hero__case-link" href="#puente">Ver un proyecto de principio a fin <Arrow diagonal /></a>
           </div>
+          <p className="hp-hero__trust hp-hero__entrance hp-hero__entrance--four">Dirección identificada <i></i> Alcance definido <i></i> Transferencia documentada</p>
         </div>
 
         <div className="hp-hero__visual hp-hero__entrance hp-hero__entrance--visual">
@@ -981,7 +962,7 @@ function ThesisSection() {
   };
 
   return (
-    <section className="hp-decision-room hp-section" id="sistema">
+    <section className="hp-decision-room hp-section" id="sistema-detalle">
       <LightMotionField variant="one" />
       <div className="hp-container">
         <div className="hp-section-code" data-reveal>02 — Así intervenimos</div>
@@ -1052,7 +1033,6 @@ function ThesisSection() {
 }
 
 function CapabilityGraphic({ item }) {
-  const reducedMotion = useReducedMotion();
   const routeId = `capability-route-${item.n}`;
   return (
     <svg className="hp-capability-graphic" viewBox="0 0 680 420" aria-hidden="true">
@@ -1082,11 +1062,6 @@ function CapabilityGraphic({ item }) {
           </g>
         );
       })}
-      {!reducedMotion && (
-        <circle className="hp-capability-graphic__packet" r="5">
-          <animateMotion dur="2.8s" repeatCount="indefinite"><mpath href={`#${routeId}`} /></animateMotion>
-        </circle>
-      )}
     </svg>
   );
 }
@@ -1109,16 +1084,16 @@ function CapabilitiesSection() {
       <div className="hp-container">
         <div className="hp-section-intro">
           <div>
-            <div className="hp-section-code" data-reveal>01 — Cuatro puntos de entrada</div>
-            <h2 data-reveal>Empieza por el bloqueo. <em>Nosotros coordinamos el resto.</em></h2>
+            <div className="hp-section-code" data-reveal>01 — Señales de encaje</div>
+            <h2 data-reveal>Entramos cuando el proyecto <em>no cabe en un solo departamento.</em></h2>
           </div>
-          <p data-reveal>Cuatro rutas para ordenar el problema sin obligarte a elegir una solución antes de tiempo.</p>
+          <p data-reveal>No vendemos horas aisladas. Asumimos mandatos que necesitan criterio, coordinación e implantación.</p>
         </div>
       </div>
 
       <div className="hp-stage-bleed">
         <div className="hp-capability-explorer" data-reveal>
-          <div className="hp-capability-explorer__nav" role="tablist" aria-label="Capacidades MEDLA">
+          <div className="hp-capability-explorer__nav" role="tablist" aria-label="Situaciones en las que MEDLA aporta más valor">
             {capabilities.map((capability, index) => (
               <button
                 type="button"
@@ -1141,7 +1116,7 @@ function CapabilitiesSection() {
             <div className="hp-capability-explorer__copy">
               <h3>{item.title}</h3>
               <p>{item.desc}</p>
-              <a className="hp-text-link hp-text-link--light" href={item.href}>Ver alcance y entregables <Arrow /></a>
+              <a className="hp-text-link hp-text-link--light" href={item.href}>Ver cómo abordamos este mandato <Arrow /></a>
             </div>
             <CapabilityGraphic item={item} key={item.n} />
           </div>
@@ -1157,8 +1132,8 @@ function OperatingModelSection() {
       <div className="hp-model__ambient" aria-hidden="true"></div>
       <div className="hp-container hp-model__layout hp-layout-bleed">
         <div className="hp-model__intro">
-          <div className="hp-section-code hp-section-code--light" data-reveal>03 — Cómo trabajamos</div>
-          <h2 data-reveal>Del diagnóstico a una solución <em>implantada y documentada.</em></h2>
+          <div className="hp-section-code hp-section-code--light" data-reveal>03 — El mandato</div>
+          <h2 data-reveal>Un socio responsable de convertir la decisión <em>en avance real.</em></h2>
         </div>
 
         <div className="hp-model__steps">
@@ -1176,10 +1151,10 @@ function OperatingModelSection() {
         </div>
       </div>
       <div className="hp-container hp-model__assurances" data-reveal aria-label="Garantías aplicadas durante todo el proyecto">
-        <span>Revisión humana</span>
-        <span>Permisos definidos</span>
+        <span>Interlocución directa</span>
+        <span>Responsable de proyecto</span>
         <span>Decisiones registradas</span>
-        <span>Documentación transferida</span>
+        <span>Transferencia al equipo</span>
       </div>
     </section>
   );
@@ -1352,9 +1327,9 @@ function TransferScene() {
 
 function DifferenceSection() {
   const standards = [
-    ["01", "Decisiones", "Qué se decidió, por qué y quién responde."],
-    ["02", "Sistema", "Versiones, límites y criterios de operación."],
-    ["03", "Continuidad", "Documentación para mantener y mejorar la solución."]
+    ["01", "Decisión ejecutiva", "Qué se decidió, con qué criterio y quién responde."],
+    ["02", "Sistema operativo", "Flujos, versiones, límites y criterios de control."],
+    ["03", "Control transferido", "Documentación y gobierno para mantener y mejorar la solución."]
   ];
 
   return (
@@ -1362,14 +1337,14 @@ function DifferenceSection() {
       <div className="hp-container hp-delivery__inner">
         <div className="hp-section-code" data-reveal>04 — Estándar de entrega</div>
         <div className="hp-delivery__heading" data-reveal>
-          <h2>La presentación termina. <em>La solución se queda.</em></h2>
-          <p>El equipo recibe el criterio, la documentación y el control necesarios para seguir operando sin depender de nosotros.</p>
+          <h2>No entregamos recomendaciones. <em>Entregamos capacidad operativa.</em></h2>
+          <p>Cada mandato cierra con decisiones registradas, una solución implantada y el control en manos del equipo.</p>
         </div>
 
         <div className="hp-delivery__proof" data-reveal>
           <header>
-            <span>Expediente de entrega</span>
-            <strong>Operativo · documentado · transferido</strong>
+            <span>Cierre del mandato</span>
+            <strong>Decidido · implantado · transferido</strong>
           </header>
           <div>
             {standards.map(([number, title, text]) => (
@@ -1381,8 +1356,8 @@ function DifferenceSection() {
             ))}
           </div>
           <footer>
-            <span><i></i> Listo para el equipo</span>
-            <a href="nosotros.html">Ver el modelo de trabajo <Arrow /></a>
+            <span><i></i> Control en manos del equipo</span>
+            <a href="nosotros.html">Conocer nuestro estándar de entrega <Arrow /></a>
           </footer>
         </div>
       </div>
@@ -1391,87 +1366,50 @@ function DifferenceSection() {
 }
 
 function FinalCTA() {
-  const issues = [
-    {
-      id: "operacion",
-      label: "Un proceso depende de demasiadas aprobaciones",
-      title: "Aprobaciones y tareas manuales",
-      description: "Hay tareas sin responsable, estado o un criterio común para avanzar.",
-      summary: "un proceso de aprobaciones manuales sin un estado ni un responsable claros"
-    },
-    {
-      id: "legal",
-      label: "Un contrato está frenando una decisión",
-      title: "Contrato o riesgo legal",
-      description: "Las obligaciones, versiones o responsables no están suficientemente claros para decidir.",
-      summary: "una decisión bloqueada por contratos, obligaciones o versiones dispersas"
-    },
-    {
-      id: "ia",
-      label: "Un piloto de IA no llega a operación",
-      title: "IA sin pasar de la prueba",
-      description: "El caso de uso existe, pero todavía faltan fuentes, permisos o controles para ponerlo a trabajar.",
-      summary: "un caso de IA que aún no opera con fuentes, permisos y controles definidos"
-    },
-    {
-      id: "growth",
-      label: "Las oportunidades pierden seguimiento",
-      title: "Seguimiento comercial",
-      description: "La actividad comercial no deja una próxima acción, una prioridad o una lectura común para dirección.",
-      summary: "oportunidades comerciales sin responsable o próxima acción"
-    }
+  const fitSignals = [
+    "La decisión afecta a varias áreas, sistemas o proveedores.",
+    "Existe una consecuencia clara de no resolver el proyecto.",
+    "Hay una persona interna capaz de impulsar decisiones.",
+    "La dirección quiere implantar, no solo recibir recomendaciones."
   ];
-  const [selectedIssue, setSelectedIssue] = useState(issues[0]);
-  const selectedIndex = issues.findIndex((issue) => issue.id === selectedIssue.id);
-  const whatsappText = encodeURIComponent(`Hola, quiero hablar con MEDLA. Mi punto de partida es: ${selectedIssue.summary}.`);
+  const whatsappText = encodeURIComponent("Hola, quiero valorar con MEDLA un proyecto que afecta a varias áreas de la empresa.");
 
   return (
     <section className="hp-final-cta hp-final-intake hp-section" id="contacto" aria-labelledby="final-intake-title">
       <div className="hp-container hp-final-intake__inner">
         <header className="hp-final-intake__intro">
           <div className="hp-kicker hp-final-intake__kicker" data-reveal>
-            <span>05 — Primera conversación</span>
+            <span>05 — Conversación de encaje</span>
           </div>
-          <h2 id="final-intake-title" data-reveal>Cuéntanos qué necesitas <em>resolver.</em></h2>
-          <p data-reveal>Elige el caso más cercano y revisa el contexto antes de enviarlo.</p>
+          <h2 id="final-intake-title" data-reveal>¿Es un proyecto <em>para MEDLA?</em></h2>
+          <p data-reveal>Encajamos especialmente cuando existe una decisión relevante, varias áreas implicadas y voluntad real de implantar.</p>
         </header>
 
-        <div className="hp-final-intake__panel" data-reveal>
-          <fieldset className="hp-issue-picker">
-            <legend>
-              <span>Selecciona un punto de partida</span>
-              <small>{String(selectedIndex + 1).padStart(2, "0")} / 04</small>
-            </legend>
+        <div className="hp-final-intake__panel hp-fit-panel" data-reveal>
+          <section className="hp-fit-criteria" aria-labelledby="fit-criteria-title">
+            <header>
+              <span id="fit-criteria-title">Buen encaje</span>
+              <small>04 señales</small>
+            </header>
             <ol>
-              {issues.map((issue, index) => (
-                <li key={issue.id}>
-                  <input
-                    className="hp-issue-picker__input"
-                    type="radio"
-                    id={`issue-${issue.id}`}
-                    name="medla-start"
-                    value={issue.id}
-                    checked={selectedIssue.id === issue.id}
-                    onChange={() => setSelectedIssue(issue)}
-                  />
-                  <label htmlFor={`issue-${issue.id}`}>
-                    <span>0{index + 1}</span>
-                    <strong>{issue.label}</strong>
-                    <i aria-hidden="true"></i>
-                  </label>
+              {fitSignals.map((signal, index) => (
+                <li key={signal}>
+                  <span>0{index + 1}</span>
+                  <p>{signal}</p>
                 </li>
               ))}
             </ol>
-          </fieldset>
+            <p className="hp-fit-criteria__note">Para tareas aisladas o ejecución por horas, probablemente no somos el equipo adecuado.</p>
+          </section>
 
-          <aside className="hp-selected-brief" aria-label="Caso seleccionado">
-            <div className="hp-selected-brief__copy" aria-live="polite" key={selectedIssue.id}>
-              <span>Punto de partida</span>
-              <h3>{selectedIssue.title}</h3>
-              <p>{selectedIssue.description}</p>
+          <aside className="hp-selected-brief hp-fit-panel__brief" aria-label="Revisión inicial del proyecto">
+            <div className="hp-selected-brief__copy">
+              <span>Revisión inicial</span>
+              <h3>Cuéntanos la decisión, el plazo y quién interviene.</h3>
+              <p>Revisaremos el contexto y te responderemos con el encaje, la información pendiente y el siguiente paso.</p>
             </div>
             <div className="hp-selected-brief__actions">
-              <a className="hp-selected-brief__primary" href={`contacto.html?context=${selectedIssue.id}`}>Continuar con este caso <Arrow /></a>
+              <a className="hp-selected-brief__primary" href="contacto.html?context=proyecto">Plantear el proyecto <Arrow /></a>
               <a className="hp-selected-brief__secondary" href={`https://api.whatsapp.com/send/?phone=34641576772&text=${whatsappText}&type=phone_number&app_absent=0`} target="_blank" rel="noopener noreferrer">Escribir por WhatsApp <Arrow diagonal /></a>
             </div>
           </aside>
@@ -1485,7 +1423,6 @@ function App() {
   return (
     <>
       <RevealController />
-      <ScrollProgress />
       <window.MedlaSiteHeader current="home" />
       <main id="contenido">
         <Hero />
@@ -1495,7 +1432,7 @@ function App() {
         <DifferenceSection />
         <FinalCTA />
       </main>
-      <window.MedlaSiteFooter />
+      <window.MedlaSiteFooter current="home" />
     </>
   );
 }

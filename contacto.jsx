@@ -94,7 +94,7 @@ function CtNav() {
           <li><a href="#contenido" style={{ color: "var(--gold)" }} aria-current="page">Contacto</a></li>
         </ul>
         <div style={{display: "flex", alignItems: "center"}}>
-          <a href="#form" className="btn btn-primary btn-sm nav-cta">Solicitar diagnóstico</a>
+          <a href="#form" className="btn btn-primary btn-sm nav-cta">Plantear un proyecto</a>
           <button
             ref={menuButtonRef}
             className="nav-toggle"
@@ -124,7 +124,7 @@ function CtNav() {
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="blog.html">Cuadernos</a></li>
             <li><a href="#contenido" style={{ color: "var(--gold)" }} aria-current="page">Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="#form" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Solicitar diagnóstico</a></li>
+            <li style={{marginTop: 20}}><a href="#form" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Plantear un proyecto</a></li>
           </ul>
         </div>
       </div>
@@ -139,13 +139,13 @@ function CtHero({ context }) {
     <section className="contacto-hero">
       <div className="container contacto-hero-inner">
         <div className="contacto-hero-copy">
-          <span className="eyebrow">01 — Conversación inicial</span>
-          <h1>Cuéntanos qué está bloqueado. <em>No hace falta que lo tengas ordenado.</em></h1>
+          <span className="eyebrow">01 — Conversación de encaje</span>
+          <h1>Cuéntanos qué decisión debe avanzar. <em>Nosotros ordenamos el proyecto.</em></h1>
           <p className="lead">
-            Una persona del equipo revisará tu solicitud y te responderá con una recomendación clara sobre cómo avanzar.
+            Un responsable revisará el contexto y te responderá con el encaje, la información pendiente y un siguiente paso concreto.
           </p>
           <div className="contacto-pulse">
-            <span className="dot"></span> Revisión humana desde el primer contacto
+            <span className="dot"></span> Revisión confidencial desde el primer contacto
           </div>
         </div>
         <aside className="ct-brief" aria-label="Vista previa del contexto que recibirá MEDLA">
@@ -169,9 +169,9 @@ const PATHS = [
   {
     id: "diagnostico",
     icon: <IconCal />,
-    title: "Diagnóstico inicial",
-    desc: "Una primera conversación para entender el problema y acotar el siguiente paso.",
-    meta: "Primera conversación",
+    title: "Conversación de encaje",
+    desc: "Para valorar una decisión o proyecto transversal y acordar el siguiente paso.",
+    meta: "Revisión inicial",
   },
   {
     id: "propuesta",
@@ -231,6 +231,11 @@ const ALCANCE_OPTIONS = [
 ];
 
 const CONTEXT_PRESETS = {
+  proyecto: {
+    label: "Proyecto transversal",
+    alcance: ["Aún no lo tengo claro"],
+    notas: "Punto de partida: una decisión o iniciativa relevante afecta a varias áreas y necesita dirección, implantación y transferencia al equipo.",
+  },
   operacion: {
     label: "Operación y sistemas",
     alcance: ["Digitalización de procesos", "Automatización e integración"],
@@ -306,11 +311,11 @@ const ETAPA_OPTIONS = [
 
 const PRESUPUESTO_LABELS = [
   { min: 0, max: 0, label: "A definir", value: "A definir" },
-  { min: 1, max: 3, label: "1.000 – 3.000 €", value: "1K – 3K" },
-  { min: 3, max: 8, label: "3.000 – 8.000 €", value: "3K – 8K" },
-  { min: 8, max: 15, label: "8.000 – 15.000 €", value: "8K – 15K" },
-  { min: 15, max: 30, label: "15.000 – 30.000 €", value: "15K – 30K" },
-  { min: 30, max: 999, label: "Más de 30.000 €", value: "30K+" },
+  { min: 1, max: 10, label: "Hasta 10.000 €", value: "Hasta 10K" },
+  { min: 10, max: 25, label: "10.000 – 25.000 €", value: "10K – 25K" },
+  { min: 25, max: 50, label: "25.000 – 50.000 €", value: "25K – 50K" },
+  { min: 50, max: 100, label: "50.000 – 100.000 €", value: "50K – 100K" },
+  { min: 100, max: 999, label: "Más de 100.000 €", value: "100K+" },
 ];
 
 function CtForm({ pathId }) {
@@ -433,7 +438,7 @@ function CtForm({ pathId }) {
   };
 
   const stepTitle = {
-    diagnostico: "Diagnóstico inicial",
+    diagnostico: "Conversación de encaje",
     propuesta: "Solicitud de propuesta",
     alianza: "Colaboración profesional",
   }[pathId] || "Conversación inicial";
@@ -628,7 +633,7 @@ function CtForm({ pathId }) {
                           value={data.presupuestoIdx}
                           onChange={(e) => setField("presupuestoIdx", parseInt(e.target.value, 10))}
                         />
-                        <div className="slider-ticks slider-ticks--ends"><span>A definir</span><span>30 mil €+</span></div>
+                        <div className="slider-ticks slider-ticks--ends"><span>A definir</span><span>100 mil €+</span></div>
                       </div>
                     </fieldset>
                   </div>

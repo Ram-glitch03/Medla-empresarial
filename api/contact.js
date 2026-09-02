@@ -26,7 +26,7 @@ const ALLOWED_SCOPES = new Set([
   "Posicionamiento, captación y CRM",
   "Aún no lo tengo claro",
 ]);
-const ALLOWED_BUDGETS = new Set(["A definir", "1K – 3K", "3K – 8K", "8K – 15K", "15K – 30K", "30K+"]);
+const ALLOWED_BUDGETS = new Set(["A definir", "Hasta 10K", "10K – 25K", "25K – 50K", "50K – 100K", "100K+"]);
 
 function text(value, maxLength) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";

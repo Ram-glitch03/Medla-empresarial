@@ -56,7 +56,7 @@ async function run() {
       telefono: "+34 600 000 000",
       alcance: ["Digitalización de procesos", "IA aplicada"],
       etapa_empresa: "Pyme en crecimiento",
-      rango_presupuesto: "8K – 15K",
+      rango_presupuesto: "25K – 50K",
       notas: "Necesitamos revisar un proceso.",
       consentimiento_privacidad: true,
       version_privacidad: "2026-08-28",
