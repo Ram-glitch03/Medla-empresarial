@@ -1,441 +1,153 @@
-// Nosotros page — manifesto + principles + stats + timeline + team + values + CTA
+const { useEffect, useRef, useState } = React;
 
-const { useState, useEffect, useRef } = React;
+const PROJECT_RHYTHM = [
+  { id: "status", code: "01", label: "Estado", title: "Una versión común del proyecto", text: "Objetivo, alcance, progreso, bloqueos y cambios visibles para todas las áreas.", facts: [["Tramo", "Implantación / 02"], ["Progreso", "6 de 8 criterios validados"], ["Próximo cierre", "Viernes · 12:00"]] },
+  { id: "decisions", code: "02", label: "Decisiones", title: "Cada decisión deja responsable y razón", text: "Se registra qué se aprobó, qué alternativa se descartó y qué condición sigue pendiente.", facts: [["Abiertas", "2 decisiones"], ["Responsable", "Dirección del cliente"], ["Evidencia", "Expediente DEC-024"]] },
+  { id: "risks", code: "03", label: "Riesgos", title: "Los riesgos salen con impacto y tratamiento", text: "Un riesgo no se esconde en una nota: se asigna, se prioriza y se lleva a una decisión.", facts: [["Crítico", "0"], ["En tratamiento", "2"], ["Revisión", "Comité semanal"]] },
+  { id: "next", code: "04", label: "Acciones", title: "Cada reunión termina con una siguiente acción", text: "Responsable, fecha y evidencia necesaria para que el proyecto continúe sin perseguir contexto.", facts: [["Esta semana", "7 acciones"], ["Sin responsable", "0"], ["Fuera de plazo", "1"]] },
+];
 
-/* ─────────── Nav ─────────── */
-function NosNav() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  return (
-    <>
-    <nav className="nav scrolled">
-      <div className="container nav-inner">
-        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 64}} /></a>
-        <ul className="nav-links">
-          <li><a href="servicios.html">Servicios</a></li>
-          <li><a href="nosotros.html" style={{ color: "var(--gold)" }}>Nosotros</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="contacto.html">Contacto</a></li>
-        </ul>
-        <div style={{display: "flex", alignItems: "center"}}>
-          <a href="contacto.html" className="btn btn-primary btn-sm nav-cta">Agendar diagnóstico</a>
-          <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-          </button>
-        </div>
-      </div>
-    </nav>
-    {mobileOpen && (
-      <div className="mobile-menu">
-        <div className="mobile-menu-overlay" onClick={() => setMobileOpen(false)}></div>
-        <div className="mobile-menu-content">
-          <div className="mobile-menu-head">
-            <img src="logo.png" alt="MEDLA" style={{height: 40}} />
-            <button className="nav-toggle" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-          </div>
-          <ul className="mobile-links" onClick={() => setMobileOpen(false)}>
-            <li><a href="servicios.html">Servicios</a></li>
-            <li><a href="nosotros.html" style={{ color: "var(--gold)" }}>Nosotros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Agendar diagnóstico</a></li>
-          </ul>
-        </div>
-      </div>
-    )}
-    </>
-  );
-}
+const ROLES = [
+  { number: "01", role: "Dirección MEDLA", responsibility: "Mantiene el alcance, ordena dependencias y eleva las decisiones que corresponden al cliente.", authority: "Coordina el mandato" },
+  { number: "02", role: "Responsable del cliente", responsibility: "Valida hechos, asigna acceso y toma las decisiones reservadas a la empresa.", authority: "Aprueba decisiones del cliente" },
+  { number: "03", role: "Especialista de frente", responsibility: "Aporta criterio jurídico, operativo o técnico sobre la misma versión del proyecto.", authority: "Resuelve su disciplina" },
+];
 
-/* ─────────── Hero ─────────── */
-function NosHero() {
-  return (
-    <section className="nos-hero">
-      <div className="nos-hero-marquee">criterio · criterio · criterio · criterio · criterio · criterio · criterio ·</div>
-      <div className="container nos-hero-inner">
-        <span className="eyebrow" style={{ justifyContent: "center" }}>— Nosotros</span>
-        <h1 style={{ marginTop: 24 }}>
-          No somos<br />consultores.<br /><em>Somos socios</em>.
-        </h1>
-        <p className="nos-hero-sub">
-          MEDLA nació para resolver un vacío claro: las empresas en crecimiento necesitan
-          una capa estratégica que piense en términos legales, tecnológicos y comerciales
-          al mismo tiempo — bajo un único criterio.
-        </p>
-      </div>
-    </section>
-  );
-}
+const PHASES = [
+  { code: "01", name: "Encaje", verb: "Delimitar", description: "Revisamos decisión, urgencia, áreas implicadas y acceso a responsables, datos y documentos.", closure: "Decisión de encaje" },
+  { code: "02", name: "Mandato", verb: "Acordar", description: "La propuesta fija resultado, alcance, autoridad, equipo, calendario, precio y criterios de aceptación.", closure: "Mandato aprobado" },
+  { code: "03", name: "Implantación", verb: "Construir", description: "Coordinamos las capacidades necesarias, probamos por tramos y registramos decisiones y cambios.", closure: "Solución validada" },
+  { code: "04", name: "Transferencia", verb: "Traspasar", description: "Asignamos propiedad interna, entregamos documentación y acordamos mantenimiento y revisión.", closure: "Control en el equipo" },
+];
 
-/* ─────────── Manifiesto ─────────── */
-function NosManifest() {
-  const principles = [
-    {
-      num: "01",
-      t: "Criterio sobre volumen",
-      d: "No queremos ser el despacho más grande. Queremos ser el que mejor entiende a tu empresa. Por eso trabajamos con un número limitado de clientes al año.",
-    },
-    {
-      num: "02",
-      t: "Integración real, no coordinación",
-      d: "Legal, tech y comercial operan bajo el mismo criterio. No somos tres equipos que se pasan tickets: somos un solo equipo que piensa transversalmente.",
-    },
-    {
-      num: "03",
-      t: "Arquitectura antes que parche",
-      d: "Resolvemos la causa estructural, no el síntoma visible. Si tu problema es de flujo operativo, no vamos a darte un contrato: vamos a rediseñar el flujo.",
-    },
-    {
-      num: "04",
-      t: "Transparencia como producto",
-      d: "Sin letra pequeña, sin minutos facturados, sin sorpresas. Cada alcance se acuerda, se escribe y se cumple. Si algo cambia, se conversa antes, no después.",
-    },
-  ];
+function Arrow({ diagonal = false }) { return <span className="how-arrow" aria-hidden="true">{diagonal ? "↗" : "→"}</span>; }
 
-  return (
-    <section className="nos-manifest">
-      <div className="container nos-manifest-inner">
-        <span className="eyebrow" style={{ color: "var(--gold)" }}>— Manifiesto</span>
-        <h2 style={{ marginTop: 16 }}>
-          Creemos que <em>operar con criterio</em> ya no es opcional para una empresa seria.
-        </h2>
-        <p className="nos-manifest-lead">
-          En un mercado saturado de proveedores funcionales, MEDLA apuesta por lo contrario:
-          menos interlocutores, más pensamiento transversal. Cuatro principios sostienen todo
-          lo que hacemos.
-        </p>
-
-        <div className="nos-manifest-grid">
-          {principles.map((p) => (
-            <div className="nos-principle" key={p.num}>
-              <div className="nos-principle-num">{p.num}</div>
-              <div className="nos-principle-body">
-                <h3>{p.t}</h3>
-                <p>{p.d}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─────────── Stats ─────────── */
-function useCountUp(target, ms = 1500) {
-  const [val, setVal] = useState(0);
-  const ref = useRef(null);
-  const started = useRef(false);
+function useReveal() {
   useEffect(() => {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const loop = (t) => {
-            const p = Math.min(1, (t - start) / ms);
-            const eased = 1 - Math.pow(1 - p, 3);
-            setVal(Math.round(target * eased));
-            if (p < 1) requestAnimationFrame(loop);
-          };
-          requestAnimationFrame(loop);
-        }
-      });
-    }, { threshold: 0.3 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [target, ms]);
-  return [val, ref];
+    const nodes = [...document.querySelectorAll("[data-how-reveal]")];
+    if (!("IntersectionObserver" in window)) { nodes.forEach((node) => node.classList.add("is-visible")); return undefined; }
+    document.documentElement.classList.add("how-reveal-ready");
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible"); observer.unobserve(entry.target);
+    }), { threshold:.12, rootMargin:"0px 0px -6%" });
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 }
 
-function StatCard({ value, suffix, label, sub }) {
-  const [v, ref] = useCountUp(value);
-  return (
-    <div className="nos-stat" ref={ref}>
-      <div className="nos-stat-val">{v}{suffix && <em>{suffix}</em>}</div>
-      <div className="nos-stat-lbl">{label}</div>
-      <div className="nos-stat-sub">{sub}</div>
+function GovernanceBoard() {
+  const [active, setActive] = useState(0);
+  const item = PROJECT_RHYTHM[active];
+  const refs = useRef([]);
+  const move = (event,index) => {
+    if (!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === "Home" ? 0 : event.key === "End" ? PROJECT_RHYTHM.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + PROJECT_RHYTHM.length) % PROJECT_RHYTHM.length;
+    setActive(next); refs.current[next]?.focus();
+  };
+  return <div className="how-board" aria-label="Ejemplo interactivo del gobierno de un proyecto">
+    <header><div><i />PROYECTO / SEMANA 03</div><span>VISTA COMPARTIDA</span></header>
+    <div className="how-board__summary"><span>MANDATO DEMOSTRATIVO</span><h2>Implantar el alta digital de proveedores.</h2><div><b>EN EJECUCIÓN</b><small>Sin bloqueo crítico</small></div></div>
+    <div className="how-board__tabs" role="tablist" aria-label="Lecturas del proyecto">
+      {PROJECT_RHYTHM.map((entry,index) => <button key={entry.id} ref={(node) => { refs.current[index] = node; }} type="button" role="tab" id={`rhythm-tab-${entry.id}`} aria-controls="rhythm-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => move(event,index)}><span>{entry.code}</span>{entry.label}<i /></button>)}
     </div>
-  );
+    <article id="rhythm-panel" role="tabpanel" aria-labelledby={`rhythm-tab-${item.id}`} key={item.id}>
+      <div><span>{item.code} / {item.label}</span><h3>{item.title}</h3><p>{item.text}</p></div>
+      <dl>{item.facts.map(([label,value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+    </article>
+    <footer><span><i />Responsable MEDLA</span><span><i />Responsable cliente</span><span><i />Próximo cierre</span></footer>
+  </div>;
 }
 
-function NosStats() {
-  return (
-    <section className="nos-stats">
-      <div className="container">
-        <div className="section-head" style={{ marginBottom: 56 }}>
-          <span className="eyebrow">— Por dentro</span>
-          <h2>Lo que <em>sí</em> somos, en números.</h2>
-        </div>
-        <div className="nos-stats-grid">
-          <StatCard value={67} label="Clientes activos" sub="Pymes, startups, holdings y family offices operando con MEDLA." />
-          <StatCard value={6} label="Años de operación" sub="Desde 2020, sirviendo a empresas que deciden crecer con criterio." />
-          <StatCard value={14} label="Profesionales" sub="Abogados, ingenieros, consultores y especialistas bajo un mismo techo." />
-          <StatCard value={24} suffix="h" label="Respuesta media" sub="Tiempo máximo para que recibas una primera respuesta con contexto." />
-        </div>
+function Hero() {
+  return <header className="how-hero">
+    <div className="how-shell how-hero__layout">
+      <div className="how-hero__copy">
+        <div className="how-overline"><span>Cómo trabajamos</span><small>Gobierno · ejecución · transferencia</small></div>
+        <h1>Así se dirige un proyecto MEDLA: <em>con alcance, responsables y decisiones visibles.</em></h1>
+        <p>Un mandato común, una persona responsable de coordinarlo y un sistema de trabajo que permite a dirección saber qué está decidido, qué falta y quién debe actuar.</p>
+        <div className="how-actions"><a className="how-button how-button--gold" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a><a className="how-text-link" href="#gobierno">Ver el gobierno del encargo <Arrow /></a></div>
       </div>
-    </section>
-  );
+      <GovernanceBoard />
+    </div>
+  </header>;
 }
 
-/* ─────────── Timeline ─────────── */
-function NosTimeline() {
-  const events = [
-    { y: "2020", t: "El punto de partida", d: "MEDLA nace como una firma pequeña de asesoría legal corporativa, especializada en pymes en crecimiento. Tres abogados, una oficina compartida, una convicción clara: el cliente merece criterio, no procesos." },
-    { y: "2022", t: "Incorporamos tecnología", d: "Tras ver una y otra vez los mismos cuellos de botella operativos en nuestros clientes, sumamos un equipo de ingenieros para digitalizar procesos internos. Nace la segunda línea." },
-    { y: "2023", t: "Especialización en inversión", d: "Acompañamos la primera ronda serie A de un cliente histórico. La operación fuerza a construir un área propia de inversiones y levantamiento de capital, con equipo dedicado." },
-    { y: "2024", t: "IA aplicada en producción", d: "Lanzamos la línea de IA aplicada tras un año de I+D. Primeros asistentes internos de clientes, análisis documental masivo y compliance automatizado." },
-    { y: "2026", t: "MEDLA Empresas consolidado", d: "Cerramos el año con 67 clientes activos en 4 países. Integramos comunicación estratégica como séptima línea: un único gobierno operativo con siete capas coordinadas.", current: true },
+function MandateAnatomy() {
+  const fields = [
+    ["01", "Resultado", "Qué debe quedar decidido, implantado o transferido."],
+    ["02", "Alcance", "Qué entra, qué queda fuera y cómo se gestionan los cambios."],
+    ["03", "Autoridad", "Quién puede aprobar, priorizar y resolver una excepción."],
+    ["04", "Equipo", "Qué capacidad activa MEDLA y qué responsabilidad conserva el cliente."],
+    ["05", "Evidencia", "Qué entregable o prueba permite aceptar cada tramo."],
+    ["06", "Continuidad", "Quién opera, mantiene y mejora la solución después del cierre."],
   ];
-  return (
-    <section className="nos-timeline">
-      <div className="container">
-        <div className="section-head">
-          <span className="eyebrow">— Trayectoria</span>
-          <h2>Seis años <em>construyendo</em> criterio.</h2>
-          <p className="lead">No improvisamos la integración. La construimos año a año, siguiendo las necesidades reales de nuestros clientes.</p>
-        </div>
-        <div className="tl-wrap">
-          {events.map((e, i) => (
-            <div key={i} className={`tl-item ${e.current ? "current" : ""}`}>
-              <div className="tl-year">{e.y}</div>
-              <div className="tl-title">{e.t}</div>
-              <div className="tl-desc">{e.d}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <section className="how-anatomy" id="gobierno" aria-labelledby="anatomy-title">
+    <div className="how-shell">
+      <div className="how-section-head" data-how-reveal><span>01 / ANTES DE EMPEZAR</span><h2 id="anatomy-title">El mandato convierte una necesidad abierta <em>en un encargo gobernable.</em></h2><p>Estas seis definiciones aparecen en la propuesta y se confirman antes de iniciar la implantación.</p></div>
+      <div className="how-anatomy__list">{fields.map(([number,title,text]) => <article key={number} data-how-reveal><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
+      <aside data-how-reveal><span>DEFINICIÓN</span><p><strong>Mandato de dirección:</strong> objetivo, alcance, autoridad, responsables y criterio de cierre acordados con el cliente.</p></aside>
+    </div>
+  </section>;
 }
 
-/* ─────────── Team ─────────── */
-const AvatarPattern = ({ seed, initials }) => {
-  const hue1 = (seed * 47) % 360;
-  const hue2 = (seed * 89 + 140) % 360;
-  const shapes = [0, 1, 2, 3].map((i) => ({
-    cx: 30 + ((seed * (i + 1) * 37) % 140),
-    cy: 30 + ((seed * (i + 2) * 53) % 140),
-    r: 18 + ((seed * (i + 1) * 11) % 30),
-  }));
-  return (
-    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id={`avg-${seed}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={`hsl(${hue1}, 30%, 90%)`} />
-          <stop offset="100%" stopColor={`hsl(${hue2}, 25%, 78%)`} />
-        </linearGradient>
-      </defs>
-      <rect width="200" height="200" fill={`url(#avg-${seed})`} />
-      {shapes.map((s, i) => (
-        <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill="#1A1A2E" opacity={0.06 + i * 0.03} />
-      ))}
-      <circle cx="100" cy="80" r="28" fill="#1A1A2E" opacity="0.85" />
-      <path d="M 50 180 Q 100 130 150 180 L 150 200 L 50 200 Z" fill="#1A1A2E" opacity="0.85" />
-      <text x="100" y="108" textAnchor="middle" fontSize="22" fill="#C9A84C" fontFamily="Cormorant Garamond" fontStyle="italic" fontWeight="500">
-        {initials}
-      </text>
-    </svg>
-  );
-};
+function Roles() {
+  return <section className="how-roles" aria-labelledby="roles-title">
+    <div className="how-shell">
+      <div className="how-section-head how-section-head--dark" data-how-reveal><span>02 / QUIÉN RESPONDE</span><h2 id="roles-title">Tres funciones distintas. <em>Ninguna responsabilidad difusa.</em></h2><p>La propuesta identifica la dirección del proyecto, las funciones asignadas, su dedicación y su autoridad.</p></div>
+      <div className="how-role-list">{ROLES.map((role) => <article key={role.number} data-how-reveal><span>{role.number}</span><div><small>FUNCIÓN</small><h3>{role.role}</h3></div><p>{role.responsibility}</p><strong><i />{role.authority}</strong></article>)}</div>
+      <div className="how-roles__note" data-how-reveal><span>Regla de gobierno</span><p>La dirección MEDLA coordina el trabajo. Las decisiones reservadas al negocio siguen perteneciendo al cliente y quedan identificadas desde el inicio.</p></div>
+    </div>
+  </section>;
+}
 
-function NosTeam() {
-  const people = [
-    { n: "Massimiliano N", r: "Socio fundador · Director", b: "Abogado corporativo. 15 años negociando M&A y rondas de inversión antes de apostar por construir algo propio.", seed: 3, i: "MN" },
-    { n: "Sebastian G", r: "Socio fundador · Tecnología", b: "Ingeniero y ex-CTO. Diseña arquitecturas operativas que hablan tanto con auditores como con equipos de producto.", seed: 17, i: "SG" },
+function Protocol() {
+  return <section className="how-protocol" aria-labelledby="protocol-title">
+    <div className="how-shell how-protocol__layout">
+      <div className="how-protocol__intro" data-how-reveal><span>03 / RECORRIDO</span><h2 id="protocol-title">Cada fase cierra una decisión <em>antes de abrir la siguiente.</em></h2><p>El calendario cambia según el alcance. La secuencia de gobierno se mantiene para que la complejidad no quede oculta tras tareas sueltas.</p></div>
+      <ol>{PHASES.map((phase,index) => <li key={phase.code} data-how-reveal><span>{phase.code}</span><div><small>{phase.name}</small><h3>{phase.verb}</h3><p>{phase.description}</p></div><strong><i />{phase.closure}</strong>{index < PHASES.length-1 && <b aria-hidden="true" />}</li>)}</ol>
+    </div>
+  </section>;
+}
+
+function WorkingCadence() {
+  const cadence = [
+    ["Arranque", "Objetivo, alcance, derechos de decisión y primer tramo confirmados."],
+    ["Seguimiento", "Estado, bloqueos, riesgos, cambios y siguiente cierre en una lectura común."],
+    ["Puertas de decisión", "La dirección aprueba únicamente cuando existe evidencia suficiente."],
+    ["Cierre", "Aceptación, propiedad interna, documentación y revisión posterior acordadas."],
   ];
-  return (
-    <section className="nos-team" id="equipo">
-      <div className="container">
-        <div className="section-head">
-          <span className="eyebrow">— Equipo</span>
-          <h2>Las personas detrás <em>del criterio</em>.</h2>
-          <p className="lead">Trabajamos de forma plana y directa. Cada cliente habla con la persona que toma las decisiones, no con un account manager que las traduce.</p>
-        </div>
-        <div className="team-grid">
-          {people.map((p, i) => (
-            <div className="team-card" key={i}>
-              <div className="team-avatar">
-                <AvatarPattern seed={p.seed} initials={p.i} />
-              </div>
-              <div className="name">{p.n}</div>
-              <div className="role">{p.r}</div>
-              <div className="bio">{p.b}</div>
-              <div className="team-card-social">
-                <a href="#" aria-label="LinkedIn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3" /><path d="M8 10v7M8 7.5v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7" strokeLinecap="round" /></svg>
-                </a>
-                <a href="#" aria-label="Email">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 7 9-7" strokeLinecap="round" /></svg>
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <section className="how-cadence" aria-labelledby="cadence-title">
+    <div className="how-shell how-cadence__layout">
+      <div data-how-reveal><span>04 / RITMO DE TRABAJO</span><h2 id="cadence-title">Una cadencia orientada <em>a cierres verificables.</em></h2><p>La frecuencia se ajusta al proyecto y a la disponibilidad de quienes deben decidir.</p></div>
+      <div className="how-cadence__track" data-how-reveal>{cadence.map(([title,text],index) => <article key={title}><span>0{index+1}</span><h3>{title}</h3><p>{text}</p>{index<cadence.length-1 && <i />}</article>)}</div>
+    </div>
+  </section>;
 }
 
-/* ─────────── Values ─────────── */
-function NosValues() {
-  const values = [
-    {
-      n: "I",
-      t: "Escuchar antes de proponer",
-      d: "Cada engagement empieza con al menos una conversación larga. Lo que aprendemos ahí define toda la ruta.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 16 Q 12 10 18 10 L 30 10 Q 36 10 36 16 L 36 24 Q 36 30 30 30 L 20 30 L 14 36 L 14 30 Q 12 30 12 28 Z" />
-          <circle cx="20" cy="20" r="1" fill="currentColor" />
-          <circle cx="24" cy="20" r="1" fill="currentColor" />
-          <circle cx="28" cy="20" r="1" fill="currentColor" />
-        </svg>
-      ),
-    },
-    {
-      n: "II",
-      t: "Decir lo que no vemos",
-      d: "Si el alcance que pides no tiene sentido, lo decimos. Si necesitas algo que no ofrecemos, recomendamos a quien sí.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="24" cy="24" r="16" />
-          <path d="M24 14 L24 26" />
-          <circle cx="24" cy="32" r="1.5" fill="currentColor" />
-        </svg>
-      ),
-    },
-    {
-      n: "III",
-      t: "Documentar todo",
-      d: "Decisiones, razones, alternativas. El trabajo queda escrito para que tu equipo pueda continuarlo sin nosotros.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="12" y="8" width="24" height="32" rx="2" />
-          <path d="M17 18 L31 18 M17 24 L31 24 M17 30 L26 30" />
-        </svg>
-      ),
-    },
-    {
-      n: "IV",
-      t: "Cerrar bien o no abrir",
-      d: "Un engagement no termina cuando entregamos: termina cuando tu equipo lo está operando sin fricciones. Esa es nuestra vara.",
-      svg: (
-        <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10 24 L20 34 L38 14" />
-        </svg>
-      ),
-    },
+function Transfer() {
+  const items = [
+    ["Decisiones", "Qué se aprobó, por qué y qué condiciones siguen vigentes."],
+    ["Sistema", "Configuración, fuentes, permisos, límites y criterios de recuperación."],
+    ["Operación", "Responsables internos, manual, mantenimiento y cambios pendientes."],
+    ["Revisión", "Fecha, métricas y preguntas para comprobar que la solución sigue funcionando."],
   ];
-  return (
-    <section className="nos-values">
-      <div className="container">
-        <div className="section-head">
-          <span className="eyebrow">— Valores</span>
-          <h2>Cómo <em>trabajamos</em>, en la práctica.</h2>
-        </div>
-        <div className="values-grid">
-          {values.map((v, i) => (
-            <div className="value-card" key={i}>
-              <div className="value-num">{v.n}</div>
-              <div className="value-pattern">{v.svg}</div>
-              <h4>{v.t}</h4>
-              <p>{v.d}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <section className="how-transfer" aria-labelledby="transfer-title">
+    <div className="how-shell">
+      <div className="how-section-head" data-how-reveal><span>05 / TRANSFERENCIA</span><h2 id="transfer-title">El control queda <em>dentro de la empresa.</em></h2><p>La transferencia forma parte del alcance; no es una explicación improvisada al final.</p></div>
+      <div className="how-transfer__record" data-how-reveal><header><span>EXPEDIENTE DE CIERRE</span><b>CONTROL TRANSFERIDO</b></header>{items.map(([title,text],index) => <article key={title}><span>0{index+1}</span><h3>{title}</h3><p>{text}</p><i aria-hidden="true">✓</i></article>)}<footer><span>Responsable interno asignado</span><span>Documentación aceptada</span><span>Próxima revisión acordada</span></footer></div>
+    </div>
+  </section>;
 }
 
-/* ─────────── CTA ─────────── */
-function NosCTA() {
-  return (
-    <section className="nos-cta">
-      <div className="container nos-cta-inner">
-        <span className="eyebrow" style={{ color: "var(--gold)", justifyContent: "center" }}>— Trabajemos juntos</span>
-        <h2 style={{ marginTop: 20 }}>¿Y si <em>el próximo</em> somos nosotros?</h2>
-        <p>Si llegaste hasta aquí es porque algo resuena. Conversemos: 30 minutos, sin compromiso, para entender si tiene sentido seguir adelante.</p>
-        <div className="hero-ctas" style={{ justifyContent: "center" }}>
-          <a href="contacto.html" className="btn btn-primary">Agendar diagnóstico <span className="arr">→</span></a>
-          <a href="contacto.html" className="btn btn-ghost" style={{ color: "var(--white)", borderColor: "rgba(255,255,255,0.3)" }}>Ver servicios</a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─────────── Footer ─────────── */
-function NosFooter() {
-  return (
-    <footer className="footer" id="blog">
-      <div className="container">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 160, display: "block", marginBottom: 16, filter: "invert(1)"}} /></a>
-            <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
-          </div>
-          <div>
-            <h4>Servicios</h4>
-            <ul>
-              <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="redes-sociales.html">Comunicación</a></li>
-              <li><a href="Langin_MEDLA_Jotform/dist/index.html">Soluciones Jotform</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Compañía</h4>
-            <ul>
-              <li><a href="nosotros.html">Nosotros</a></li>
-              <li><a href="blog.html">Blog</a></li>
-              <li><a href="contacto.html">Casos</a></li>
-              <li><a href="contacto.html">Carreras</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Contacto</h4>
-            <ul>
-              <li><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></li>
-              <li><a href="tel:+34641576772">+34 641 576 772</a></li>
-              <li><a href="#">Madrid, España</a></li>
-            </ul>
-            <a
-              href="https://api.whatsapp.com/send/?phone=34641576772&text=Hola%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n&type=phone_number&app_absent=0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-              style={{marginTop: 20, display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.85rem", padding: "10px 20px"}}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              Contactar por WhatsApp
-            </a>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 MEDLA Empresas. Todos los derechos reservados.</span>
-          <span>Aviso de privacidad · Términos</span>
-        </div>
-      </div>
-    </footer>
-  );
+function Identity() {
+  return <aside className="how-identity"><div className="how-shell how-identity__layout" data-how-reveal><div><span>RESPONSABILIDAD EMPRESARIAL</span><h2>La entidad que recibe el encargo está identificada.</h2><p>La propuesta identifica además la dirección del proyecto y los perfiles previstos para cada frente.</p></div><dl><div><dt>Razón social</dt><dd>MEDLA ASESORES, S.L.</dd></div><div><dt>Sede</dt><dd>Móstoles · Madrid · España</dd></div><div><dt>Registro</dt><dd>Tomo 46169 · Folio 20 · Hoja M-811076</dd></div><div><dt>Contacto</dt><dd><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></dd></div></dl><a href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a></div></aside>;
 }
 
 function NosotrosApp() {
-  return (
-    <div className="nos-page">
-      <NosNav />
-      <NosHero />
-      <NosManifest />
-      <NosStats />
-      <NosTimeline />
-      <NosTeam />
-      <NosValues />
-      <NosCTA />
-      <NosFooter />
-    </div>
-  );
+  useReveal();
+  return <div className="how-page"><window.MedlaSiteHeader current="about" /><main id="main-content"><Hero /><MandateAnatomy /><Roles /><Protocol /><WorkingCadence /><Transfer /><Identity /></main><window.MedlaSiteFooter current="about" /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<NosotrosApp />);

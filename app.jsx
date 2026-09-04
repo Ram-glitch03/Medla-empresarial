@@ -1,393 +1,312 @@
-// Main App — MEDLA Empresas
-const { useState, useEffect, useRef } = React;
+// MEDLA — dirección e implantación de proyectos transversales
+const { useEffect, useRef, useState } = React;
 
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "goldTone": "#C9A84C",
-  "animations": "on",
-  "heading": "serif"
-}/*EDITMODE-END*/;
+const PROJECT_SITUATIONS = [
+  {
+    number: "01",
+    type: "Decisión transversal",
+    title: "Una decisión con impacto en inversión, riesgo u operación exige criterio de varias áreas.",
+    text: "Reunimos hechos, contratos, escenarios y responsables para que dirección pueda comparar opciones y aprobar un alcance ejecutable.",
+    outputs: ["Documento de decisión", "Alcance aprobado", "Responsables y condiciones"],
+    href: "servicios.html#decision",
+  },
+  {
+    number: "02",
+    type: "Operaciones y sistemas",
+    title: "El crecimiento ha dejado procesos, datos y responsabilidades fuera de control.",
+    text: "Rediseñamos el recorrido, conectamos los sistemas necesarios y dejamos estados, excepciones y control visibles para el equipo.",
+    outputs: ["Modelo operativo", "Sistema implantado", "Control y documentación"],
+    href: "digitalizacion.html",
+  },
+  {
+    number: "03",
+    type: "Tecnología e IA",
+    title: "La inversión tecnológica todavía no ha llegado al uso operativo.",
+    text: "Acotamos el caso, resolvemos datos, permisos e integración y lo implantamos con revisión humana y criterios de aceptación.",
+    outputs: ["Caso priorizado", "Solución en operación", "Protocolo de calidad"],
+    href: "agentes.html",
+  },
+];
 
-function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+const MANDATE_STAGES = [
+  { code: "01", label: "Encaje", title: "Aclarar la decisión", detail: "Objetivo, consecuencia, áreas implicadas y acceso a la información.", output: "Decisión de encaje" },
+  { code: "02", label: "Mandato", title: "Acordar alcance y gobierno", detail: "Autoridad, responsables, calendario, límites y criterio de cierre.", output: "Mandato aprobado" },
+  { code: "03", label: "Implantación", title: "Construir y probar", detail: "Especialistas coordinados, entregas por tramos y decisiones registradas.", output: "Solución validada" },
+  { code: "04", label: "Transferencia", title: "Entregar el control", detail: "Responsables internos, documentación, mantenimiento y siguiente revisión.", output: "Control transferido" },
+];
+
+const DOSSIER_CHAPTERS = [
+  {
+    id: "decision", number: "01", label: "Decisión",
+    title: "Aprobar el alta cuando llegue el certificado fiscal vigente.",
+    text: "La condición, el responsable y el plazo quedan registrados. El equipo no necesita reconstruir la decisión desde el correo.",
+    facts: [["Responsable", "Dirección de Operaciones"], ["Plazo", "Viernes · 12:00"], ["Siguiente acción", "Validar y registrar el alta"]],
+  },
+  {
+    id: "system", number: "02", label: "Sistema",
+    title: "Un recorrido único desde la recepción documental hasta el ERP.",
+    text: "Cada dato tiene una fuente, una validación y un destino. Las excepciones salen hacia una persona con todo el contexto necesario.",
+    facts: [["Alcance", "Captura, validación y sincronización"], ["Versión", "Entrega 1.4"], ["Repositorio", "Proveedores / Alta"]],
+  },
+  {
+    id: "control", number: "03", label: "Control",
+    title: "Cada incidencia tiene estado, alerta e historial.",
+    text: "El equipo puede ver qué se ha detenido, desde cuándo y quién debe intervenir sin depender del proveedor.",
+    facts: [["Estados", "Recibido · Revisión · Aprobado"], ["Alertas", "Vencimiento · Plazo superado"], ["Historial", "Hitos y cambios registrados"]],
+  },
+  {
+    id: "handover", number: "04", label: "Transferencia",
+    title: "El equipo recibe el criterio para operar y cambiar la solución.",
+    text: "La entrega incluye responsables, documentación y una revisión acordada para que el conocimiento no quede fuera de la empresa.",
+    facts: [["Operación", "Operaciones + Sistemas"], ["Documentación", "Manual y criterios de cambio"], ["Revisión", "Fecha acordada con el cliente"]],
+  },
+];
+
+function Arrow({ diagonal = false }) {
+  return <svg className="ex-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d={diagonal ? "M5 15 15 5M7 5h8v8" : "M3 10h13M11 5l5 5-5 5"} /></svg>;
+}
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    query.addEventListener?.("change", update);
+    return () => query.removeEventListener?.("change", update);
   }, []);
+  return reduced;
+}
+
+function RevealController() {
+  useEffect(() => {
+    const nodes = [...document.querySelectorAll("[data-reveal]")];
+    if (!("IntersectionObserver" in window)) {
+      nodes.forEach((node) => node.classList.add("is-visible"));
+      return undefined;
+    }
+    document.documentElement.classList.add("ex-reveal-ready");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -5%" });
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+  return null;
+}
+
+function MandateConsole() {
+  const [active, setActive] = useState(0);
+  const reducedMotion = useReducedMotion();
+  const [running, setRunning] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const stage = MANDATE_STAGES[active];
+
+  useEffect(() => {
+    if (reducedMotion || !running) return undefined;
+    const timer = window.setTimeout(() => {
+      if (active >= MANDATE_STAGES.length - 1) setRunning(false);
+      else setActive((value) => value + 1);
+    }, 1550);
+    return () => window.clearTimeout(timer);
+  }, [active, running, reducedMotion]);
+
+  const select = (index) => { setActive(index); setRunning(false); };
+  const replay = () => { setActive(0); setRunning(!reducedMotion); };
+
   return (
-    <>
-    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <div className="container nav-inner">
-        <a href="index.html" className="logo"><img src="logo.png" alt="MEDLA" style={{height: 96}} /></a>
-        <ul className="nav-links">
-          <li><a href="servicios.html">Servicios</a></li>
-          <li><a href="nosotros.html">Nosotros</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="contacto.html">Contacto</a></li>
-        </ul>
-        <div style={{display: "flex", alignItems: "center"}}>
-          <a href="contacto.html" className="nav-cta">Contactar</a>
-          <button className="nav-toggle" onClick={() => setMobileOpen(true)}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-          </button>
-        </div>
+    <section className="ex-console" aria-label="Demostración del recorrido de un proyecto MEDLA">
+      <header className="ex-console__head">
+        <div><b>M/</b><span>CONTROL DE PROYECTO</span></div>
+        <button type="button" onClick={running ? () => setRunning(false) : replay}><i className={running ? "is-live" : ""} />{running ? "EN CURSO" : "REPETIR"}</button>
+      </header>
+      <div className="ex-console__brief">
+        <span>ESCENARIO ILUSTRATIVO / 01</span>
+        <h2>Implantar un nuevo proceso de alta de proveedores.</h2>
+        <p>Legal, operaciones y sistemas trabajan sobre una misma decisión.</p>
       </div>
-    </nav>
-    {mobileOpen && (
-      <div className="mobile-menu">
-        <div className="mobile-menu-overlay" onClick={() => setMobileOpen(false)}></div>
-        <div className="mobile-menu-content">
-          <div className="mobile-menu-head">
-            <img src="logo.png" alt="MEDLA" style={{height: 40}} />
-            <button className="nav-toggle" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
+      <div className="ex-console__body">
+        <div className="ex-console__inputs" aria-label="Información de entrada">
+          <span>ENTRADAS</span>
+          {["Riesgo contractual", "Proceso actual", "Datos y permisos"].map((item, index) => <div className={active >= index ? "is-ready" : ""} key={item}><i /><b>{item}</b></div>)}
+        </div>
+        <div className="ex-console__flow">
+          <div className="ex-console__rail" aria-hidden="true"><i style={{ "--progress": `${active / (MANDATE_STAGES.length - 1)}` }} /></div>
+          <div className="ex-console__steps" role="tablist" aria-label="Fases del proyecto">
+            {MANDATE_STAGES.map((item, index) => (
+              <button key={item.code} type="button" role="tab" id={`mandate-tab-${item.code}`} aria-selected={active === index} aria-controls="mandate-stage" tabIndex={active === index ? 0 : -1} className={`${active === index ? "is-active" : ""}${active > index ? " is-done" : ""}`} onClick={() => select(index)} onKeyDown={(event) => {
+                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                event.preventDefault();
+                const next = event.key === "Home" ? 0 : event.key === "End" ? MANDATE_STAGES.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + MANDATE_STAGES.length) % MANDATE_STAGES.length;
+                select(next);
+                event.currentTarget.parentElement.querySelectorAll("button")[next]?.focus();
+              }}><span>{item.code}</span><b>{item.label}</b></button>
+            ))}
           </div>
-          <ul className="mobile-links" onClick={() => setMobileOpen(false)}>
-            <li><a href="servicios.html">Servicios</a></li>
-            <li><a href="nosotros.html">Nosotros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="contacto.html" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Contactar</a></li>
-          </ul>
         </div>
+        <article id="mandate-stage" className="ex-console__result" role="tabpanel" aria-labelledby={`mandate-tab-${stage.code}`} key={stage.code}>
+          <span>SALIDA / {stage.code}</span><h3>{stage.title}</h3><p>{stage.detail}</p><div><i />{stage.output}</div>
+        </article>
       </div>
-    )}
-    </>
+      <footer><span>Demostración conceptual · no utiliza datos de clientes</span><span>Encaje → mandato → implantación → transferencia</span></footer>
+    </section>
   );
 }
 
 function Hero() {
   return (
-    <section className="hero">
-      <div className="hero-bg"></div>
-      <div className="container hero-inner">
-        <div className="hero-text">
-          <span className="eyebrow">Soluciones integrales para empresas</span>
-          <h1 style={{ marginTop: 24 }}>
-            Estrategia, tecnología y <em>criterio legal</em> en equilibrio.
-          </h1>
-          <p className="lead">
-            Acompañamos a empresas en expansión con asesoría legal, automatización e inteligencia artificial aplicada — todo bajo una misma estructura.
-          </p>
-          <div className="hero-ctas">
-            <a href="contacto.html" className="btn btn-primary">Agendar diagnóstico <span className="arr">→</span></a>
-            <a href="#servicios" className="btn btn-ghost">Ver servicios</a>
+    <header className="ex-hero">
+      <div className="ex-hero__contours" aria-hidden="true"><i /><i /><i /></div>
+      <div className="ex-shell ex-hero__layout">
+        <div className="ex-hero__copy">
+          <div className="ex-eyebrow"><span>Dirección de proyectos transversales</span><small>Madrid · España</small></div>
+          <h1>Una sola dirección para decisiones que cruzan <em>negocio, legal y tecnología.</em></h1>
+          <p>MEDLA aclara la decisión, coordina a los especialistas e implanta la solución. El proyecto termina con responsables, documentación y control dentro de tu empresa.</p>
+          <div className="ex-actions">
+            <a className="ex-button ex-button--gold" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a>
+            <a className="ex-text-link" href="#como-funciona">Ver cómo funciona <Arrow /></a>
           </div>
-          <div className="hero-meta">
-            <div><span className="num">+6</span><span className="lbl">Años de experiencia</span></div>
-            <div><span className="num">+20</span><span className="lbl">Empresas atendidas</span></div>
-            <div><span className="num">24/7</span><span className="lbl">Soporte personalizado</span></div>
-          </div>
+          <div className="ex-hero__assurance" aria-label="Compromisos principales"><span>Un responsable</span><i /><span>Un alcance aprobado</span><i /><span>Control transferido</span></div>
         </div>
-        <div className="hero-visual-wrap"><HeroVisual /></div>
+        <div className="ex-hero__visual"><MandateConsole /></div>
       </div>
-    </section>
+      <a className="ex-scroll-cue" href="#encaje"><span>Explorar</span><i /></a>
+    </header>
   );
 }
 
-function LogosSection() {
-  const logos = [
-    "assets/logos/ce.png",
-    "assets/logos/asociacion_espanola.png",
-    "assets/logos/avannzza.png",
-    "assets/logos/jotform.png"
-  ];
-  const doubled = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
+function Situations() {
   return (
-    <section className="logos-section">
-      <div className="container">
-        <div className="logos-head">Empresas que confían en MEDLA</div>
-      </div>
-      <div className="marquee">
-        <div className="marquee-track">
-          {doubled.map((src, i) => (
-            <div className="logo-item" key={i} style={{ display: 'flex', alignItems: 'center', padding: '0 30px' }}>
-              <img src={src} alt="logo" style={{ maxHeight: '80px', maxWidth: '240px', objectFit: 'contain' }} />
-            </div>
+    <section className="ex-situations" id="encaje" aria-labelledby="situations-title">
+      <div className="ex-shell">
+        <div className="ex-section-head" data-reveal>
+          <span>01 / CUÁNDO INTERVENIMOS</span>
+          <h2 id="situations-title">MEDLA interviene cuando <em>una sola disciplina ya no basta.</em></h2>
+          <p>Asumimos la dirección cuando el resultado depende de varias capacidades y de una implantación coordinada.</p>
+        </div>
+        <div className="ex-situation-list">
+          {PROJECT_SITUATIONS.map((item) => (
+            <article key={item.number} data-reveal>
+              <div className="ex-situation-list__number"><span>{item.number}</span><small>{item.type}</small></div>
+              <div className="ex-situation-list__copy"><h3>{item.title}</h3><p>{item.text}</p></div>
+              <ul>{item.outputs.map((output) => <li key={output}><i />{output}</li>)}</ul>
+              <a href={item.href} aria-label={`Ver una capacidad relacionada con ${item.type}`}>Ver capacidad <Arrow diagonal /></a>
+            </article>
           ))}
         </div>
+        <div className="ex-situations__foot" data-reveal><p>¿Tu situación cruza varios de estos escenarios?</p><a href="servicios.html">Orientar el proyecto por situación <Arrow /></a></div>
       </div>
     </section>
   );
 }
 
-function ServicesSection() {
-  const services = [
-    { kind: "legal", icon: "legal", cls: "t-legal", label: "01 — Pilar", title: "Asesoría legal integral", desc: "Consultoría permanente, revisión contractual, compliance y litigio estratégico. Equipo dedicado por cuenta." },
-    { kind: "ai", icon: "ia", cls: "t-ai", label: "02", title: "IA aplicada", desc: "Modelos privados, análisis documental, agentes de decisión." },
-    { kind: "invest", icon: "finanzas", cls: "t-invest", label: "03", title: "Manejo de inversiones", desc: "Estructura patrimonial, vehículos y relación con fondos." },
-    { kind: "const", icon: "constitucion", cls: "t-const", label: "04", title: "Constitución de empresas", desc: "De la idea a la entidad operativa." },
-    { kind: "digi", icon: "digitalizacion", cls: "t-digi", label: "05", title: "Digitalización", desc: "Procesos y operación en capas trazables." },
-    { kind: "auto", icon: "automatizacion", cls: "t-auto", label: "06", title: "Automatización", desc: "Flujos que eliminan fricción operativa." },
-    { kind: "social", icon: "comercial", cls: "t-social", label: "07 — Nuevo", title: "Manejo comercial & redes", desc: "Creación de contenido, crecimiento de redes y campañas orientadas a resultado. Estrategia, producción y métrica en un mismo equipo." },
-  ];
-  return (
-    <section className="services-section" id="servicios">
-      <div className="container">
-        <div className="section-head">
-          <span className="eyebrow">Servicios</span>
-          <h2>Una operación entera,<br />un solo interlocutor.</h2>
-          <p className="lead">Siete líneas que se articulan entre sí. Tu empresa accede a la capa que necesita, sin multiplicar proveedores.</p>
-        </div>
-        <div className="dashboard">
-          {services.map((s) => (
-            <div className={`tile ${s.cls}`} key={s.kind}>
-              <TileCanvas kind={s.kind} />
-              <div className="tile-head">
-                <div className="tile-label"><span className="dot"></span>{s.label}</div>
-                <div className="tile-icon"><ServiceIcon name={s.icon} size={22} /></div>
-              </div>
-              <div className="tile-text">
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="services-cta">
-          <a href="servicios.html" className="btn btn-dark">Explorar todos los servicios <span className="arr">→</span></a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ProcessSection() {
-  const ref = useRef(null);
-  const [progress, setProgress] = useState(0);
+function DeliveryDossier() {
   const [active, setActive] = useState(0);
+  const chapter = DOSSIER_CHAPTERS[active];
+  const refs = useRef([]);
+  const selectByKeyboard = (event, index) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === "Home" ? 0 : event.key === "End" ? DOSSIER_CHAPTERS.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + DOSSIER_CHAPTERS.length) % DOSSIER_CHAPTERS.length;
+    setActive(next);
+    refs.current[next]?.focus();
+  };
+  return (
+    <div className="ex-dossier" data-reveal>
+      <header className="ex-dossier__head"><div><i /><span>EJEMPLO DE ENTREGA</span><b>Alta de proveedor internacional</b></div><span>ESCENARIO ILUSTRATIVO</span></header>
+      <div className="ex-dossier__layout">
+        <aside className="ex-dossier__before">
+          <header><span>ANTES</span><h3>Información dispersa y una decisión detenida.</h3></header>
+          <ol>
+            <li><span>Correo</span><b>¿Quién valida las condiciones?</b><small>Sin responsable</small></li>
+            <li><span>Documento</span><b>Contrato_proveedor_v7.pdf</b><small>Versión por confirmar</small></li>
+            <li><span>ERP</span><b>Alta bloqueada</b><small>Falta certificado fiscal</small></li>
+          </ol>
+          <div><i />Contexto incompleto</div>
+        </aside>
+        <div className="ex-dossier__transformation" aria-hidden="true"><span>MEDLA</span><i /><small>Reunir · decidir · implantar</small></div>
+        <article className="ex-dossier__document">
+          <header><div><span>EXPEDIENTE DE ENTREGA</span><b>Folio 06 · versión 1.4</b></div><strong><i /> VALIDADO</strong></header>
+          <div className="ex-dossier__tabs" role="tablist" aria-label="Contenido de la entrega">
+            {DOSSIER_CHAPTERS.map((item, index) => <button key={item.id} ref={(node) => { refs.current[index] = node; }} type="button" role="tab" id={`dossier-tab-${item.id}`} aria-controls="dossier-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => selectByKeyboard(event, index)}><span>{item.number}</span>{item.label}<i /></button>)}
+          </div>
+          <div id="dossier-panel" className="ex-dossier__panel" role="tabpanel" aria-labelledby={`dossier-tab-${chapter.id}`} key={chapter.id}>
+            <span>{chapter.number} / {chapter.label}</span><h3>{chapter.title}</h3><p>{chapter.text}</p>
+            <dl>{chapter.facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+          </div>
+          <footer><span><i />Decisión registrada</span><span><i />Sistema probado</span><span><i />Control transferido</span></footer>
+        </article>
+      </div>
+    </div>
+  );
+}
 
-  useEffect(() => {
-    const onScroll = () => {
-      const el = ref.current;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // progress: 0 when section top reaches bottom of viewport; 1 when bottom reaches top
-      const total = r.height - vh * 0.4;
-      const p = Math.max(0, Math.min(1, (vh * 0.5 - r.top) / total));
-      setProgress(p);
-      if (p < 0.33) setActive(0);
-      else if (p < 0.66) setActive(1);
-      else setActive(2);
-    };
-    window.addEventListener("scroll", onScroll);
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+function Delivery() {
+  return (
+    <section className="ex-delivery" id="como-funciona" aria-labelledby="delivery-title">
+      <div className="ex-shell">
+        <div className="ex-section-head ex-section-head--dark" data-reveal>
+          <span>02 / QUÉ CAMBIA</span>
+          <h2 id="delivery-title">El encargo no termina en una recomendación. <em>Termina con una solución operativa.</em></h2>
+          <p>Esta demostración enseña cómo una decisión dispersa se convierte en un expediente que el equipo puede ejecutar, revisar y mantener.</p>
+        </div>
+        <DeliveryDossier />
+      </div>
+    </section>
+  );
+}
 
-  const steps = [
-    { n: "01", title: "Diagnóstico estratégico", desc: "Mapeamos legal, fiscal, operativa y digital. Entregamos un retrato honesto del estado actual y del camino.", tags: ["Auditoría", "Mapeo", "Oportunidades"] },
-    { n: "02", title: "Diseño e implementación", desc: "Construimos la estructura: contratos, tecnología, automatizaciones y procesos. Cada pieza con responsable y métrica.", tags: ["Legal", "Tech stack", "Automatización"] },
-    { n: "03", title: "Acompañamiento continuo", desc: "Operamos contigo. Comité mensual, ajuste de estrategia y acceso permanente al equipo.", tags: ["Gobernanza", "Iteración", "Soporte"] },
+function MandateDefinition() {
+  return (
+    <section className="ex-mandate" aria-labelledby="mandate-title">
+      <div className="ex-shell ex-mandate__layout">
+        <div className="ex-mandate__intro" data-reveal>
+          <span>03 / PRIMERA FASE</span>
+          <h2 id="mandate-title">Antes de movilizar especialistas, <em>cerramos el mandato.</em></h2>
+          <p><strong>Mandato de dirección:</strong> objetivo, alcance, autoridad, responsables y criterio de cierre acordados con el cliente.</p>
+          <a className="ex-button ex-button--ink" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a>
+        </div>
+        <div className="ex-mandate__protocol" data-reveal>
+          <header><span>RECORRIDO DEL PROYECTO</span><small>4 cierres verificables</small></header>
+          <ol>{MANDATE_STAGES.map((stage, index) => <li key={stage.code}>
+            <span>{stage.code}</span><div><small>{stage.label}</small><h3>{stage.title}</h3><p>{stage.detail}</p></div><strong><i />{stage.output}</strong>{index < MANDATE_STAGES.length - 1 && <b aria-hidden="true" />}
+          </li>)}</ol>
+          <footer>La propuesta confirma calendario, equipo, precio, entregables y criterios de aceptación antes de empezar.</footer>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Accountability() {
+  const commitments = [
+    ["Dirección identificada", "La propuesta identifica la dirección del proyecto, las funciones asignadas y la autoridad de cada frente."],
+    ["Alcance gobernable", "Cada entrega tiene responsable, versión, criterio de aceptación y cambio pendiente."],
+    ["Control del cliente", "Permisos, documentación y conocimiento se transfieren al equipo; la solución no depende de una caja negra."],
   ];
-
   return (
-    <section className="process-section" id="proceso" ref={ref}>
-      <div className="container process-wrap">
-        <div className="process-sticky">
-          <span className="eyebrow">Cómo trabajamos</span>
-          <h2 style={{ marginTop: 20, marginBottom: 24 }}>Tres pasos,<br />un mismo hilo.</h2>
-          <p style={{ color: "var(--text-mute)", maxWidth: "38ch" }}>
-            Nuestro método integra disciplinas desde el primer día. Así evitamos los espacios muertos entre asesores.
-          </p>
+    <section className="ex-accountability" aria-labelledby="accountability-title">
+      <div className="ex-shell ex-accountability__layout">
+        <div className="ex-accountability__identity" data-reveal>
+          <span>04 / RESPONSABILIDAD</span><h2 id="accountability-title">La entidad responsable <em>está identificada.</em></h2>
+          <dl>
+            <div><dt>Razón social</dt><dd>MEDLA ASESORES, S.L.</dd></div>
+            <div><dt>Sede</dt><dd>Móstoles · Madrid · España</dd></div>
+            <div><dt>Registro Mercantil</dt><dd>Tomo 46169 · Folio 20 · Hoja M-811076</dd></div>
+            <div><dt>Contacto</dt><dd><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></dd></div>
+          </dl>
+          <a href="privacidad.html#responsable">Ver información legal <Arrow diagonal /></a>
         </div>
-        <div className="process-steps">
-          <div className="process-track"></div>
-          <div className="process-track-fill" style={{ height: `calc(${progress * 100}% - ${progress * 48}px)` }}></div>
-          {steps.map((s, i) => (
-            <div className={`step ${active >= i ? "active" : ""}`} key={i}>
-              <div className="step-num">{s.n}</div>
-              <div className="step-body">
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
-                <div className="step-tags">
-                  {s.tags.map(t => <span key={t}>{t}</span>)}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="ex-accountability__commitments">{commitments.map(([title, text], index) => <article key={title} data-reveal><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
       </div>
     </section>
-  );
-}
-
-function TestimonialsSection() {
-  const items = [
-    { q: "MEDLA simplificó una operación que llevaba años fragmentada. En seis meses pasamos de tres despachos a un solo interlocutor.", name: "Lucía Ortega", role: "CEO · Monteverde Holdings", ini: "LO" },
-    { q: "La combinación de criterio legal y capacidad técnica es única. Resolvieron nuestra migración a IA sin perder compliance.", name: "Andrés Villalba", role: "COO · Lumière Tech", ini: "AV" },
-    { q: "Transparencia total, respuestas en horas y un equipo que entiende de verdad cómo opera una empresa en crecimiento.", name: "Renata Paz", role: "Fundadora · Aetheris", ini: "RP" },
-    { q: "La automatización que implementaron nos devolvió semanas de trabajo cada mes. El ROI fue visible desde el primer trimestre.", name: "Mauricio Escalante", role: "Director · Vanterra Group", ini: "ME" },
-    { q: "Trabajar con MEDLA es tener un socio silencioso que se anticipa. Eso, para un fondo como el nuestro, vale oro.", name: "Daniela Brun", role: "Partner · Nórdica Capital", ini: "DB" },
-    { q: "Nos acompañaron en la constitución, y tres años después siguen operando el compliance y las redes comerciales.", name: "Iván Cortés", role: "CEO · Orion Fiscal", ini: "IC" },
-  ];
-  const doubled = [...items, ...items];
-  return (
-    <section className="testimonials-section" id="nosotros">
-      <div className="container">
-        <div className="section-head centered">
-          <span className="eyebrow">Testimonios</span>
-          <h2>Lo que dicen<br />de trabajar con MEDLA.</h2>
-        </div>
-      </div>
-      <div className="testimonials-track-wrap">
-        <div className="testimonials-track">
-          {doubled.map((t, i) => (
-            <div className="testimonial" key={i}>
-              <div className="testimonial-quote">{t.q}</div>
-              <div className="testimonial-person">
-                <div>
-                  <div className="testimonial-name">{t.name}</div>
-                  <div className="testimonial-role">{t.role}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CTASection() {
-  return (
-    <section className="cta-section" id="contacto">
-      <div className="container">
-        <div className="cta-card">
-          <CTACanvas />
-          <span className="cta-corner tl"></span>
-          <span className="cta-corner tr"></span>
-          <span className="cta-corner bl"></span>
-          <span className="cta-corner br"></span>
-          <div className="cta-card-inner">
-            <span className="cta-tag"><span className="blink"></span>Disponibles · Abril 2026</span>
-            <h2>
-              Conversemos sobre el<br /><em>futuro de tu empresa.</em>
-            </h2>
-            <p>Una llamada de 30 minutos para entender tu operación y dibujar, sin compromiso, cómo sería trabajar juntos.</p>
-            <div className="hero-ctas">
-              <a href="contacto.html" className="btn btn-dark">Agendar diagnóstico <span className="arr">→</span></a>
-              <a href="https://api.whatsapp.com/send/?phone=34641576772&text=Hola%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" className="btn btn-ghost">Escribir por WhatsApp</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer id="blog">
-      <div className="container">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <a href="index.html"><img src="logo.png" alt="MEDLA Empresas" style={{height: 160, display: "block", marginBottom: 16, filter: "invert(1)"}} /></a>
-            <p>Estructura legal, tecnológica y comercial para empresas que deciden operar con criterio.</p>
-          </div>
-          <div>
-            <h4>Servicios</h4>
-            <ul>
-              <li><a href="asesoria-legal.html">Asesoría legal</a></li>
-              <li><a href="redes-sociales.html">Comunicación</a></li>
-              <li><a href="Langin_MEDLA_Jotform/dist/index.html">Soluciones Jotform</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Compañía</h4>
-            <ul>
-              <li><a href="nosotros.html">Nosotros</a></li>
-              <li><a href="blog.html">Blog</a></li>
-              <li><a href="contacto.html">Casos</a></li>
-              <li><a href="contacto.html">Carreras</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Contacto</h4>
-            <ul>
-              <li><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></li>
-              <li><a href="tel:+34641576772">+34 641 576 772</a></li>
-              <li><a href="#">Madrid, España</a></li>
-            </ul>
-            <a
-              href="https://api.whatsapp.com/send/?phone=34641576772&text=Hola%2C+me+gustar%C3%ADa+recibir+m%C3%A1s+informaci%C3%B3n&type=phone_number&app_absent=0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-              style={{marginTop: 20, display: "inline-flex", alignItems: "center", gap: 8, fontSize: "0.85rem", padding: "10px 20px"}}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              Contactar por WhatsApp
-            </a>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 MEDLA Empresas. Todos los derechos reservados.</span>
-          <span>Aviso de privacidad · Términos</span>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-function TweaksUI({ t, setTweak }) {
-  return (
-    <TweaksPanel>
-      <TweakSection label="Apariencia" />
-      <TweakColor label="Tono dorado" value={t.goldTone} onChange={(v) => setTweak("goldTone", v)} />
-      <TweakRadio label="Titulares" value={t.heading} options={["serif", "sans"]} onChange={(v) => setTweak("heading", v)} />
-      <TweakSection label="Movimiento" />
-      <TweakRadio label="Animaciones" value={t.animations} options={["on", "reducido", "off"]} onChange={(v) => setTweak("animations", v)} />
-    </TweaksPanel>
   );
 }
 
 function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
-
-  useEffect(() => {
-    document.documentElement.style.setProperty("--gold", t.goldTone);
-    document.documentElement.style.setProperty("--f-display-current",
-      t.heading === "serif" ? "Cormorant Garamond, Georgia, serif" : "Inter, sans-serif");
-  }, [t.goldTone, t.heading]);
-
-  useEffect(() => {
-    if (t.animations === "off") {
-      document.documentElement.classList.add("no-anim");
-    } else {
-      document.documentElement.classList.remove("no-anim");
-    }
-    if (t.animations === "reducido") {
-      document.documentElement.classList.add("slow-anim");
-    } else {
-      document.documentElement.classList.remove("slow-anim");
-    }
-  }, [t.animations]);
-
-  useEffect(() => {
-    const style = document.getElementById("dyn-heading") || document.createElement("style");
-    style.id = "dyn-heading";
-    style.textContent = `h1, h2, h3, h4 { font-family: ${t.heading === "serif" ? "'Cormorant Garamond', Georgia, serif" : "'Inter', sans-serif"} !important; font-weight: ${t.heading === "serif" ? 500 : 600} !important; } .logo, .testimonial-quote { font-family: ${t.heading === "serif" ? "'Cormorant Garamond', Georgia, serif" : "'Inter', sans-serif"} !important; }`;
-    if (!style.parentNode) document.head.appendChild(style);
-  }, [t.heading]);
-
-  return (
-    <>
-      <Nav />
-      <Hero />
-      <LogosSection />
-      <ServicesSection />
-      <ProcessSection />
-      
-      <TestimonialsSection />
-      <CTASection />
-      <Footer />
-      <TweaksUI t={t} setTweak={setTweak} />
-    </>
-  );
+  return <><RevealController /><window.MedlaSiteHeader current="home" /><main id="contenido"><Hero /><Situations /><Delivery /><MandateDefinition /><Accountability /></main><window.MedlaSiteFooter current="home" /></>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
