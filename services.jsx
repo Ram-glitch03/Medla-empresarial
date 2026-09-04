@@ -1,294 +1,165 @@
 const { useEffect, useRef, useState } = React;
 
-const SERVICES = [
+const CAPABILITY_FAMILIES = [
   {
-    id: "legal", num: "01", label: "Legal", icon: "legal", title: "Asesoría legal y gobierno corporativo",
-    statement: "Convertimos una decisión de negocio en contratos, acuerdos y controles que el equipo puede ejecutar.",
-    trigger: "Un acuerdo, una contratación o una operación necesita respaldo jurídico antes de avanzar.",
-    intervention: "Revisión de hechos y documentos, definición de riesgos y preparación de la documentación aplicable.",
-    outcome: "Una decisión documentada, responsables claros y próximos pasos comprensibles.",
-    scope: ["Contratos mercantiles", "Gobierno societario", "Coordinación documental", "Obligaciones aplicables"], href: "asesoria-legal.html",
+    id: "decision", number: "01", label: "Decisión y estructura",
+    title: "Decisiones corporativas con criterio jurídico y financiero trazable.",
+    description: "Reunimos hechos, riesgos, hipótesis y documentos para que dirección, socios o comité puedan comparar, aprobar y ejecutar.",
+    situations: ["Contratos o acuerdos con impacto operativo", "Cambios societarios y reglas de gobierno", "Escenarios de inversión o financiación"],
+    outputs: ["Documento de decisión", "Documentación coordinada", "Condiciones y próximos pasos"],
+    links: [["Legal y contratos", "asesoria-legal.html"], ["Estructura societaria", "constitucion.html"], ["Preparación de financiación", "inversiones.html"]],
   },
   {
-    id: "constitucion", num: "02", label: "Societario", icon: "constitucion", title: "Constitución y estructura societaria",
-    statement: "Diseñamos la base societaria para que propiedad, administración y operación no se contradigan después.",
-    trigger: "Una nueva sociedad o un cambio de socios exige ordenar roles, capital y reglas de decisión.",
-    intervention: "Definición de la estructura, preparación documental y coordinación de los trámites necesarios.",
-    outcome: "Una sociedad preparada para operar con una estructura comprensible para socios y administración.",
-    scope: ["Diseño societario", "Pactos y estatutos", "Órganos de administración", "Cambios estructurales"], href: "constitucion.html",
+    id: "operations", number: "02", label: "Operaciones y sistemas",
+    title: "Procesos visibles, conectados y mantenibles por el equipo.",
+    description: "Definimos el recorrido real antes de tocar herramientas. Después conectamos datos, reglas, aprobaciones y excepciones con responsables claros.",
+    situations: ["Información repartida entre hojas y correos", "Aprobaciones sin estado ni plazo", "Datos copiados entre herramientas"],
+    outputs: ["Mapa de operación", "Flujo implantado", "Registro y guía de recuperación"],
+    links: [["Digitalización de operaciones", "digitalizacion.html"], ["Automatización", "automatizacion.html"], ["Captura de datos y formularios", "jotform.html"]],
   },
   {
-    id: "inversiones", num: "03", label: "Inversión", icon: "inversiones", title: "Inversión y financiación",
-    statement: "Ordenamos información, escenarios y materiales para decidir con rigor; no prometemos rentabilidades.",
-    trigger: "La dirección necesita valorar una oportunidad, preparar financiación o presentar el negocio con claridad.",
-    intervention: "Estructuración de datos, supuestos, escenarios y documentación para el proceso de decisión.",
-    outcome: "Un dossier trazable que permite comparar alternativas y formular mejores preguntas.",
-    scope: ["Modelos y escenarios", "Documentación para inversión", "Preparación de procesos", "Apoyo a la decisión"], href: "inversiones.html",
+    id: "ai", number: "03", label: "IA aplicada",
+    title: "Agentes integrados en procesos, con fuentes, permisos y evaluación.",
+    description: "La tarea, los datos y el control se definen antes de elegir el modelo. Implantamos casos acotados con revisión humana y registro de actividad.",
+    situations: ["Conocimiento difícil de recuperar", "Tareas intensivas en lectura o clasificación", "Pilotos sin permisos, evaluación o propietario"],
+    outputs: ["Arquitectura del agente", "Caso evaluado en contexto", "Protocolo de operación"],
+    links: [["Agentes de IA", "agentes.html"], ["Sistemas de soporte", "digitalizacion.html"], ["Automatización conectada", "automatizacion.html"]],
   },
   {
-    id: "digitalizacion", num: "04", label: "Sistemas", icon: "digitalizacion", title: "Digitalización de operaciones",
-    statement: "Pasamos procesos dispersos a un sistema compartido, visible y mantenible por el equipo.",
-    trigger: "La información vive en correos, hojas y herramientas que no comparten contexto.",
-    intervention: "Mapa del proceso actual, diseño del flujo objetivo e implantación por etapas.",
-    outcome: "Una operación con estados visibles, datos consistentes y menos dependencia de tareas manuales.",
-    scope: ["Mapeo de procesos", "Arquitectura de información", "Portales y herramientas", "Integraciones operativas"], href: "digitalizacion.html",
-  },
-  {
-    id: "automatizacion", num: "05", label: "Automatización", icon: "automatizacion", title: "Automatización de flujos",
-    statement: "Conectamos tareas repetitivas sin convertir la operación en una caja negra difícil de mantener.",
-    trigger: "El equipo replica datos, persigue aprobaciones o ejecuta pasos previsibles de forma manual.",
-    intervention: "Priorización, diseño de reglas, integración, registro de excepciones y puesta en producción.",
-    outcome: "Un flujo observable con responsables humanos allí donde la decisión lo requiere.",
-    scope: ["Aprobaciones", "Notificaciones", "Sincronización de datos", "Control de excepciones"], href: "automatizacion.html",
-  },
-  {
-    id: "ia", num: "06", label: "IA aplicada", icon: "ia", title: "Agentes de IA para trabajo real",
-    statement: "Diseñamos asistentes con fuentes, límites y revisión humana; útiles dentro de un proceso concreto.",
-    trigger: "Existe una tarea intensiva en información que necesita velocidad sin perder criterio ni control.",
-    intervention: "Definición del caso, fuentes autorizadas, herramientas, evaluaciones y reglas de escalado.",
-    outcome: "Un agente acotado, evaluable y conectado al trabajo que debe asistir.",
-    scope: ["Asistentes internos", "Consulta documental", "Clasificación y extracción", "Evaluación y control"], href: "agentes.html",
-  },
-  {
-    id: "social", num: "07", label: "Captación y CRM", icon: "social", title: "Posicionamiento, captación y CRM",
-    statement: "Conectamos posicionamiento, captación y seguimiento para que cada oportunidad llegue al equipo con contexto.",
-    trigger: "La empresa genera interés, pero los contactos llegan dispersos o no dejan una siguiente acción comercial clara.",
-    intervention: "Arquitectura de mensajes, puntos de entrada, criterios de cualificación, CRM y circuito de seguimiento.",
-    outcome: "Un recorrido comercial medible, con contexto, prioridad y responsable para cada oportunidad.",
-    scope: ["Posicionamiento", "Captación", "Cualificación y CRM", "Seguimiento comercial"], href: "redes-sociales.html",
-  },
-  {
-    id: "jotform", num: "08", label: "Jotform", icon: "digitalizacion", title: "Soluciones sobre Jotform",
-    statement: "Creamos formularios y portales que capturan datos útiles y activan el siguiente paso del proceso.",
-    trigger: "La recogida de información genera errores, duplicados o demasiado trabajo posterior.",
-    intervention: "Diseño de campos y lógica, experiencia de usuario, integraciones, pruebas y documentación.",
-    outcome: "Una entrada de datos más clara, conectada y lista para operar dentro del sistema existente.",
-    scope: ["Formularios avanzados", "Portales", "Firmas y aprobaciones", "Integraciones"], href: "jotform.html",
+    id: "growth", number: "04", label: "Crecimiento y CRM",
+    title: "Una sola lectura desde el primer interés hasta la siguiente acción comercial.",
+    description: "Conectamos posicionamiento, entrada, cualificación y seguimiento para que cada oportunidad conserve contexto, prioridad y responsable.",
+    situations: ["Mensajes que no atraen al cliente adecuado", "Entradas sin información suficiente", "Oportunidades sin próxima acción"],
+    outputs: ["Arquitectura de mensaje", "Recorrido de captación", "CRM y seguimiento operativo"],
+    links: [["Posicionamiento, captación y CRM", "redes-sociales.html"], ["Formularios y entradas", "jotform.html"], ["Automatización comercial", "automatizacion.html"]],
   },
 ];
 
-const BLOCKERS = [
-  {
-    id: "operacion",
-    label: "El trabajo se atasca entre correos, hojas y aprobaciones",
-    title: "Primero documentamos el proceso completo.",
-    text: "Mapeamos estados, responsables, datos y excepciones antes de conectar herramientas. Así sabemos qué automatizar y qué debe seguir siendo una decisión humana.",
-    services: ["digitalizacion", "automatizacion", "jotform"],
-    context: "digitalizacion",
-  },
-  {
-    id: "acuerdo",
-    label: "Hay un acuerdo, una sociedad o una obligación que desbloquear",
-    title: "El documento tiene que describir la operación real.",
-    text: "Reunimos hechos, límites comerciales y evidencia disponible para que la decisión jurídica no avance separada del trabajo que debe sostener.",
-    services: ["legal", "constitucion"],
-    context: "legal",
-  },
-  {
-    id: "capital",
-    label: "Necesitamos comparar una inversión o preparar financiación",
-    title: "Separamos datos, supuestos y condiciones de cierre.",
-    text: "Construimos escenarios trazables y una documentación que permita discutir la decisión sin convertir una proyección en una promesa.",
-    services: ["inversiones", "legal"],
-    context: "inversiones",
-  },
-  {
-    id: "ia",
-    label: "Queremos aplicar IA sin abrir una caja negra",
-    title: "La tarea manda; el modelo viene después.",
-    text: "Definimos fuentes, permisos, formato de salida, evaluación y ruta de escalado. Después conectamos el agente al proceso que realmente debe asistir.",
-    services: ["ia", "digitalizacion", "automatizacion"],
-    context: "ia",
-  },
-  {
-    id: "crecimiento",
-    label: "La captación no termina en un seguimiento claro",
-    title: "Unimos promesa, dato y próxima acción comercial.",
-    text: "Ordenamos el mensaje, el punto de entrada y el traspaso al CRM para que cada oportunidad conserve contexto y tenga responsable.",
-    services: ["social", "jotform", "automatizacion"],
-    context: "crecimiento",
-  },
+const STARTING_POINTS = [
+  { id: "blocked", label: "La decisión está bloqueada entre varias áreas", title: "Primero fijamos qué debe decidirse y con qué información.", text: "Separamos hechos, supuestos, riesgos y derechos de decisión. El resultado es un mandato que permite movilizar a cada especialista sobre el mismo alcance.", families: ["decision", "operations"], outputs: ["Pregunta ejecutiva", "Opciones comparables", "Mandato inicial"], context: "proyecto" },
+  { id: "manual", label: "La operación depende de correos, hojas y seguimiento manual", title: "Primero documentamos el recorrido completo.", text: "Mapeamos entradas, decisiones, esperas, excepciones y sistemas. Solo después definimos qué automatizar y qué debe seguir en manos de una persona.", families: ["operations", "ai"], outputs: ["Mapa actual", "Flujo objetivo", "Prioridad de implantación"], context: "digitalizacion" },
+  { id: "technology", label: "Una inversión tecnológica no llega al uso diario", title: "Primero definimos el caso, los datos y el criterio de aceptación.", text: "Acotamos la tarea, el propietario, las fuentes y los permisos. La tecnología se valida dentro del proceso que debe mejorar, no en una demostración aislada.", families: ["ai", "operations"], outputs: ["Caso priorizado", "Prueba en contexto", "Plan de implantación"], context: "ia" },
+  { id: "commercial", label: "La captación no termina en un seguimiento claro", title: "Primero conectamos promesa, contexto y siguiente acción.", text: "Revisamos el mensaje, la entrada y el traspaso al CRM para que cada oportunidad llegue al responsable adecuado con información suficiente.", families: ["growth", "operations"], outputs: ["Criterio de encaje", "Recorrido comercial", "Responsable y próxima acción"], context: "crecimiento" },
 ];
 
-function useMenu() {
-  const [open, setOpen] = useState(false);
-  const dialogRef = useRef(null);
-  const triggerRef = useRef(null);
+function Arrow({ diagonal = false }) { return <span className="svc-arrow" aria-hidden="true">{diagonal ? "↗" : "→"}</span>; }
+
+function useReveal() {
   useEffect(() => {
-    if (!open) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const main = document.getElementById("main");
-    const footer = document.querySelector(".inner-footer");
-    if (main) main.inert = true;
-    if (footer) footer.inert = true;
-    const dialog = dialogRef.current;
-    const focusable = dialog ? [...dialog.querySelectorAll('a[href], button:not([disabled])')] : [];
-    focusable[0]?.focus();
-    const onKey = (event) => {
-      if (event.key === "Escape") setOpen(false);
-      if (event.key !== "Tab" || focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previousOverflow;
-      if (main) main.inert = false;
-      if (footer) footer.inert = false;
-      triggerRef.current?.focus();
-    };
-  }, [open]);
-  return { open, setOpen, dialogRef, triggerRef };
+    const nodes = [...document.querySelectorAll("[data-svc-reveal]")];
+    if (!("IntersectionObserver" in window)) { nodes.forEach((node) => node.classList.add("is-visible")); return undefined; }
+    document.documentElement.classList.add("svc-reveal-ready");
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      observer.unobserve(entry.target);
+    }), { threshold: .12, rootMargin: "0px 0px -6%" });
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 }
 
-function ServicesNav() {
-  const { open, setOpen, dialogRef, triggerRef } = useMenu();
-  return <>
-    <a className="skip-link" href="#main">Saltar al contenido</a>
-    <header className="inner-nav">
-      <a className="inner-brand" href="index.html" aria-label="MEDLA — Inicio"><img src="logo.png" alt="" /></a>
-      <nav className="inner-links" aria-label="Navegación principal">
-        <a className="is-current" href="servicios.html" aria-current="page">Servicios</a><a href="nosotros.html">Nosotros</a><a href="blog.html">Cuadernos</a><a href="contacto.html">Contacto</a>
-      </nav>
-      <a className="inner-contact" href="contacto.html">Plantear una decisión <span>↗</span></a>
-      <button ref={triggerRef} className="inner-menu-trigger" type="button" aria-label="Abrir menú" aria-expanded={open} aria-controls="services-mobile-menu" onClick={() => setOpen(true)}><span /><span /></button>
-    </header>
-    {open && <div className="inner-menu" id="services-mobile-menu" role="dialog" aria-modal="true" aria-label="Menú principal" ref={dialogRef}>
-      <div className="inner-menu-top"><span>MEDLA / Navegación</span><button type="button" aria-label="Cerrar menú" onClick={() => setOpen(false)}>Cerrar ×</button></div>
-      <nav aria-label="Navegación móvil" onClick={() => setOpen(false)}><a href="servicios.html">01 <strong>Servicios</strong></a><a href="nosotros.html">02 <strong>Nosotros</strong></a><a href="blog.html">03 <strong>Cuadernos</strong></a><a href="contacto.html">04 <strong>Contacto</strong></a></nav>
-      <p>Madrid · España<br />info@medla-empresas.com</p>
-    </div>}
-  </>;
-}
-
-function Constellation() {
-  const points = [[150, 74], [345, 58], [526, 120], [594, 255], [514, 392], [318, 430], [126, 378], [62, 222]];
-  return <div className="svc-constellation" aria-hidden="true">
-    <svg viewBox="0 0 660 500"><defs><radialGradient id="svc-halo"><stop offset="0" stopColor="#79d2c5" stopOpacity=".2" /><stop offset="1" stopColor="#79d2c5" stopOpacity="0" /></radialGradient></defs>
-      <circle className="const-halo" cx="330" cy="250" r="178" fill="url(#svc-halo)" /><circle className="const-orbit const-orbit-a" cx="330" cy="250" r="190" /><circle className="const-orbit const-orbit-b" cx="330" cy="250" r="122" />
-      {points.map(([x, y], index) => <g key={index}><line className="const-line" x1="330" y1="250" x2={x} y2={y} /><circle className="const-pulse" cx={x} cy={y} r="14" style={{ animationDelay: `${index * -0.38}s` }} /><circle className="const-node" cx={x} cy={y} r="4" /><text className="const-label" x={x + (x < 330 ? -17 : 17)} y={y - 14} textAnchor={x < 330 ? "end" : "start"}>{SERVICES[index].label}</text></g>)}
-      <g className="const-core"><circle cx="330" cy="250" r="45" /><text x="330" y="246" textAnchor="middle">SISTEMA</text><text x="330" y="264" textAnchor="middle">MEDLA</text></g>
-    </svg>
-    <div className="const-readout"><span>08 áreas de trabajo</span><span>01 plan coordinado</span></div>
+function CapabilityMap() {
+  const [active, setActive] = useState(0);
+  const family = CAPABILITY_FAMILIES[active];
+  const refs = useRef([]);
+  return <div className="svc-map" aria-label="Mapa interactivo de capacidades MEDLA">
+    <header><span>M/ MAPA DE CAPACIDADES</span><small>Selecciona una ruta</small></header>
+    <div className="svc-map__routes" role="tablist" aria-label="Familias de capacidades">
+      {CAPABILITY_FAMILIES.map((item,index) => <button key={item.id} ref={(node) => { refs.current[index] = node; }} type="button" role="tab" id={`map-tab-${item.id}`} aria-controls="map-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => {
+        if (!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === "Home" ? 0 : event.key === "End" ? CAPABILITY_FAMILIES.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + CAPABILITY_FAMILIES.length) % CAPABILITY_FAMILIES.length;
+        setActive(next); refs.current[next]?.focus();
+      }}><span>{item.number}</span><b>{item.label}</b><i /></button>)}
+    </div>
+    <article id="map-panel" className="svc-map__panel" role="tabpanel" aria-labelledby={`map-tab-${family.id}`} key={family.id}>
+      <span>RUTA {family.number}</span><h2>{family.title}</h2><p>{family.description}</p>
+      <div><small>RESULTADO DEL FRENTE</small>{family.outputs.map((output) => <b key={output}><i />{output}</b>)}</div>
+    </article>
+    <footer><span>Proyecto</span><i /><span>Capacidades necesarias</span><i /><strong>Resultado verificable</strong></footer>
   </div>;
 }
 
-function ServicesHero() {
-  return <section className="svc-hero" aria-labelledby="svc-title">
-    <div className="svc-hero-noise" /><div className="svc-hero-copy"><p className="svc-kicker"><span>Servicios</span> / Consultoría multidisciplinar</p>
-      <h1 id="svc-title">Todo lo que necesita el proyecto.<br /><em>Un único equipo para coordinarlo.</em></h1>
-      <p className="svc-hero-lead">Integramos asesoría legal, operaciones, tecnología y crecimiento comercial para resolver el problema de principio a fin.</p>
-      <div className="svc-hero-actions"><a className="svc-button svc-button-primary" href="#explorador">Explorar servicios <span>↓</span></a><a className="svc-text-link" href="contacto.html">Cuéntanos tu proyecto <span>↗</span></a></div>
-    </div><Constellation /><div className="svc-hero-index" aria-hidden="true">S / 08</div>
-  </section>;
-}
-
-function DecisionRouter() {
-  const [active, setActive] = useState(0);
-  const current = BLOCKERS[active];
-  const recommended = current.services.map((id) => SERVICES.find((service) => service.id === id)).filter(Boolean);
-
-  return <section className="svc-router" aria-labelledby="router-title">
-    <div className="svc-router-head">
-      <p className="svc-kicker"><span>Orientador</span> / Empieza por el bloqueo</p>
-      <h2 id="router-title">No hace falta que sepas<br /><em>qué servicio pedir.</em></h2>
-      <p>Elige la frase que más se parece a tu situación. Te mostramos por dónde empezar y qué servicios podrían intervenir después.</p>
-    </div>
-    <div className="svc-router-workbench">
-      <div className="svc-router-questions" role="tablist" aria-label="Bloqueos habituales">
-        {BLOCKERS.map((blocker, index) => <button key={blocker.id} id={`blocker-tab-${blocker.id}`} type="button" role="tab" aria-selected={active === index} aria-controls="blocker-panel" tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => {
-          if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
-          event.preventDefault();
-          const next = event.key === "Home" ? 0 : event.key === "End" ? BLOCKERS.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + BLOCKERS.length) % BLOCKERS.length;
-          setActive(next);
-          event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next]?.focus();
-        }}><span>{String(index + 1).padStart(2, "0")}</span><strong>{blocker.label}</strong><i aria-hidden="true">→</i></button>)}
+function Hero() {
+  return <header className="svc-hero">
+    <div className="svc-shell svc-hero__layout">
+      <div className="svc-hero__copy">
+        <div className="svc-overline"><span>Capacidades activadas según el mandato</span><small>04 rutas</small></div>
+        <h1>Empieza por el proyecto. <em>No por una lista de servicios.</em></h1>
+        <p>Combinamos criterio jurídico, diseño operativo y desarrollo tecnológico bajo un responsable de proyecto, desde la decisión hasta la transferencia.</p>
+        <div className="svc-actions"><a className="svc-button svc-button--gold" href="#orientador">Orientar el proyecto <Arrow /></a><a className="svc-text-link" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a></div>
       </div>
-      <article key={current.id} id="blocker-panel" className="svc-router-result" role="tabpanel" aria-labelledby={`blocker-tab-${current.id}`}>
-        <div className="svc-router-result-code"><span>RUTA / {String(active + 1).padStart(2, "0")}</span><i>Orientación inicial</i></div>
-        <h3>{current.title}</h3>
-        <p>{current.text}</p>
-        <div className="svc-router-capabilities"><span>Capacidades que pueden intervenir</span>{recommended.map((service) => <a key={service.id} href={service.href}><b>{service.num}</b>{service.label}<i aria-hidden="true">↗</i></a>)}</div>
-        <a className="svc-button svc-button-primary" href={`contacto.html?context=${current.context}`}>Continuar con esta situación <span>↗</span></a>
-      </article>
+      <CapabilityMap />
     </div>
-  </section>;
+  </header>;
 }
 
-function ServiceExplorer() {
+function ProjectRouter() {
   const [active, setActive] = useState(0);
-  const [t, setT] = useState(0);
-  const [horizontalRail, setHorizontalRail] = useState(() => window.matchMedia("(max-width: 760px)").matches);
-  const tabRefs = useRef([]);
-  const railRef = useRef(null);
-  const visualRef = useRef(null);
-  const current = SERVICES[active];
-  const Scene = Scenes[current.icon] || Scenes.legal;
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 760px)");
-    const sync = (event) => setHorizontalRail(event.matches);
-    setHorizontalRail(media.matches);
-    media.addEventListener?.("change", sync);
-    return () => media.removeEventListener?.("change", sync);
-  }, []);
-  useEffect(() => {
-    const visual = visualRef.current;
-    if (!visual || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-    let visible = false; let raf = 0; let last = 0;
-    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }, { threshold: 0.05 });
-    observer.observe(visual);
-    const tick = (now) => { if (visible && now - last > 33) { setT(now / 1000); last = now; } raf = requestAnimationFrame(tick); };
-    raf = requestAnimationFrame(tick);
-    return () => { observer.disconnect(); cancelAnimationFrame(raf); };
-  }, []);
-  useEffect(() => {
-    if (!horizontalRail) return;
-    const rail = railRef.current;
-    const tab = tabRefs.current[active];
-    if (!rail || !tab) return;
-    const left = tab.offsetLeft - (rail.clientWidth - tab.clientWidth) / 2;
-    const fullyVisible = tab.offsetLeft >= rail.scrollLeft && tab.offsetLeft + tab.offsetWidth <= rail.scrollLeft + rail.clientWidth;
-    if (!fullyVisible) rail.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
-  }, [active, horizontalRail]);
-  const choose = (index, focus = false) => { setActive(index); if (focus) tabRefs.current[index]?.focus(); };
-  const onTabKeyDown = (event, index) => {
-    let next = index;
-    if (["ArrowDown", "ArrowRight"].includes(event.key)) next = (index + 1) % SERVICES.length;
-    else if (["ArrowUp", "ArrowLeft"].includes(event.key)) next = (index - 1 + SERVICES.length) % SERVICES.length;
-    else if (event.key === "Home") next = 0; else if (event.key === "End") next = SERVICES.length - 1; else return;
-    event.preventDefault(); choose(next, true);
+  const point = STARTING_POINTS[active];
+  const related = point.families.map((id) => CAPABILITY_FAMILIES.find((family) => family.id === id));
+  const refs = useRef([]);
+  const move = (event,index) => {
+    if (!["ArrowUp","ArrowDown","Home","End"].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === "Home" ? 0 : event.key === "End" ? STARTING_POINTS.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + STARTING_POINTS.length) % STARTING_POINTS.length;
+    setActive(next); refs.current[next]?.focus();
   };
-  return <section className="svc-explorer" id="explorador" aria-labelledby="explorer-title">
-    <div className="svc-section-intro"><p className="svc-kicker"><span>Mapa de servicios</span> / Selecciona un área</p><h2 id="explorer-title">Ocho áreas de trabajo.<br /><em>Un mismo proyecto.</em></h2><p>Cada servicio puede contratarse por separado. Si el proyecto cruza varias áreas, coordinamos responsables, documentos y entregas en un único plan.</p></div>
-    <div className="svc-explorer-shell">
-      <div className="svc-rail" ref={railRef} role="tablist" aria-label="Servicios MEDLA" aria-orientation={horizontalRail ? "horizontal" : "vertical"}>
-        {SERVICES.map((service, index) => <button key={service.id} id={`tab-${service.id}`} ref={(node) => { tabRefs.current[index] = node; }} type="button" className={index === active ? "is-active" : ""} role="tab" aria-selected={index === active} aria-controls="service-panel" tabIndex={index === active ? 0 : -1} onClick={() => choose(index)} onKeyDown={(event) => onTabKeyDown(event, index)}><span>{service.num}</span><strong>{service.label}</strong><i>↗</i></button>)}
+  return <section className="svc-router" id="orientador" aria-labelledby="router-title">
+    <div className="svc-shell">
+      <div className="svc-section-head" data-svc-reveal><span>01 / PUNTO DE PARTIDA</span><h2 id="router-title">Describe la situación. <em>A partir de ella, identificamos las capacidades necesarias.</em></h2><p>Selecciona la situación más próxima para ver qué debe quedar definido antes de iniciar.</p></div>
+      <div className="svc-router__workspace" data-svc-reveal>
+        <div className="svc-router__questions" role="tablist" aria-label="Situaciones empresariales">
+          {STARTING_POINTS.map((item,index) => <button key={item.id} ref={(node) => { refs.current[index] = node; }} type="button" role="tab" id={`start-tab-${item.id}`} aria-controls="start-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => move(event,index)}><span>0{index+1}</span><b>{item.label}</b><Arrow /></button>)}
+        </div>
+        <article id="start-panel" className="svc-router__answer" role="tabpanel" aria-labelledby={`start-tab-${point.id}`} key={point.id}>
+          <header><span>LECTURA INICIAL / 0{active+1}</span><b>PROYECTO TRANSVERSAL</b></header>
+          <h3>{point.title}</h3><p>{point.text}</p>
+          <div className="svc-router__answer-lower">
+            <section><span>CAPACIDADES PROBABLES</span>{related.map((family) => <a key={family.id} href={`#${family.id}`}><i>{family.number}</i>{family.label}<Arrow diagonal /></a>)}</section>
+            <section><span>DEBERÍA QUEDAR DEFINIDO</span>{point.outputs.map((output,index) => <b key={output}><i>{index+1}</i>{output}</b>)}</section>
+          </div>
+          <a className="svc-button svc-button--light" href={`contacto.html?context=${point.context}`}>Plantear este proyecto <Arrow /></a>
+        </article>
       </div>
-      <article key={current.id} className="svc-panel" id="service-panel" role="tabpanel" aria-labelledby={`tab-${current.id}`} tabIndex="0">
-        <div className="svc-panel-top"><div className="svc-panel-title"><p>{current.num} / {current.label}</p><h3>{current.title}</h3><strong>{current.statement}</strong></div><div className="svc-scene" ref={visualRef} aria-hidden="true"><Scene t={t} /></div></div>
-        <dl className="svc-decision-flow"><div><dt>El problema</dt><dd>{current.trigger}</dd></div><div><dt>El trabajo</dt><dd>{current.intervention}</dd></div><div><dt>El resultado</dt><dd>{current.outcome}</dd></div></dl>
-        <div className="svc-panel-bottom"><ul aria-label="Ámbitos incluidos">{current.scope.map((item) => <li key={item}>{item}</li>)}</ul><a className="svc-button svc-button-dark" href={current.href}>Ver servicio <span>↗</span></a></div>
-      </article>
     </div>
   </section>;
 }
 
-function Orchestration() {
-  return <section className="svc-orchestration" aria-labelledby="orchestration-title"><div className="svc-orch-heading"><p className="svc-kicker"><span>Coordinación</span> / Un método visible</p><h2 id="orchestration-title">Un proyecto coordinado <em>de principio a fin.</em></h2></div>
-    <div className="svc-orch-track"><article><span>01</span><h3>Diagnóstico</h3><p>Definimos qué debe ocurrir, qué puede bloquearlo y quién tiene la última palabra.</p></article><div className="svc-orch-signal"><i /><i /><i /></div><article><span>02</span><h3>Ejecución</h3><p>Traducimos la decisión a documentación, herramientas, reglas y puntos de control.</p></article><div className="svc-orch-signal"><i /><i /><i /></div><article><span>03</span><h3>Entrega</h3><p>Entregamos decisiones, manuales y responsables para que el equipo pueda operar y revisar el trabajo.</p></article></div>
+function Families() {
+  const [open, setOpen] = useState(0);
+  return <section className="svc-families" aria-labelledby="families-title">
+    <div className="svc-shell">
+      <div className="svc-section-head" data-svc-reveal><span>02 / CAPACIDADES</span><h2 id="families-title">Cuatro grupos de capacidades. <em>Una misma dirección de proyecto.</em></h2><p>Las capacidades se activan según el mandato y comparten calendario, responsables y registro de decisiones.</p></div>
+      <div className="svc-family-list">
+        {CAPABILITY_FAMILIES.map((family,index) => <article id={family.id} className={open === index ? "is-open" : ""} key={family.id} data-svc-reveal>
+          <button type="button" aria-expanded={open === index} aria-controls={`family-panel-${family.id}`} onClick={() => setOpen(open === index ? -1 : index)}>
+            <span>{family.number}</span><small>{family.label}</small><h3>{family.title}</h3><i aria-hidden="true">{open === index ? "−" : "+"}</i>
+          </button>
+          <div id={`family-panel-${family.id}`} className="svc-family-list__panel" hidden={open !== index}>
+            <div><p>{family.description}</p><span>SEÑALES</span><ul>{family.situations.map((item) => <li key={item}>{item}</li>)}</ul></div>
+            <div><span>RESULTADOS HABITUALES</span><ol>{family.outputs.map((item,outputIndex) => <li key={item}><span>0{outputIndex+1}</span>{item}</li>)}</ol></div>
+            <nav aria-label={`Especialidades de ${family.label}`}>{family.links.map(([label,href]) => <a key={href} href={href}>{label}<Arrow diagonal /></a>)}</nav>
+          </div>
+        </article>)}
+      </div>
+    </div>
   </section>;
 }
 
-function ServicesCta() {
-  return <section className="svc-cta" aria-labelledby="svc-cta-title"><div><p className="svc-kicker"><span>Siguiente paso</span> / Primera revisión</p><h2 id="svc-cta-title">Cuéntanos tu proyecto.<br /><em>Te diremos por dónde empezar.</em></h2></div><div className="svc-cta-side"><p>Revisaremos el objetivo, las prioridades y las áreas necesarias para proponerte un siguiente paso claro.</p><a className="svc-button svc-button-primary" href="contacto.html">Solicitar diagnóstico <span>↗</span></a></div></section>;
+function MandatePrinciple() {
+  return <section className="svc-principle" aria-labelledby="principle-title">
+    <div className="svc-shell svc-principle__layout">
+      <div data-svc-reveal><span>03 / FORMA DE CONTRATAR</span><h2 id="principle-title">Cada frente conserva <em>alcance y criterio de aceptación propios.</em></h2></div>
+      <div data-svc-reveal><p>Si un frente puede ejecutarse de forma independiente, la propuesta identifica alcance, responsable, calendario y criterio de aceptación.</p><strong>No trabajamos como bolsa de horas.</strong><a href="nosotros.html">Ver cómo gobernamos cada encargo <Arrow /></a></div>
+    </div>
+  </section>;
 }
 
 function ServicesApp() {
-  return <div className="svc-page"><window.MedlaSiteHeader current="services" /><main id="main"><ServicesHero /><DecisionRouter /><ServiceExplorer /><Orchestration /><ServicesCta /></main><window.MedlaSiteFooter /></div>;
+  useReveal();
+  return <div className="svc-page"><window.MedlaSiteHeader current="services" /><main><Hero /><ProjectRouter /><Families /><MandatePrinciple /></main><window.MedlaSiteFooter current="services" /></div>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<ServicesApp />);

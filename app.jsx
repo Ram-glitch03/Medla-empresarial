@@ -1,1440 +1,312 @@
-// MEDLA Empresas — bespoke operational intelligence experience
-const { useEffect, useReducer, useRef, useState } = React;
+// MEDLA — dirección e implantación de proyectos transversales
+const { useEffect, useRef, useState } = React;
 
-const capabilities = [
+const PROJECT_SITUATIONS = [
   {
-    n: "01",
-    eyebrow: "Decisión crítica",
-    title: "Una decisión importante está bloqueada entre varias áreas",
-    desc: "Reunimos contratos, riesgos, datos y responsables para que dirección pueda comparar opciones y aprobar un mandato ejecutable.",
-    href: "asesoria-legal.html",
-    className: "hp-capability--lead",
-    signal: "Decisión bloqueada",
-    deliverables: ["Criterio ejecutivo", "Escenarios", "Mandato"]
-  },
-  {
-    n: "02",
-    eyebrow: "Operación que no escala",
-    title: "La empresa ha crecido más rápido que su forma de operar",
-    desc: "Rediseñamos el flujo, conectamos los sistemas y fijamos responsables, control y métricas para que la operación deje de depender de seguimiento manual.",
-    href: "digitalizacion.html",
-    className: "hp-capability--dark",
-    signal: "Operación crítica",
-    deliverables: ["Modelo operativo", "Automatización", "Control"]
-  },
-  {
-    n: "03",
-    eyebrow: "Tecnología sin adopción",
-    title: "Una inversión tecnológica no consigue llegar a producción",
-    desc: "Acotamos el caso, resolvemos datos, permisos e integración y lo implantamos dentro del trabajo real, con revisión humana y criterios de mejora.",
-    href: "agentes.html",
-    className: "",
-    signal: "Inversión bloqueada",
-    deliverables: ["Caso priorizado", "Sistema implantado", "Adopción"]
-  }
-];
-
-const operatingModel = [
-  {
-    n: "01",
-    label: "Sesión de encaje",
-    title: "Confirmar si el proyecto merece un mandato",
-    desc: "Revisamos la decisión, las áreas implicadas, la urgencia y el acceso necesario para determinar si MEDLA puede asumir la dirección del conjunto.",
-    output: "Recomendación de encaje y siguiente paso"
-  },
-  {
-    n: "02",
-    label: "Mandato ejecutivo",
-    title: "Fijar alcance, gobierno y criterio de éxito",
-    desc: "Acordamos qué debe cambiar, quién decide, qué queda fuera, cómo trabajarán los especialistas y con qué evidencia se dará el proyecto por resuelto.",
-    output: "Mandato, responsables y calendario acordados"
-  },
-  {
-    n: "03",
-    label: "Implantación y transferencia",
-    title: "Convertir el mandato en capacidad operativa",
-    desc: "Coordinamos la ejecución, resolvemos dependencias, probamos los casos críticos y transferimos sistema, documentación y control al equipo.",
-    output: "Solución operativa y control transferido"
-  }
-];
-
-const demoScenarios = [
-  {
-    id: "contract",
-    code: "CASO 01 / CONTRATOS",
-    tab: "Contrato",
-    title: "Revisión de un contrato con criterios de riesgo definidos.",
-    summary: "El documento se contrasta con tus criterios de riesgo. La revisión jurídica valida las excepciones y el expediente queda registrado.",
-    sources: [
-      { name: "DOCUMENTO", value: "Proveedor_nuevo.pdf" },
-      { name: "CRITERIO", value: "Matriz jurídica v4" },
-      { name: "EXPEDIENTE", value: "Proveedor / Alta" }
-    ],
-    stages: [
-      { name: "Ingesta", detail: "Documento normalizado", code: "doc.parse" },
-      { name: "Análisis IA", detail: "Cláusulas y desviaciones", code: "risk.extract" },
-      { name: "Control humano", detail: "Revisión jurídica", code: "human.gate" },
-      { name: "Registro", detail: "Versión y trazabilidad", code: "audit.write" }
-    ],
-    output: { title: "Contrato listo para decidir", detail: "Riesgos señalados, responsable y próxima acción" },
-    trace: ["Documento recibido", "7 cláusulas localizadas", "2 revisiones requeridas", "Expediente listo"]
-  },
-  {
-    id: "operations",
-    code: "CASO 02 / OPERACIONES",
-    tab: "Operaciones",
-    title: "Una aprobación sin cadenas de correos.",
-    summary: "La solicitud se registra una vez; el flujo aplica la política interna y la envía a la persona que debe resolverla.",
-    sources: [
-      { name: "ERP", value: "Solicitud #1042" },
-      { name: "POLÍTICA", value: "Compras / Nivel 2" },
-      { name: "EQUIPO", value: "Finanzas + Operación" }
-    ],
-    stages: [
-      { name: "Captura", detail: "12 campos unificados", code: "intake.map" },
-      { name: "Regla", detail: "Política aplicada", code: "rule.check" },
-      { name: "Aprobación", detail: "Responsable asignado", code: "owner.route" },
-      { name: "Sincronización", detail: "ERP actualizado", code: "system.sync" }
-    ],
-    output: { title: "Aprobación resuelta y registrada", detail: "Estado, plazo e historial visibles" },
-    trace: ["Solicitud detectada", "Política validada", "Dirección notificada", "Sistemas sincronizados"]
-  },
-  {
-    id: "mandate",
-    code: "MANDATO / PROYECTO TRANSVERSAL",
-    tab: "Dirección",
-    title: "Una decisión compleja, convertida en un mandato listo para ejecutar.",
-    summary: "MEDLA reúne el criterio jurídico, operativo y técnico; fija la decisión y la traduce en responsables, sistema y control.",
-    sources: [
-      { name: "LEGAL", value: "Riesgos y obligaciones" },
-      { name: "OPERACIÓN", value: "Capacidad y responsables" },
-      { name: "TECNOLOGÍA", value: "Datos y dependencias" }
-    ],
-    stages: [
-      { name: "Alinear", detail: "Hechos y criterio común", code: "mandate.align" },
-      { name: "Decidir", detail: "Alcance y gobierno", code: "mandate.decide" },
-      { name: "Implantar", detail: "Sistema y transferencia", code: "mandate.deliver" }
-    ],
-    output: { title: "Proyecto listo para avanzar", detail: "Decisión, responsables y criterio de aceptación" },
-    trace: ["Hechos reunidos", "Mandato acordado", "Implantación preparada"]
-  },
-  {
-    id: "growth",
-    code: "CASO 04 / VENTAS",
-    tab: "Crecimiento",
-    title: "Cada oportunidad queda asignada y con una próxima acción.",
-    summary: "La información llega al CRM, se prioriza y asigna sin perder el contexto.",
-    sources: [
-      { name: "WEB", value: "Nueva conversación" },
-      { name: "CRM", value: "Cuenta / Contexto" },
-      { name: "SEÑAL", value: "Interés + Encaje" }
-    ],
-    stages: [
-      { name: "Captura", detail: "Contexto reunido", code: "lead.enrich" },
-      { name: "Criterio", detail: "Encaje evaluado", code: "fit.score" },
-      { name: "Asignación", detail: "Responsable y acción", code: "owner.route" },
-      { name: "Seguimiento", detail: "CRM actualizado", code: "next.sync" }
-    ],
-    output: { title: "Seguimiento preparado", detail: "Prioridad, responsable y próxima acción" },
-    trace: ["Señal capturada", "Contexto enriquecido", "Responsable asignado", "Seguimiento programado"]
-  }
-];
-
-const decisionCases = [
-  {
-    id: "scale",
-    code: "EJEMPLO / 01",
-    label: "El proceso depende de seguimiento manual",
-    signal: "El equipo copia datos, persigue aprobaciones y pregunta por el estado.",
-    thesis: "Un flujo con estado, responsable y plazo visibles.",
-    steps: [
-      { n: "01", name: "Observar", owner: "Operaciones", text: "Mapeamos decisiones, esperas y traspasos reales." },
-      { n: "02", name: "Diseñar", owner: "Arquitectura", text: "Definimos datos, reglas, responsables y excepciones." },
-      { n: "03", name: "Construir", owner: "Desarrollo", text: "Conectamos herramientas y automatizamos el flujo." },
-      { n: "04", name: "Gobernar", owner: "Dirección", text: "Dejamos métricas, alertas, permisos y documentación." }
-    ],
-    stack: ["Diseño del proceso", "Integraciones", "Automatización", "Control"],
-    outputs: ["Mapa de proceso", "Flujo implantado", "Tablero de control"]
-  },
-  {
-    id: "legal",
-    code: "EJEMPLO / 02",
-    label: "El riesgo legal frena decisiones",
-    signal: "Los contratos y obligaciones se revisan tarde, o con versiones y contexto dispersos.",
-    thesis: "El criterio legal, disponible cuando hay que decidir.",
-    steps: [
-      { n: "01", name: "Ordenar", owner: "Legal", text: "Reunimos documentos, obligaciones, roles y vencimientos." },
-      { n: "02", name: "Priorizar", owner: "Dirección", text: "Clasificamos cada riesgo por impacto, responsable y plazo." },
-      { n: "03", name: "Implantar", owner: "Tecnología", text: "Creamos plantillas, flujos, avisos y repositorio." },
-      { n: "04", name: "Transferir", owner: "Equipo", text: "Dejamos gobierno, responsables y trazabilidad." }
-    ],
-    stack: ["Criterio legal", "Documentos", "Avisos", "Gobierno"],
-    outputs: ["Matriz de riesgos", "Documentos versionados", "Calendario de control"]
-  },
-  {
-    id: "ai",
-    code: "EJEMPLO / 03",
-    label: "Los pilotos de IA no se integran en el trabajo diario",
-    signal: "Hay herramientas y pruebas, pero ningún caso funciona aún con datos, permisos y control definidos.",
-    thesis: "Un caso acotado, integrado y medible.",
-    steps: [
-      { n: "01", name: "Elegir", owner: "Negocio", text: "Priorizamos una tarea con valor, datos y propietario." },
-      { n: "02", name: "Proteger", owner: "Legal + Sistemas", text: "Definimos acceso, datos, riesgos y control humano." },
-      { n: "03", name: "Construir", owner: "IA", text: "Conectamos el modelo con las fuentes autorizadas y el flujo de trabajo." },
-      { n: "04", name: "Medir", owner: "Dirección", text: "Registramos uso, calidad, incidencias y oportunidades de mejora." }
-    ],
-    stack: ["Diseño del caso", "Fuentes autorizadas", "Permisos", "Evaluación"],
-    outputs: ["Caso de uso activo", "Asistente integrado", "Protocolo de calidad"]
-  },
-  {
-    id: "commercial",
-    code: "EJEMPLO / 04",
-    label: "Marketing, CRM y ventas trabajan sin una lectura común",
-    signal: "Marketing genera actividad, ventas gestiona oportunidades y dirección no ve el conjunto.",
-    thesis: "Una sola lectura desde el primer contacto hasta la venta.",
-    steps: [
-      { n: "01", name: "Enfocar", owner: "Estrategia", text: "Alineamos cliente, problema, oferta y criterio de encaje." },
-      { n: "02", name: "Conectar", owner: "Marketing", text: "Diseñamos señales, canales y captura de contexto." },
-      { n: "03", name: "Activar", owner: "Ventas", text: "Definimos prioridad, responsable y próximo paso." },
-      { n: "04", name: "Aprender", owner: "Dirección", text: "Unimos actividad, oportunidades y decisiones de mejora." }
-    ],
-    stack: ["Oferta", "CRM", "Seguimiento", "Operaciones de venta"],
-    outputs: ["Propuesta y criterio de encaje", "Oportunidades con responsable", "Sistema de seguimiento"]
-  }
-];
-
-const handoverChapters = [
-  {
-    id: "decision",
     number: "01",
-    label: "Decisión",
-    title: "Aprobar el alta cuando llegue el certificado fiscal vigente.",
-    description: "La condición, el responsable y el plazo quedan registrados para que la decisión no vuelva a una cadena de correos.",
-    facts: [
-      ["Responsable", "Dirección de Operaciones"],
-      ["Plazo", "Viernes · 12:00"],
-      ["Próxima acción", "Validar y registrar el alta"]
-    ]
+    type: "Decisión transversal",
+    title: "Una decisión con impacto en inversión, riesgo u operación exige criterio de varias áreas.",
+    text: "Reunimos hechos, contratos, escenarios y responsables para que dirección pueda comparar opciones y aprobar un alcance ejecutable.",
+    outputs: ["Documento de decisión", "Alcance aprobado", "Responsables y condiciones"],
+    href: "servicios.html#decision",
   },
   {
-    id: "system",
     number: "02",
-    label: "Sistema",
-    title: "Un flujo único desde la recepción documental hasta el ERP.",
-    description: "La solución entregada define alcance, fuentes y destino de cada dato; también deja visibles sus límites.",
-    facts: [
-      ["Alcance", "Captura, validación y sincronización"],
-      ["Versión", "Entrega 1.4"],
-      ["Repositorio", "Proveedores / Alta"]
-    ]
+    type: "Operaciones y sistemas",
+    title: "El crecimiento ha dejado procesos, datos y responsabilidades fuera de control.",
+    text: "Rediseñamos el recorrido, conectamos los sistemas necesarios y dejamos estados, excepciones y control visibles para el equipo.",
+    outputs: ["Modelo operativo", "Sistema implantado", "Control y documentación"],
+    href: "digitalizacion.html",
   },
   {
-    id: "control",
     number: "03",
-    label: "Control",
-    title: "Cada incidencia tiene estado, alerta e historial.",
-    description: "El equipo puede saber qué se ha detenido, desde cuándo y quién debe intervenir sin pedir una reconstrucción manual.",
-    facts: [
-      ["Estados", "Recibido · Revisión · Aprobado · Registrado"],
-      ["Alertas", "Documento vencido · Plazo superado"],
-      ["Historial", "8 hitos registrados"]
-    ]
+    type: "Tecnología e IA",
+    title: "La inversión tecnológica todavía no ha llegado al uso operativo.",
+    text: "Acotamos el caso, resolvemos datos, permisos e integración y lo implantamos con revisión humana y criterios de aceptación.",
+    outputs: ["Caso priorizado", "Solución en operación", "Protocolo de calidad"],
+    href: "agentes.html",
   },
-  {
-    id: "continuity",
-    number: "04",
-    label: "Continuidad",
-    title: "El equipo recibe el criterio para operar y cambiar el sistema.",
-    description: "La entrega incluye responsables, documentación y una primera revisión para que el conocimiento no dependa del proveedor.",
-    facts: [
-      ["Operación", "Operaciones + Sistemas"],
-      ["Documentación", "Manual y criterios de cambio"],
-      ["Revisión", "30 días después de la entrega"]
-    ]
-  }
 ];
 
-const worldBridgeRoutes = [
-  { id: "intake", number: "01", short: "Información", label: "Correos · documentos · bloqueos", color: "#56849a" },
-  { id: "dossier", number: "02", short: "Criterio", label: "Versión válida · criterio · decisión", color: "#126b6a" },
-  { id: "action", number: "03", short: "Acción", label: "Responsable · plazo · siguiente paso", color: "#9d8246" }
+const MANDATE_STAGES = [
+  { code: "01", label: "Encaje", title: "Aclarar la decisión", detail: "Objetivo, consecuencia, áreas implicadas y acceso a la información.", output: "Decisión de encaje" },
+  { code: "02", label: "Mandato", title: "Acordar alcance y gobierno", detail: "Autoridad, responsables, calendario, límites y criterio de cierre.", output: "Mandato aprobado" },
+  { code: "03", label: "Implantación", title: "Construir y probar", detail: "Especialistas coordinados, entregas por tramos y decisiones registradas.", output: "Solución validada" },
+  { code: "04", label: "Transferencia", title: "Entregar el control", detail: "Responsables internos, documentación, mantenimiento y siguiente revisión.", output: "Control transferido" },
+];
+
+const DOSSIER_CHAPTERS = [
+  {
+    id: "decision", number: "01", label: "Decisión",
+    title: "Aprobar el alta cuando llegue el certificado fiscal vigente.",
+    text: "La condición, el responsable y el plazo quedan registrados. El equipo no necesita reconstruir la decisión desde el correo.",
+    facts: [["Responsable", "Dirección de Operaciones"], ["Plazo", "Viernes · 12:00"], ["Siguiente acción", "Validar y registrar el alta"]],
+  },
+  {
+    id: "system", number: "02", label: "Sistema",
+    title: "Un recorrido único desde la recepción documental hasta el ERP.",
+    text: "Cada dato tiene una fuente, una validación y un destino. Las excepciones salen hacia una persona con todo el contexto necesario.",
+    facts: [["Alcance", "Captura, validación y sincronización"], ["Versión", "Entrega 1.4"], ["Repositorio", "Proveedores / Alta"]],
+  },
+  {
+    id: "control", number: "03", label: "Control",
+    title: "Cada incidencia tiene estado, alerta e historial.",
+    text: "El equipo puede ver qué se ha detenido, desde cuándo y quién debe intervenir sin depender del proveedor.",
+    facts: [["Estados", "Recibido · Revisión · Aprobado"], ["Alertas", "Vencimiento · Plazo superado"], ["Historial", "Hitos y cambios registrados"]],
+  },
+  {
+    id: "handover", number: "04", label: "Transferencia",
+    title: "El equipo recibe el criterio para operar y cambiar la solución.",
+    text: "La entrega incluye responsables, documentación y una revisión acordada para que el conocimiento no quede fuera de la empresa.",
+    facts: [["Operación", "Operaciones + Sistemas"], ["Documentación", "Manual y criterios de cambio"], ["Revisión", "Fecha acordada con el cliente"]],
+  },
 ];
 
 function Arrow({ diagonal = false }) {
-  return (
-    <svg className="hp-arrow" viewBox="0 0 20 20" aria-hidden="true">
-      {diagonal ? <path d="M5 15 15 5M7 5h8v8" /> : <path d="M3 10h13M11 5l5 5-5 5" />}
-    </svg>
-  );
+  return <svg className="ex-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d={diagonal ? "M5 15 15 5M7 5h8v8" : "M3 10h13M11 5l5 5-5 5"} /></svg>;
 }
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReduced(query.matches);
     query.addEventListener?.("change", update);
     return () => query.removeEventListener?.("change", update);
   }, []);
-
   return reduced;
-}
-
-function SignatureField({ id, light = false }) {
-  const reducedMotion = useReducedMotion();
-  const mainPath = `medla-flow-${id}`;
-  const secondPath = `medla-flow-secondary-${id}`;
-  const gradient = `medla-gradient-${id}`;
-
-  return (
-    <svg className={`hp-signature-field ${light ? "hp-signature-field--light" : ""}`} viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <linearGradient id={gradient} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor={light ? "#080a0f" : "#8bc7ee"} stopOpacity="0" />
-          <stop offset=".28" stopColor={light ? "#080a0f" : "#79d2c5"} stopOpacity=".68" />
-          <stop offset=".72" stopColor={light ? "#4e5f4e" : "#d5b76c"} stopOpacity=".54" />
-          <stop offset="1" stopColor={light ? "#080a0f" : "#8bc7ee"} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path id={mainPath} className="hp-signature-field__line hp-signature-field__line--main" d="M-60 690C170 690 180 238 405 238S560 690 720 690 820 238 1042 238s234 452 458 452" stroke={`url(#${gradient})`} />
-      <path id={secondPath} className="hp-signature-field__line hp-signature-field__line--secondary" d="M-80 752C162 752 218 318 408 318S570 752 720 752 842 318 1035 318s236 434 488 434" stroke={`url(#${gradient})`} />
-      <path className="hp-signature-field__line hp-signature-field__line--ghost" d="M-40 612C190 612 150 166 402 166S548 612 720 612 818 166 1056 166s218 446 440 446" stroke={`url(#${gradient})`} />
-      <g className="hp-signature-field__nodes">
-        <circle cx="405" cy="238" r="4" /><circle cx="720" cy="690" r="4" /><circle cx="1042" cy="238" r="4" />
-      </g>
-      {!reducedMotion && (
-        <>
-          <circle className="hp-signature-field__packet" r="5">
-            <animateMotion dur="8s" repeatCount="indefinite" rotate="auto"><mpath href={`#${mainPath}`} /></animateMotion>
-          </circle>
-          <circle className="hp-signature-field__packet hp-signature-field__packet--two" r="3">
-            <animateMotion dur="11s" begin="-4s" repeatCount="indefinite" rotate="auto"><mpath href={`#${secondPath}`} /></animateMotion>
-          </circle>
-        </>
-      )}
-    </svg>
-  );
-}
-
-function LightMotionField({ variant = "one" }) {
-  const fieldRef = useRef(null);
-
-  useEffect(() => {
-    const node = fieldRef.current;
-    if (!node || !("IntersectionObserver" in window)) {
-      node?.classList.add("is-active");
-      return undefined;
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      node.classList.toggle("is-active", entry.isIntersecting);
-    }, { rootMargin: "160px 0px" });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={fieldRef} className={`hp-light-field hp-light-field--${variant}`} aria-hidden="true">
-      <i></i><i></i><i></i>
-      <span></span><span></span>
-    </div>
-  );
-}
-
-function WorldBridgeSequence({ onSceneChange, requestedStep }) {
-  const markerRef = useRef(null);
-  const onSceneChangeRef = useRef(onSceneChange);
-  const requestedStepRef = useRef(requestedStep);
-  const reducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    onSceneChangeRef.current = onSceneChange;
-  }, [onSceneChange]);
-
-  useEffect(() => {
-    requestedStepRef.current = requestedStep;
-  }, [requestedStep]);
-
-  useEffect(() => {
-    const marker = markerRef.current;
-    const section = marker?.closest(".hp-world-bridge");
-    if (!marker || !section) return undefined;
-
-    let frame = 0;
-    let visible = false;
-    let sequenceStartTime = null;
-    let scrollAssist = 0;
-    let furthestProgress = reducedMotion ? 1 : 0;
-    let lastCssProgress = -1;
-    let lastSceneKey = "";
-
-    const smoothstep = (start, end, value) => {
-      const amount = Math.max(0, Math.min(1, (value - start) / (end - start)));
-      return amount * amount * (3 - 2 * amount);
-    };
-
-    const render = (time) => {
-      const sectionRect = section.getBoundingClientRect();
-      const scrollSpan = Math.max(1, section.offsetHeight - window.innerHeight);
-      const scrollProgress = reducedMotion ? 1 : Math.max(0, Math.min(1, -sectionRect.top / scrollSpan));
-
-      if (!reducedMotion) {
-        const readyToStart = sectionRect.bottom > 0 && sectionRect.top < window.innerHeight * .34;
-        if (visible && readyToStart && !document.hidden && sequenceStartTime === null) sequenceStartTime = time;
-        const duration = window.innerWidth < 760 ? 5800 : 6900;
-        const autoProgress = sequenceStartTime === null ? 0 : Math.min(1, Math.max(0, (time - sequenceStartTime) / duration));
-        if (scrollProgress > scrollAssist) scrollAssist += (scrollProgress - scrollAssist) * .08;
-        furthestProgress = Math.max(furthestProgress, autoProgress, scrollAssist);
-      }
-
-      const manualProgress = requestedStepRef.current === null
-        ? null
-        : [0.29, 0.6, 1][requestedStepRef.current];
-      const sceneProgress = reducedMotion ? 1 : manualProgress ?? furthestProgress;
-      const stageReveal = [
-        smoothstep(.01, .3, sceneProgress),
-        smoothstep(.27, .64, sceneProgress),
-        smoothstep(.58, .94, sceneProgress)
-      ];
-      const hasStarted = reducedMotion || sequenceStartTime !== null || scrollAssist > .001;
-      const sceneStep = hasStarted ? (sceneProgress < .3 ? 0 : sceneProgress < .62 ? 1 : 2) : -1;
-      const completedStages = stageReveal.filter((value) => value >= .995).length;
-      const sceneComplete = sceneProgress >= .985;
-      const sceneKey = `${sceneStep}:${completedStages}:${sceneComplete}`;
-
-      if (Math.abs(sceneProgress - lastCssProgress) > .003 || (sceneProgress === 1 && lastCssProgress !== 1)) {
-        lastCssProgress = sceneProgress;
-        section.style.setProperty("--bridge-progress", sceneProgress.toFixed(3));
-        section.style.setProperty("--bridge-intake", stageReveal[0].toFixed(3));
-        section.style.setProperty("--bridge-dossier", stageReveal[1].toFixed(3));
-        section.style.setProperty("--bridge-action", stageReveal[2].toFixed(3));
-      }
-
-      if (sceneKey !== lastSceneKey) {
-        lastSceneKey = sceneKey;
-        section.dataset.bridgeAct = String(sceneStep);
-        section.dataset.bridgeComplete = String(sceneComplete);
-        onSceneChangeRef.current?.({ step: sceneStep, completed: completedStages, complete: sceneComplete });
-      }
-    };
-
-    const loop = (time) => {
-      frame = 0;
-      if (!visible || document.hidden || reducedMotion) return;
-      render(time);
-      frame = window.requestAnimationFrame(loop);
-    };
-    const start = () => {
-      if (!frame && visible && !document.hidden && !reducedMotion) frame = window.requestAnimationFrame(loop);
-    };
-    const stop = () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      frame = 0;
-    };
-    const onVisibility = () => {
-      const rect = section.getBoundingClientRect();
-      visible = !document.hidden && rect.bottom > -80 && rect.top < window.innerHeight + 80;
-      section.dataset.bridgeVisible = String(visible);
-      if (visible) start(); else stop();
-    };
-
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      section.dataset.bridgeVisible = String(visible);
-      if (visible) start(); else stop();
-    }, { rootMargin: "80px" });
-
-    observer.observe(section);
-    document.addEventListener("visibilitychange", onVisibility);
-    const initialRect = section.getBoundingClientRect();
-    visible = initialRect.bottom > -80 && initialRect.top < window.innerHeight + 80;
-    section.dataset.bridgeVisible = String(visible);
-    render(performance.now());
-    if (!reducedMotion) start();
-
-    return () => {
-      stop();
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, [reducedMotion]);
-
-  return <span ref={markerRef} className="hp-world-bridge__sequence" aria-hidden="true"></span>;
-}
-
-function WorldBridgeSection() {
-  const [scene, setScene] = useState({ step: -1, completed: 0, complete: false });
-  const [previewRoute, setPreviewRoute] = useState(null);
-  const [pinnedRoute, setPinnedRoute] = useState(null);
-  const activeRoute = previewRoute ?? pinnedRoute ?? Math.max(scene.step, 0);
-
-  return (
-    <section
-      className="hp-world-bridge hp-section"
-      id="puente"
-      data-bridge-act={scene.step}
-      data-bridge-complete={scene.complete}
-      data-bridge-focus={activeRoute}
-    >
-      <div className="hp-world-bridge__sticky">
-        <WorldBridgeSequence onSceneChange={setScene} requestedStep={pinnedRoute} />
-        <div className="hp-world-bridge__wash" aria-hidden="true"><i></i><i></i><i></i></div>
-
-        <div className="hp-world-bridge__intro hp-container">
-          <div className="hp-section-code" data-reveal>02 — Caso de coordinación</div>
-          <div>
-            <h2 data-reveal>Una decisión de dirección. <em>Una ejecución compartida.</em></h2>
-            <p data-reveal>Cuando una iniciativa afecta a estrategia, contratos, operación y sistemas, MEDLA convierte criterios separados en un mandato común y una implantación con responsables.</p>
-          </div>
-        </div>
-
-        <div className="hp-world-bridge__flow hp-container" aria-label="Ejemplo ilustrativo de cómo MEDLA convierte una expansión empresarial en un mandato ejecutable">
-          <header className="hp-world-bridge__flow-head">
-            <span>Ejemplo ilustrativo</span>
-            <strong>Expansión a un nuevo mercado</strong>
-          </header>
-
-          <div className="hp-world-bridge__scene">
-            <article className="hp-world-bridge__source" id="bridge-phase-intake">
-              <header>
-                <span>01 / Información de partida</span>
-                <h3>El proyecto llega fragmentado</h3>
-              </header>
-              <ul>
-                <li>
-                  <span>Dirección / estrategia</span>
-                  <strong>¿Qué modelo de entrada?</strong>
-                  <small>Tres escenarios sin criterio común</small>
-                </li>
-                <li>
-                  <span>Legal / acuerdos</span>
-                  <strong>Acuerdo_operador_v5.pdf</strong>
-                  <small>Riesgos y obligaciones pendientes</small>
-                </li>
-                <li>
-                  <span>Operación / sistemas</span>
-                  <strong>Modelo operativo incompleto</strong>
-                  <small>Responsables y datos por definir</small>
-                </li>
-              </ul>
-            </article>
-
-            <div className="hp-world-bridge__transfer hp-world-bridge__transfer--one" aria-hidden="true">
-              <span>Reunir y contrastar</span><i></i><b></b>
-            </div>
-
-            <article className="hp-world-bridge__dossier" id="bridge-phase-dossier">
-              <header>
-                <span>MEDLA / Expediente único</span>
-                <strong>Expansión / mercado objetivo</strong>
-              </header>
-              <dl>
-                <div>
-                  <dt>Versión válida</dt>
-                  <dd>Escenario B / socio local</dd>
-                </div>
-                <div>
-                  <dt>Condición para continuar</dt>
-                  <dd>Control contractual e integración operativa</dd>
-                </div>
-                <div>
-                  <dt>Decisión identificada</dt>
-                  <dd>Aprobar modelo de entrada</dd>
-                </div>
-              </dl>
-              <p>Hechos reunidos <i></i> criterio aplicado <i></i> decisión visible</p>
-            </article>
-
-            <div className="hp-world-bridge__transfer hp-world-bridge__transfer--two" aria-hidden="true">
-              <span>Asignar y ejecutar</span><i></i><b></b>
-            </div>
-
-            <article className="hp-world-bridge__result" id="bridge-phase-action">
-              <header>
-                <span>03 / Resultado</span>
-                <h3>La ejecución ya tiene dirección</h3>
-              </header>
-              <dl>
-                <div>
-                  <dt>Responsable</dt>
-                  <dd>Dirección General</dd>
-                </div>
-                <div>
-                  <dt>Plazo</dt>
-                  <dd>Próximo comité</dd>
-                </div>
-                <div>
-                  <dt>Próxima acción</dt>
-                  <dd>Aprobar mandato e iniciar implantación</dd>
-                </div>
-              </dl>
-              <p><i></i> Listo para ejecutar</p>
-            </article>
-          </div>
-        </div>
-
-        <div className="hp-world-bridge__controls" role="group" aria-label="Fases del ejemplo de coordinación">
-          {worldBridgeRoutes.map((item, index) => (
-            <button
-              type="button"
-              aria-controls={`bridge-phase-${item.id}`}
-              aria-pressed={pinnedRoute === index}
-              className={`${activeRoute === index ? "is-active" : ""} ${index < scene.completed ? "is-complete" : ""}`.trim()}
-              key={item.id}
-              style={{ "--bridge-route-color": item.color }}
-              onClick={() => setPinnedRoute((current) => current === index ? null : index)}
-              onMouseEnter={() => setPreviewRoute(index)}
-              onMouseLeave={() => setPreviewRoute(null)}
-              onFocus={() => setPreviewRoute(index)}
-              onBlur={() => setPreviewRoute(null)}
-            >
-              <span>{item.number}</span>{item.short}<i></i>
-            </button>
-          ))}
-          <span className="hp-world-bridge__status" aria-live="polite">
-            {scene.complete ? "Caso resuelto" : `Fase ${Math.max(scene.step + 1, 1)} de 3`}
-          </span>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function MenuIcon({ close = false }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      {close ? <path d="M5 5l14 14M19 5 5 19" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-    </svg>
-  );
 }
 
 function RevealController() {
   useEffect(() => {
-    if (!("IntersectionObserver" in window)) return;
-    document.documentElement.classList.add("hp-reveal-ready");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.14, rootMargin: "0px 0px -6%" }
-    );
-    const nodes = document.querySelectorAll("[data-reveal]");
+    const nodes = [...document.querySelectorAll("[data-reveal]")];
+    if (!("IntersectionObserver" in window)) {
+      nodes.forEach((node) => node.classList.add("is-visible"));
+      return undefined;
+    }
+    document.documentElement.classList.add("ex-reveal-ready");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -5%" });
     nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   }, []);
   return null;
 }
 
-function ScrollProgress() {
-  useEffect(() => {
-    const update = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const value = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-      document.documentElement.style.setProperty("--hp-scroll", value);
-    };
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, []);
-
-  return <div className="hp-scroll-progress" aria-hidden="true"><i></i></div>;
-}
-
-function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const toggleRef = useRef(null);
-  const panelRef = useRef(null);
-  const wasOpenRef = useRef(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const main = document.querySelector("main");
-    const footer = document.querySelector("footer");
-    const setBackgroundInert = (value) => {
-      [main, footer].forEach((node) => {
-        if (!node) return;
-        if (value) node.setAttribute("inert", "");
-        else node.removeAttribute("inert");
-      });
-    };
-
-    if (!open) {
-      document.body.style.overflow = "";
-      setBackgroundInert(false);
-      if (wasOpenRef.current) toggleRef.current?.focus();
-      wasOpenRef.current = false;
-      return undefined;
-    }
-
-    wasOpenRef.current = true;
-    document.body.style.overflow = "hidden";
-    setBackgroundInert(true);
-    const panel = panelRef.current;
-    const focusables = panel ? [...panel.querySelectorAll('a[href], button:not([disabled])')] : [];
-    const focusFrame = window.requestAnimationFrame(() => focusables[0]?.focus());
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setOpen(false);
-        return;
-      }
-      if (event.key !== "Tab" || focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.cancelAnimationFrame(focusFrame);
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
-      setBackgroundInert(false);
-    };
-  }, [open]);
-
-  const closeMenu = () => setOpen(false);
-
-  return (
-    <>
-      <nav className={`hp-nav ${scrolled ? "is-scrolled" : ""}`} aria-label="Navegación principal">
-        <div className="hp-container hp-nav__inner">
-          <a className="hp-brand" href="index.html" aria-label="MEDLA Empresas, inicio">
-            <img src="logo.png" alt="" />
-            <span className="hp-brand__descriptor">Consultoría<br />empresarial</span>
-          </a>
-
-          <div className="hp-nav__links">
-            <a href="#sistema">Cómo intervenimos</a>
-            <a href="#capacidades">Qué hacemos</a>
-            <a href="#modelo">Cómo trabajamos</a>
-            <a href="nosotros.html">Nosotros</a>
-          </div>
-
-          <div className="hp-nav__actions">
-            <span className="hp-nav__location"><i></i> Madrid · España</span>
-            <a className="hp-nav__cta" href="contacto.html">Cuéntanos el problema <Arrow /></a>
-            <button
-              ref={toggleRef}
-              className="hp-nav__toggle"
-              type="button"
-              aria-label={open ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={open}
-              aria-controls="hp-mobile-menu"
-              onClick={() => setOpen(!open)}
-            >
-              <MenuIcon close={open} />
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      <div id="hp-mobile-menu" className={`hp-mobile-menu ${open ? "is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menú de navegación" aria-hidden={!open}>
-        <button className="hp-mobile-menu__backdrop" aria-label="Cerrar menú" onClick={closeMenu}></button>
-        <div ref={panelRef} className="hp-mobile-menu__panel">
-          <button className="hp-mobile-menu__close" type="button" aria-label="Cerrar menú" onClick={closeMenu}><MenuIcon close /></button>
-          <div className="hp-mobile-menu__meta">MEDLA / Navegación</div>
-          <div className="hp-mobile-menu__links">
-            <a href="#sistema" onClick={closeMenu}><span>01</span> Cómo intervenimos</a>
-            <a href="#capacidades" onClick={closeMenu}><span>02</span> Qué hacemos</a>
-            <a href="#modelo" onClick={closeMenu}><span>03</span> Cómo trabajamos</a>
-            <a href="nosotros.html" onClick={closeMenu}><span>04</span> Nosotros</a>
-          </div>
-          <a className="hp-button hp-button--gold" href="contacto.html">Cuéntanos el problema <Arrow /></a>
-          <div className="hp-mobile-menu__foot">Legal · Operaciones · Software · Ventas</div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function demoReducer(state, action) {
-  switch (action.type) {
-    case "SELECT": return { scenario: action.index, step: 0, running: true };
-    case "ADVANCE": return state.step >= action.total - 1
-      ? { ...state, running: false }
-      : { ...state, step: state.step + 1 };
-    case "TOGGLE": return { ...state, running: !state.running };
-    case "FINISH": return { ...state, step: action.step, running: false };
-    case "RESET": return { ...state, step: 0, running: true };
-    default: return state;
-  }
-}
-
-function MedlaOpsLab() {
-  const [state, dispatch] = useReducer(demoReducer, { scenario: 2, step: 0, running: true });
-  const [isVisible, setIsVisible] = useState(true);
-  const labRef = useRef(null);
+function MandateConsole() {
+  const [active, setActive] = useState(0);
   const reducedMotion = useReducedMotion();
-  const demo = demoScenarios[state.scenario];
+  const [running, setRunning] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const stage = MANDATE_STAGES[active];
 
   useEffect(() => {
-    const node = labRef.current;
-    if (!node || !("IntersectionObserver" in window)) return undefined;
-    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting && !document.hidden), { rootMargin: "120px" });
-    const onVisibility = () => setIsVisible(!document.hidden && node.getBoundingClientRect().bottom > -120 && node.getBoundingClientRect().top < window.innerHeight + 120);
-    observer.observe(node);
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => {
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, []);
+    if (reducedMotion || !running) return undefined;
+    const timer = window.setTimeout(() => {
+      if (active >= MANDATE_STAGES.length - 1) setRunning(false);
+      else setActive((value) => value + 1);
+    }, 1550);
+    return () => window.clearTimeout(timer);
+  }, [active, running, reducedMotion]);
 
-  useEffect(() => {
-    if (reducedMotion) {
-      dispatch({ type: "FINISH", step: demo.stages.length - 1 });
-      return undefined;
-    }
-    if (!state.running || !isVisible) return undefined;
-    const timer = window.setInterval(() => dispatch({ type: "ADVANCE", total: demo.stages.length }), 1900);
-    return () => window.clearInterval(timer);
-  }, [state.running, state.scenario, isVisible, reducedMotion, demo.stages.length]);
-
-  const paused = !state.running || !isVisible || reducedMotion;
-  const completed = state.step === demo.stages.length - 1 && !state.running;
+  const select = (index) => { setActive(index); setRunning(false); };
+  const replay = () => { setActive(0); setRunning(!reducedMotion); };
 
   return (
-    <div ref={labRef} className={`hp-ops-lab${paused ? " is-paused" : ""}`} aria-label="Demostración interactiva de cómo MEDLA convierte información transversal en un mandato ejecutable">
-      <div className="hp-ops-lab__topbar">
-        <div><span>M/</span> DIRECCIÓN DE PROYECTO</div>
-        <button type="button" onClick={() => dispatch({ type: completed ? "RESET" : "TOGGLE" })} aria-label={completed ? "Repetir demostración" : state.running ? "Pausar demostración" : "Reanudar demostración"}>
-          <i className={state.running ? "is-live" : ""}></i>{state.running ? "EN CURSO" : completed ? "REPETIR" : "PAUSA"}
-        </button>
+    <section className="ex-console" aria-label="Demostración del recorrido de un proyecto MEDLA">
+      <header className="ex-console__head">
+        <div><b>M/</b><span>CONTROL DE PROYECTO</span></div>
+        <button type="button" onClick={running ? () => setRunning(false) : replay}><i className={running ? "is-live" : ""} />{running ? "EN CURSO" : "REPETIR"}</button>
+      </header>
+      <div className="ex-console__brief">
+        <span>ESCENARIO ILUSTRATIVO / 01</span>
+        <h2>Implantar un nuevo proceso de alta de proveedores.</h2>
+        <p>Legal, operaciones y sistemas trabajan sobre una misma decisión.</p>
       </div>
-
-      <div id="ops-panel" className="hp-ops-lab__context" aria-label="Ejemplo ilustrativo con datos ficticios">
-        <div><span>{demo.code}</span><span>Escenario ilustrativo</span></div>
-        <h2>{demo.title}</h2>
-        <p>{demo.summary}</p>
-      </div>
-
-      <div className="hp-ops-lab__diagram">
-        <div className="hp-ops-lab__column hp-ops-lab__sources">
-          <span className="hp-ops-lab__label">SEÑALES</span>
-          {demo.sources.map((source, index) => (
-            <div className={`hp-ops-source ${state.step >= index ? "is-online" : ""}`} key={source.name}>
-              <i></i><div><b>{source.name}</b><small>{source.value}</small></div>
-            </div>
-          ))}
+      <div className="ex-console__body">
+        <div className="ex-console__inputs" aria-label="Información de entrada">
+          <span>ENTRADAS</span>
+          {["Riesgo contractual", "Proceso actual", "Datos y permisos"].map((item, index) => <div className={active >= index ? "is-ready" : ""} key={item}><i /><b>{item}</b></div>)}
         </div>
-
-        <div className="hp-ops-lab__bus" aria-hidden="true">
-          <i></i><i></i><i></i><i></i>
-        </div>
-
-        <div className="hp-ops-lab__column hp-ops-lab__pipeline">
-          <span className="hp-ops-lab__label">DIRECCIÓN MEDLA</span>
-          {demo.stages.map((stage, index) => (
-            <div className={`hp-ops-stage ${state.step === index ? "is-active" : ""} ${state.step > index ? "is-complete" : ""}`} key={stage.code}>
-              <span>0{index + 1}</span>
-              <div><b>{stage.name}</b><small>{stage.detail}</small></div>
-            </div>
-          ))}
-        </div>
-
-        <div className="hp-ops-lab__column hp-ops-lab__result">
-          <span className="hp-ops-lab__label">RESULTADO</span>
-          <div className={state.step === demo.stages.length - 1 ? "is-ready" : ""}>
-            <span>{state.step === demo.stages.length - 1 ? "LISTO" : "EN PROCESO"}</span>
-            <strong>{demo.output.title}</strong>
-            <small>{demo.output.detail}</small>
+        <div className="ex-console__flow">
+          <div className="ex-console__rail" aria-hidden="true"><i style={{ "--progress": `${active / (MANDATE_STAGES.length - 1)}` }} /></div>
+          <div className="ex-console__steps" role="tablist" aria-label="Fases del proyecto">
+            {MANDATE_STAGES.map((item, index) => (
+              <button key={item.code} type="button" role="tab" id={`mandate-tab-${item.code}`} aria-selected={active === index} aria-controls="mandate-stage" tabIndex={active === index ? 0 : -1} className={`${active === index ? "is-active" : ""}${active > index ? " is-done" : ""}`} onClick={() => select(index)} onKeyDown={(event) => {
+                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                event.preventDefault();
+                const next = event.key === "Home" ? 0 : event.key === "End" ? MANDATE_STAGES.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + MANDATE_STAGES.length) % MANDATE_STAGES.length;
+                select(next);
+                event.currentTarget.parentElement.querySelectorAll("button")[next]?.focus();
+              }}><span>{item.code}</span><b>{item.label}</b></button>
+            ))}
           </div>
         </div>
+        <article id="mandate-stage" className="ex-console__result" role="tabpanel" aria-labelledby={`mandate-tab-${stage.code}`} key={stage.code}>
+          <span>SALIDA / {stage.code}</span><h3>{stage.title}</h3><p>{stage.detail}</p><div><i />{stage.output}</div>
+        </article>
       </div>
-
-    </div>
+      <footer><span>Demostración conceptual · no utiliza datos de clientes</span><span>Encaje → mandato → implantación → transferencia</span></footer>
+    </section>
   );
 }
 
 function Hero() {
   return (
-    <header className="hp-hero">
-      <SignatureField id="hero" />
-      <div className="hp-hero__ambient" aria-hidden="true"></div>
-      <div className="hp-container hp-hero__inner">
-        <div className="hp-hero__copy">
-          <div className="hp-kicker hp-hero__entrance hp-hero__entrance--one">
-            <span>Dirección e implantación · Madrid</span>
-            <small>Proyectos críticos / Mandatos transversales</small>
+    <header className="ex-hero">
+      <div className="ex-hero__contours" aria-hidden="true"><i /><i /><i /></div>
+      <div className="ex-shell ex-hero__layout">
+        <div className="ex-hero__copy">
+          <div className="ex-eyebrow"><span>Dirección de proyectos transversales</span><small>Madrid · España</small></div>
+          <h1>Una sola dirección para decisiones que cruzan <em>negocio, legal y tecnología.</em></h1>
+          <p>MEDLA aclara la decisión, coordina a los especialistas e implanta la solución. El proyecto termina con responsables, documentación y control dentro de tu empresa.</p>
+          <div className="ex-actions">
+            <a className="ex-button ex-button--gold" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a>
+            <a className="ex-text-link" href="#como-funciona">Ver cómo funciona <Arrow /></a>
           </div>
-          <h1 className="hp-hero__entrance hp-hero__entrance--two">
-            Los proyectos que cruzan varias áreas <em>necesitan una sola dirección.</em>
-          </h1>
-          <p className="hp-hero__lead hp-hero__entrance hp-hero__entrance--three">
-            MEDLA dirige proyectos donde contratos, operaciones, datos y tecnología dependen entre sí. Definimos la decisión, coordinamos a los especialistas e implantamos una solución que tu equipo puede operar y mantener.
-          </p>
-          <div className="hp-hero__actions hp-hero__entrance hp-hero__entrance--four">
-            <a className="hp-button hp-button--gold" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a>
-            <a className="hp-hero__case-link" href="#puente">Ver un proyecto de principio a fin <Arrow diagonal /></a>
-          </div>
-          <p className="hp-hero__trust hp-hero__entrance hp-hero__entrance--four">Dirección identificada <i></i> Alcance definido <i></i> Transferencia documentada</p>
+          <div className="ex-hero__assurance" aria-label="Compromisos principales"><span>Un responsable</span><i /><span>Un alcance aprobado</span><i /><span>Control transferido</span></div>
         </div>
-
-        <div className="hp-hero__visual hp-hero__entrance hp-hero__entrance--visual">
-          <MedlaOpsLab />
-        </div>
+        <div className="ex-hero__visual"><MandateConsole /></div>
       </div>
+      <a className="ex-scroll-cue" href="#encaje"><span>Explorar</span><i /></a>
     </header>
   );
 }
 
-function SignalRail() {
+function Situations() {
   return (
-    <div className="hp-system-rail" aria-label="Principios de diseño MEDLA">
-      <div className="hp-container hp-system-rail__inner">
-        <div><code>01</code><span>Revisión humana</span></div>
-        <div><code>02</code><span>Registro de decisiones clave</span></div>
-        <div><code>03</code><span>Permisos según responsabilidad</span></div>
-        <div><code>04</code><span>Documentación acordada</span></div>
-      </div>
-    </div>
-  );
-}
-
-function DecisionTrajectory({ caseId }) {
-  const reducedMotion = useReducedMotion();
-  const pathId = `decision-route-${caseId}`;
-
-  return (
-    <svg className="hp-decision-room__trajectory" viewBox="0 0 1000 390" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id={`decision-gradient-${caseId}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#79d2c5" stopOpacity=".12" />
-          <stop offset=".52" stopColor="#79d2c5" stopOpacity=".84" />
-          <stop offset="1" stopColor="#d5b76c" stopOpacity=".38" />
-        </linearGradient>
-        <filter id={`decision-glow-${caseId}`} x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      </defs>
-      <path className="hp-decision-room__trajectory-ghost" d="M105 258C245 258 240 94 355 94S512 276 615 246 748 102 884 118" />
-      <path id={pathId} className="hp-decision-room__trajectory-line" pathLength="1" d="M105 258C245 258 240 94 355 94S512 276 615 246 748 102 884 118" stroke={`url(#decision-gradient-${caseId})`} />
-      {[{ x: 105, y: 258 }, { x: 355, y: 94 }, { x: 615, y: 246 }, { x: 884, y: 118 }].map((point, index) => (
-        <g className="hp-decision-room__trajectory-node" key={point.x} transform={`translate(${point.x} ${point.y})`}>
-          <circle r="14" /><circle r="3" /><text x="0" y="34">0{index + 1}</text>
-        </g>
-      ))}
-      {!reducedMotion && (
-        <circle className="hp-decision-room__trajectory-packet" r="6" filter={`url(#decision-glow-${caseId})`}>
-          <animateMotion dur="4.8s" repeatCount="indefinite"><mpath href={`#${pathId}`} /></animateMotion>
-        </circle>
-      )}
-    </svg>
-  );
-}
-
-function ThesisSection() {
-  const [active, setActive] = useState(0);
-  const item = decisionCases[active];
-  const choose = (index) => setActive(index);
-  const handleKey = (event, index) => {
-    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-    event.preventDefault();
-    const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1;
-    const next = (index + direction + decisionCases.length) % decisionCases.length;
-    choose(next);
-    event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next]?.focus();
-  };
-
-  return (
-    <section className="hp-decision-room hp-section" id="sistema-detalle">
-      <LightMotionField variant="one" />
-      <div className="hp-container">
-        <div className="hp-section-code" data-reveal>02 — Así intervenimos</div>
-        <div className="hp-decision-room__heading">
-          <h2 data-reveal>Cuatro problemas frecuentes.<br /><em>Un plan concreto para cada uno.</em></h2>
-          <div data-reveal>
-            <p>Cada ejemplo detalla responsables, trabajo incluido y entregables.</p>
-            <small>Escenarios ilustrativos · No utilizan datos de clientes</small>
-          </div>
+    <section className="ex-situations" id="encaje" aria-labelledby="situations-title">
+      <div className="ex-shell">
+        <div className="ex-section-head" data-reveal>
+          <span>01 / CUÁNDO INTERVENIMOS</span>
+          <h2 id="situations-title">MEDLA interviene cuando <em>una sola disciplina ya no basta.</em></h2>
+          <p>Asumimos la dirección cuando el resultado depende de varias capacidades y de una implantación coordinada.</p>
         </div>
-      </div>
-
-      <div className="hp-stage-bleed">
-        <div className="hp-decision-room__shell" data-reveal>
-          <div className="hp-decision-room__nav" role="tablist" aria-label="Bloqueos empresariales">
-            <div className="hp-decision-room__nav-head"><span>PROBLEMA</span><span>4 ejemplos</span></div>
-            {decisionCases.map((decision, index) => (
-              <button
-                type="button"
-                role="tab"
-                id={`decision-tab-${decision.id}`}
-                aria-controls="decision-panel"
-                aria-selected={active === index}
-                tabIndex={active === index ? 0 : -1}
-                className={active === index ? "is-active" : ""}
-                key={decision.id}
-                onClick={() => choose(index)}
-                onKeyDown={(event) => handleKey(event, index)}
-              >
-                <span>0{index + 1}</span>
-                <div><strong>{decision.label}</strong><small>{decision.signal}</small></div>
-                <i></i>
-              </button>
-            ))}
-          </div>
-
-          <div id="decision-panel" className="hp-decision-room__workspace" role="tabpanel" aria-labelledby={`decision-tab-${item.id}`} aria-live="polite">
-            <div className="hp-decision-room__case-head">
-              <div><span>{item.code}</span><b>PLAN DE TRABAJO</b></div>
-              <h3>{item.thesis}</h3>
-            </div>
-            <div className="hp-decision-room__map" key={item.id}>
-              <DecisionTrajectory caseId={item.id} />
-              {item.steps.map((step, index) => (
-                <article key={step.n} style={{ "--step": index }}>
-                  <div className="hp-decision-room__step-head"><span>{step.n}</span><code>{step.owner}</code></div>
-                  <strong>{step.name}</strong>
-                  <p>{step.text}</p>
-                  {index < item.steps.length - 1 && <i aria-hidden="true"></i>}
-                </article>
-              ))}
-            </div>
-            <div className="hp-decision-room__bottom">
-              <div>
-                <span>TRABAJO INCLUIDO</span>
-                <p>{item.stack.map((entry) => <b key={entry}>{entry}</b>)}</p>
-              </div>
-              <div>
-                <span>ENTREGABLES</span>
-                <p>{item.outputs.map((entry, index) => <b key={entry}><i>{index + 1}</i>{entry}</b>)}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CapabilityGraphic({ item }) {
-  const routeId = `capability-route-${item.n}`;
-  return (
-    <svg className="hp-capability-graphic" viewBox="0 0 680 420" aria-hidden="true">
-      <defs>
-        <linearGradient id={`capability-gradient-${item.n}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#79d2c5" stopOpacity=".78" />
-          <stop offset="1" stopColor="#8bc7ee" stopOpacity=".22" />
-        </linearGradient>
-      </defs>
-      <path id={routeId} className="hp-capability-graphic__route" d="M220 210C320 210 330 92 470 92" stroke={`url(#capability-gradient-${item.n})`} />
-      <path className="hp-capability-graphic__route hp-capability-graphic__route--two" d="M220 210C340 210 360 210 510 210" stroke={`url(#capability-gradient-${item.n})`} />
-      <path className="hp-capability-graphic__route hp-capability-graphic__route--three" d="M220 210C320 210 330 328 470 328" stroke={`url(#capability-gradient-${item.n})`} />
-      <g className="hp-capability-graphic__hub">
-        <rect x="54" y="137" width="166" height="146" rx="20" />
-        <text x="82" y="177">PUNTO DE PARTIDA</text>
-        <text x="82" y="218">{item.signal}</text>
-        <text x="82" y="251">ENTREGABLES</text>
-      </g>
-      {item.deliverables.map((deliverable, index) => {
-        const positions = [{ x: 470, y: 62 }, { x: 510, y: 180 }, { x: 470, y: 298 }];
-        const point = positions[index];
-        return (
-          <g className="hp-capability-graphic__output" key={deliverable} transform={`translate(${point.x} ${point.y})`}>
-            <rect width="162" height="60" rx="30" />
-            <circle cx="25" cy="30" r="4" />
-            <text x="42" y="34">{deliverable}</text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
-function CapabilitiesSection() {
-  const [activeCapability, setActiveCapability] = useState(0);
-  const item = capabilities[activeCapability];
-  const handleCapabilityKey = (event, index) => {
-    if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
-    event.preventDefault();
-    const direction = ["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1;
-    const next = (index + direction + capabilities.length) % capabilities.length;
-    setActiveCapability(next);
-    event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next]?.focus();
-  };
-
-  return (
-    <section className="hp-capabilities hp-section" id="capacidades">
-      <span id="sistema" className="hp-anchor-target" aria-hidden="true"></span>
-      <div className="hp-container">
-        <div className="hp-section-intro">
-          <div>
-            <div className="hp-section-code" data-reveal>01 — Señales de encaje</div>
-            <h2 data-reveal>Entramos cuando el proyecto <em>no cabe en un solo departamento.</em></h2>
-          </div>
-          <p data-reveal>No vendemos horas aisladas. Asumimos mandatos que necesitan criterio, coordinación e implantación.</p>
-        </div>
-      </div>
-
-      <div className="hp-stage-bleed">
-        <div className="hp-capability-explorer" data-reveal>
-          <div className="hp-capability-explorer__nav" role="tablist" aria-label="Situaciones en las que MEDLA aporta más valor">
-            {capabilities.map((capability, index) => (
-              <button
-                type="button"
-                role="tab"
-                id={`capability-tab-${capability.n}`}
-                aria-controls="capability-panel"
-                aria-selected={activeCapability === index}
-                tabIndex={activeCapability === index ? 0 : -1}
-                className={activeCapability === index ? "is-active" : ""}
-                key={capability.n}
-                onClick={() => setActiveCapability(index)}
-                onMouseEnter={() => setActiveCapability(index)}
-                onKeyDown={(event) => handleCapabilityKey(event, index)}
-              >
-                <span>{capability.n}</span><strong>{capability.eyebrow}</strong><i></i>
-              </button>
-            ))}
-          </div>
-          <div id="capability-panel" className="hp-capability-explorer__stage" role="tabpanel" aria-labelledby={`capability-tab-${item.n}`} aria-live="polite">
-            <div className="hp-capability-explorer__copy">
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-              <a className="hp-text-link hp-text-link--light" href={item.href}>Ver cómo abordamos este mandato <Arrow /></a>
-            </div>
-            <CapabilityGraphic item={item} key={item.n} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function OperatingModelSection() {
-  return (
-    <section className="hp-model hp-section" id="modelo">
-      <div className="hp-model__ambient" aria-hidden="true"></div>
-      <div className="hp-container hp-model__layout hp-layout-bleed">
-        <div className="hp-model__intro">
-          <div className="hp-section-code hp-section-code--light" data-reveal>03 — El mandato</div>
-          <h2 data-reveal>Un socio responsable de convertir la decisión <em>en avance real.</em></h2>
-        </div>
-
-        <div className="hp-model__steps">
-          {operatingModel.map((step, index) => (
-            <article className="hp-model-step" key={step.n} data-reveal style={{ "--delay": `${index * 90}ms` }}>
-              <div className="hp-model-step__number">{step.n}</div>
-              <div className="hp-model-step__content">
-                <span>{step.label}</span>
-                <h3>{step.title}</h3>
-                <p>{step.desc}</p>
-                <div className="hp-model-step__output"><i></i> Resultado: {step.output}</div>
-              </div>
+        <div className="ex-situation-list">
+          {PROJECT_SITUATIONS.map((item) => (
+            <article key={item.number} data-reveal>
+              <div className="ex-situation-list__number"><span>{item.number}</span><small>{item.type}</small></div>
+              <div className="ex-situation-list__copy"><h3>{item.title}</h3><p>{item.text}</p></div>
+              <ul>{item.outputs.map((output) => <li key={output}><i />{output}</li>)}</ul>
+              <a href={item.href} aria-label={`Ver una capacidad relacionada con ${item.type}`}>Ver capacidad <Arrow diagonal /></a>
             </article>
           ))}
         </div>
-      </div>
-      <div className="hp-container hp-model__assurances" data-reveal aria-label="Garantías aplicadas durante todo el proyecto">
-        <span>Interlocución directa</span>
-        <span>Responsable de proyecto</span>
-        <span>Decisiones registradas</span>
-        <span>Transferencia al equipo</span>
+        <div className="ex-situations__foot" data-reveal><p>¿Tu situación cruza varios de estos escenarios?</p><a href="servicios.html">Orientar el proyecto por situación <Arrow /></a></div>
       </div>
     </section>
   );
 }
 
-function TransferScene() {
-  const [activeChapter, setActiveChapter] = useState(0);
-  const [entered, setEntered] = useState(false);
-  const rootRef = useRef(null);
-  const reducedMotion = useReducedMotion();
-  const sources = [
-    {
-      channel: "Correo / equipo local",
-      title: "¿Quién valida las condiciones?",
-      status: "Sin responsable asignado"
-    },
-    {
-      channel: "Documento / proveedor",
-      title: "Contrato_proveedor_v7.pdf",
-      status: "Versión pendiente de confirmar"
-    },
-    {
-      channel: "ERP / Compras",
-      title: "Alta bloqueada",
-      status: "Falta certificado fiscal"
-    }
-  ];
-  const chapter = handoverChapters[activeChapter];
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setEntered(true);
-      return undefined;
-    }
-    const node = rootRef.current;
-    if (!node || !("IntersectionObserver" in window)) {
-      setEntered(true);
-      return undefined;
-    }
-    const observer = new IntersectionObserver((entries) => {
-      if (!entries[0]?.isIntersecting) return;
-      setEntered(true);
-      observer.disconnect();
-    }, { threshold: .24 });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [reducedMotion]);
-
-  const handleChapterKey = (event, index) => {
+function DeliveryDossier() {
+  const [active, setActive] = useState(0);
+  const chapter = DOSSIER_CHAPTERS[active];
+  const refs = useRef([]);
+  const selectByKeyboard = (event, index) => {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
-    let next = index;
-    if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = handoverChapters.length - 1;
-    else next = (index + (event.key === "ArrowRight" ? 1 : -1) + handoverChapters.length) % handoverChapters.length;
-    setActiveChapter(next);
-    event.currentTarget.closest('[role="tablist"]')?.querySelectorAll('[role="tab"]')[next]?.focus();
+    const next = event.key === "Home" ? 0 : event.key === "End" ? DOSSIER_CHAPTERS.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + DOSSIER_CHAPTERS.length) % DOSSIER_CHAPTERS.length;
+    setActive(next);
+    refs.current[next]?.focus();
   };
-
   return (
-    <div ref={rootRef} className={`hp-transfer-scene hp-handover ${entered ? "is-entered" : ""}`}>
-      <header className="hp-handover__head">
-        <div className="hp-handover__case">
-          <i aria-hidden="true"></i>
-          <span>Ejemplo de entrega</span>
-          <strong>Alta de proveedor internacional</strong>
-        </div>
-        <div className="hp-handover__status"><i aria-hidden="true"></i> Entrega aceptada</div>
-      </header>
-
-      <div className="hp-handover__layout">
-        <aside className="hp-handover__sources" aria-labelledby="handover-sources-title">
-          <header>
-            <div>
-              <span>01 / Información recibida</span>
-              <h3 id="handover-sources-title">Tres fuentes. Dos bloqueos.</h3>
-            </div>
-            <small>Entrada</small>
-          </header>
+    <div className="ex-dossier" data-reveal>
+      <header className="ex-dossier__head"><div><i /><span>EJEMPLO DE ENTREGA</span><b>Alta de proveedor internacional</b></div><span>ESCENARIO ILUSTRATIVO</span></header>
+      <div className="ex-dossier__layout">
+        <aside className="ex-dossier__before">
+          <header><span>ANTES</span><h3>Información dispersa y una decisión detenida.</h3></header>
           <ol>
-            {sources.map((source, index) => (
-              <li className="hp-handover__source" key={source.channel} style={{ "--source": index }}>
-                <div><span>{source.channel}</span><b>0{index + 1}</b></div>
-                <strong>{source.title}</strong>
-                <p><i aria-hidden="true"></i>{source.status}</p>
-              </li>
-            ))}
+            <li><span>Correo</span><b>¿Quién valida las condiciones?</b><small>Sin responsable</small></li>
+            <li><span>Documento</span><b>Contrato_proveedor_v7.pdf</b><small>Versión por confirmar</small></li>
+            <li><span>ERP</span><b>Alta bloqueada</b><small>Falta certificado fiscal</small></li>
           </ol>
-          <div className="hp-handover__blocker"><i aria-hidden="true"></i> Contexto incompleto · decisión detenida</div>
+          <div><i />Contexto incompleto</div>
         </aside>
-
-        <div className="hp-handover__rail" aria-hidden="true">
-          <span>Reunir · validar · asignar</span>
-          <i></i>
-          <b>MEDLA</b>
-        </div>
-
-        <article className="hp-handover__dossier" aria-labelledby="handover-title">
-          <header className="hp-handover__folio">
-            <div>
-              <span>MEDLA / Expediente de entrega</span>
-              <strong>Folio 06 · versión 1.4</strong>
-            </div>
-            <div className="hp-handover__seal"><i aria-hidden="true"></i> Validado</div>
-          </header>
-
-          <div className="hp-handover__title">
-            <span>Resultado operativo</span>
-            <h3 id="handover-title">Alta de proveedor internacional</h3>
-            <p>Una sola versión para decidir, ejecutar y revisar.</p>
+        <div className="ex-dossier__transformation" aria-hidden="true"><span>MEDLA</span><i /><small>Reunir · decidir · implantar</small></div>
+        <article className="ex-dossier__document">
+          <header><div><span>EXPEDIENTE DE ENTREGA</span><b>Folio 06 · versión 1.4</b></div><strong><i /> VALIDADO</strong></header>
+          <div className="ex-dossier__tabs" role="tablist" aria-label="Contenido de la entrega">
+            {DOSSIER_CHAPTERS.map((item, index) => <button key={item.id} ref={(node) => { refs.current[index] = node; }} type="button" role="tab" id={`dossier-tab-${item.id}`} aria-controls="dossier-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => selectByKeyboard(event, index)}><span>{item.number}</span>{item.label}<i /></button>)}
           </div>
-
-          <div className="hp-handover__tabs" role="tablist" aria-label="Contenido del expediente">
-            {handoverChapters.map((item, index) => (
-              <button
-                type="button"
-                role="tab"
-                id={`handover-tab-${item.id}`}
-                aria-controls="handover-panel"
-                aria-selected={activeChapter === index}
-                tabIndex={activeChapter === index ? 0 : -1}
-                className={activeChapter === index ? "is-active" : ""}
-                onClick={() => setActiveChapter(index)}
-                onKeyDown={(event) => handleChapterKey(event, index)}
-                key={item.id}
-              >
-                <span>{item.number}</span>
-                <strong>{item.label}</strong>
-                <i aria-hidden="true"></i>
-              </button>
-            ))}
+          <div id="dossier-panel" className="ex-dossier__panel" role="tabpanel" aria-labelledby={`dossier-tab-${chapter.id}`} key={chapter.id}>
+            <span>{chapter.number} / {chapter.label}</span><h3>{chapter.title}</h3><p>{chapter.text}</p>
+            <dl>{chapter.facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
           </div>
-
-          <div
-            className="hp-handover__panel"
-            id="handover-panel"
-            role="tabpanel"
-            aria-labelledby={`handover-tab-${chapter.id}`}
-            aria-live="polite"
-            key={chapter.id}
-          >
-            <div className="hp-handover__panel-copy">
-              <span>{chapter.number} / {chapter.label}</span>
-              <h4>{chapter.title}</h4>
-              <p>{chapter.description}</p>
-            </div>
-            <dl className="hp-handover__facts">
-              {chapter.facts.map(([label, value]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <footer className="hp-handover__dossier-foot">
-            <span>Versión 1.4</span><i></i><span>Responsable asignado</span><i></i><span>Revisión registrada</span>
-          </footer>
+          <footer><span><i />Decisión registrada</span><span><i />Sistema probado</span><span><i />Control transferido</span></footer>
         </article>
       </div>
-
-      <footer className="hp-handover__proof">
-        <span>Criterio de cierre</span>
-        <p><b>Decisión registrada</b><i></i><b>Documentación entregada</b><i></i><b>Control transferido</b></p>
-      </footer>
     </div>
   );
 }
 
-function DifferenceSection() {
-  const standards = [
-    ["01", "Decisión ejecutiva", "Qué se decidió, con qué criterio y quién responde."],
-    ["02", "Sistema operativo", "Flujos, versiones, límites y criterios de control."],
-    ["03", "Control transferido", "Documentación y gobierno para mantener y mejorar la solución."]
-  ];
-
+function Delivery() {
   return (
-    <section className="hp-difference hp-delivery hp-section" id="resultado">
-      <div className="hp-container hp-delivery__inner">
-        <div className="hp-section-code" data-reveal>04 — Estándar de entrega</div>
-        <div className="hp-delivery__heading" data-reveal>
-          <h2>No entregamos recomendaciones. <em>Entregamos capacidad operativa.</em></h2>
-          <p>Cada mandato cierra con decisiones registradas, una solución implantada y el control en manos del equipo.</p>
+    <section className="ex-delivery" id="como-funciona" aria-labelledby="delivery-title">
+      <div className="ex-shell">
+        <div className="ex-section-head ex-section-head--dark" data-reveal>
+          <span>02 / QUÉ CAMBIA</span>
+          <h2 id="delivery-title">El encargo no termina en una recomendación. <em>Termina con una solución operativa.</em></h2>
+          <p>Esta demostración enseña cómo una decisión dispersa se convierte en un expediente que el equipo puede ejecutar, revisar y mantener.</p>
         </div>
+        <DeliveryDossier />
+      </div>
+    </section>
+  );
+}
 
-        <div className="hp-delivery__proof" data-reveal>
-          <header>
-            <span>Cierre del mandato</span>
-            <strong>Decidido · implantado · transferido</strong>
-          </header>
-          <div>
-            {standards.map(([number, title, text]) => (
-              <article key={number}>
-                <span>{number}</span>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
-            ))}
-          </div>
-          <footer>
-            <span><i></i> Control en manos del equipo</span>
-            <a href="nosotros.html">Conocer nuestro estándar de entrega <Arrow /></a>
-          </footer>
+function MandateDefinition() {
+  return (
+    <section className="ex-mandate" aria-labelledby="mandate-title">
+      <div className="ex-shell ex-mandate__layout">
+        <div className="ex-mandate__intro" data-reveal>
+          <span>03 / PRIMERA FASE</span>
+          <h2 id="mandate-title">Antes de movilizar especialistas, <em>cerramos el mandato.</em></h2>
+          <p><strong>Mandato de dirección:</strong> objetivo, alcance, autoridad, responsables y criterio de cierre acordados con el cliente.</p>
+          <a className="ex-button ex-button--ink" href="contacto.html?context=proyecto">Plantear un proyecto <Arrow /></a>
+        </div>
+        <div className="ex-mandate__protocol" data-reveal>
+          <header><span>RECORRIDO DEL PROYECTO</span><small>4 cierres verificables</small></header>
+          <ol>{MANDATE_STAGES.map((stage, index) => <li key={stage.code}>
+            <span>{stage.code}</span><div><small>{stage.label}</small><h3>{stage.title}</h3><p>{stage.detail}</p></div><strong><i />{stage.output}</strong>{index < MANDATE_STAGES.length - 1 && <b aria-hidden="true" />}
+          </li>)}</ol>
+          <footer>La propuesta confirma calendario, equipo, precio, entregables y criterios de aceptación antes de empezar.</footer>
         </div>
       </div>
     </section>
   );
 }
 
-function FinalCTA() {
-  const fitSignals = [
-    "La decisión afecta a varias áreas, sistemas o proveedores.",
-    "Existe una consecuencia clara de no resolver el proyecto.",
-    "Hay una persona interna capaz de impulsar decisiones.",
-    "La dirección quiere implantar, no solo recibir recomendaciones."
+function Accountability() {
+  const commitments = [
+    ["Dirección identificada", "La propuesta identifica la dirección del proyecto, las funciones asignadas y la autoridad de cada frente."],
+    ["Alcance gobernable", "Cada entrega tiene responsable, versión, criterio de aceptación y cambio pendiente."],
+    ["Control del cliente", "Permisos, documentación y conocimiento se transfieren al equipo; la solución no depende de una caja negra."],
   ];
-  const whatsappText = encodeURIComponent("Hola, quiero valorar con MEDLA un proyecto que afecta a varias áreas de la empresa.");
-
   return (
-    <section className="hp-final-cta hp-final-intake hp-section" id="contacto" aria-labelledby="final-intake-title">
-      <div className="hp-container hp-final-intake__inner">
-        <header className="hp-final-intake__intro">
-          <div className="hp-kicker hp-final-intake__kicker" data-reveal>
-            <span>05 — Conversación de encaje</span>
-          </div>
-          <h2 id="final-intake-title" data-reveal>¿Es un proyecto <em>para MEDLA?</em></h2>
-          <p data-reveal>Encajamos especialmente cuando existe una decisión relevante, varias áreas implicadas y voluntad real de implantar.</p>
-        </header>
-
-        <div className="hp-final-intake__panel hp-fit-panel" data-reveal>
-          <section className="hp-fit-criteria" aria-labelledby="fit-criteria-title">
-            <header>
-              <span id="fit-criteria-title">Buen encaje</span>
-              <small>04 señales</small>
-            </header>
-            <ol>
-              {fitSignals.map((signal, index) => (
-                <li key={signal}>
-                  <span>0{index + 1}</span>
-                  <p>{signal}</p>
-                </li>
-              ))}
-            </ol>
-            <p className="hp-fit-criteria__note">Para tareas aisladas o ejecución por horas, probablemente no somos el equipo adecuado.</p>
-          </section>
-
-          <aside className="hp-selected-brief hp-fit-panel__brief" aria-label="Revisión inicial del proyecto">
-            <div className="hp-selected-brief__copy">
-              <span>Revisión inicial</span>
-              <h3>Cuéntanos la decisión, el plazo y quién interviene.</h3>
-              <p>Revisaremos el contexto y te responderemos con el encaje, la información pendiente y el siguiente paso.</p>
-            </div>
-            <div className="hp-selected-brief__actions">
-              <a className="hp-selected-brief__primary" href="contacto.html?context=proyecto">Plantear el proyecto <Arrow /></a>
-              <a className="hp-selected-brief__secondary" href={`https://api.whatsapp.com/send/?phone=34641576772&text=${whatsappText}&type=phone_number&app_absent=0`} target="_blank" rel="noopener noreferrer">Escribir por WhatsApp <Arrow diagonal /></a>
-            </div>
-          </aside>
+    <section className="ex-accountability" aria-labelledby="accountability-title">
+      <div className="ex-shell ex-accountability__layout">
+        <div className="ex-accountability__identity" data-reveal>
+          <span>04 / RESPONSABILIDAD</span><h2 id="accountability-title">La entidad responsable <em>está identificada.</em></h2>
+          <dl>
+            <div><dt>Razón social</dt><dd>MEDLA ASESORES, S.L.</dd></div>
+            <div><dt>Sede</dt><dd>Móstoles · Madrid · España</dd></div>
+            <div><dt>Registro Mercantil</dt><dd>Tomo 46169 · Folio 20 · Hoja M-811076</dd></div>
+            <div><dt>Contacto</dt><dd><a href="mailto:info@medla-empresas.com">info@medla-empresas.com</a></dd></div>
+          </dl>
+          <a href="privacidad.html#responsable">Ver información legal <Arrow diagonal /></a>
         </div>
+        <div className="ex-accountability__commitments">{commitments.map(([title, text], index) => <article key={title} data-reveal><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
       </div>
     </section>
   );
 }
 
 function App() {
-  return (
-    <>
-      <RevealController />
-      <window.MedlaSiteHeader current="home" />
-      <main id="contenido">
-        <Hero />
-        <CapabilitiesSection />
-        <WorldBridgeSection />
-        <OperatingModelSection />
-        <DifferenceSection />
-        <FinalCTA />
-      </main>
-      <window.MedlaSiteFooter current="home" />
-    </>
-  );
+  return <><RevealController /><window.MedlaSiteHeader current="home" /><main id="contenido"><Hero /><Situations /><Delivery /><MandateDefinition /><Accountability /></main><window.MedlaSiteFooter current="home" /></>;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);

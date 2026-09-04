@@ -29,133 +29,29 @@ const IconPhone = () => (
     <path d="M5 4h3l2 5-2 1a11 11 0 0 0 6 6l1-2 5 2v3c0 1-1 2-2 2A18 18 0 0 1 3 6c0-1 1-2 2-2z" />
   </svg>
 );
-const IconPin = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s-8-7-8-13a8 8 0 0 1 16 0c0 6-8 13-8 13z" />
-    <circle cx="12" cy="9" r="3" />
-  </svg>
-);
-const IconLinkedIn = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="18" height="18" rx="3" />
-    <path d="M8 10v7M8 7.5v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7" />
-  </svg>
-);
-
-/* ─────────── Nav ─────────── */
-function CtNav() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const menuButtonRef = useRef(null);
-  const closeButtonRef = useRef(null);
-
-  useEffect(() => {
-    if (!mobileOpen) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    const pageSections = [...document.querySelectorAll(".contacto-page > :not(.nav):not(.mobile-menu)")];
-    document.body.style.overflow = "hidden";
-    pageSections.forEach((section) => section.setAttribute("inert", ""));
-    closeButtonRef.current?.focus();
-    const panel = closeButtonRef.current?.closest(".mobile-menu-content");
-    const focusables = panel ? [...panel.querySelectorAll('a[href], button:not([disabled])')] : [];
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setMobileOpen(false);
-        return;
-      }
-      if (event.key !== "Tab" || focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      pageSections.forEach((section) => section.removeAttribute("inert"));
-      document.removeEventListener("keydown", handleKeyDown);
-      menuButtonRef.current?.focus();
-    };
-  }, [mobileOpen]);
-
-  return (
-    <>
-    <nav className="nav scrolled">
-      <div className="container nav-inner">
-        <a href="index.html" className="logo"><img className="contact-logo-image" src="logo.png" alt="MEDLA" /></a>
-        <ul className="nav-links">
-          <li><a href="servicios.html">Servicios</a></li>
-          <li><a href="nosotros.html">Nosotros</a></li>
-          <li><a href="blog.html">Cuadernos</a></li>
-          <li><a href="#contenido" style={{ color: "var(--gold)" }} aria-current="page">Contacto</a></li>
-        </ul>
-        <div style={{display: "flex", alignItems: "center"}}>
-          <a href="#form" className="btn btn-primary btn-sm nav-cta">Plantear un proyecto</a>
-          <button
-            ref={menuButtonRef}
-            className="nav-toggle"
-            type="button"
-            aria-label="Abrir navegación"
-            aria-expanded={mobileOpen}
-            aria-controls="contact-mobile-menu"
-            onClick={() => setMobileOpen(true)}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-          </button>
-        </div>
-      </div>
-    </nav>
-    {mobileOpen && (
-      <div className="mobile-menu" id="contact-mobile-menu" role="dialog" aria-modal="true" aria-label="Navegación">
-        <div className="mobile-menu-overlay" aria-hidden="true" onClick={() => setMobileOpen(false)}></div>
-        <div className="mobile-menu-content">
-          <div className="mobile-menu-head">
-            <img src="logo.png" alt="MEDLA" style={{height: 40}} />
-            <button ref={closeButtonRef} className="nav-toggle" type="button" aria-label="Cerrar navegación" style={{display: "block"}} onClick={() => setMobileOpen(false)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-          </div>
-          <ul className="mobile-links" onClick={() => setMobileOpen(false)}>
-            <li><a href="servicios.html">Servicios</a></li>
-            <li><a href="nosotros.html">Nosotros</a></li>
-            <li><a href="blog.html">Cuadernos</a></li>
-            <li><a href="#contenido" style={{ color: "var(--gold)" }} aria-current="page">Contacto</a></li>
-            <li style={{marginTop: 20}}><a href="#form" className="btn btn-primary" style={{textAlign: "center", justifyContent: "center", width: "100%"}}>Plantear un proyecto</a></li>
-          </ul>
-        </div>
-      </div>
-    )}
-    </>
-  );
-}
-
 /* ─────────── Hero ─────────── */
 function CtHero({ context }) {
   return (
     <section className="contacto-hero">
       <div className="container contacto-hero-inner">
         <div className="contacto-hero-copy">
-          <span className="eyebrow">01 — Conversación de encaje</span>
-          <h1>Cuéntanos qué decisión debe avanzar. <em>Nosotros ordenamos el proyecto.</em></h1>
+          <span className="eyebrow">01 — Revisión de encaje</span>
+          <h1>Describe la decisión, el plazo <em>y las áreas implicadas.</em></h1>
           <p className="lead">
-            Un responsable revisará el contexto y te responderá con el encaje, la información pendiente y un siguiente paso concreto.
+            Revisaremos el contexto para confirmar si MEDLA debe asumir la dirección, qué información falta y qué reunión conviene convocar.
           </p>
           <div className="contacto-pulse">
-            <span className="dot"></span> Revisión confidencial desde el primer contacto
+            <span className="dot"></span> Revisión del contexto del proyecto
           </div>
         </div>
         <aside className="ct-brief" aria-label="Vista previa del contexto que recibirá MEDLA">
           <header><span>MEDLA / CONTEXTO INICIAL</span><b>01</b></header>
           <div className="ct-brief-status"><i></i><span>{context ? "Tema seleccionado" : "Preparado para completar"}</span></div>
-          <h2>{context?.label || "Cuéntanos tu proyecto"}</h2>
+          <h2>{context?.label || "Describe tu proyecto"}</h2>
           <dl>
-            <div><dt>Tema seleccionado</dt><dd>{context ? "Conservado desde la página anterior" : "Empiezas por el bloqueo, sin elegir un servicio"}</dd></div>
-            <div><dt>Primera revisión</dt><dd>Problema · momento · responsables</dd></div>
-            <div><dt>Respuesta</dt><dd>Alcance y siguiente paso</dd></div>
+            <div><dt>Tema seleccionado</dt><dd>{context ? "Conservado desde la página anterior" : "Empiezas por el proyecto, sin elegir una capacidad"}</dd></div>
+            <div><dt>Revisión de encaje</dt><dd>Decisión · consecuencia · responsables</dd></div>
+            <div><dt>Respuesta</dt><dd>Encaje · información pendiente · reunión</dd></div>
           </dl>
           <footer><span>Datos tratados con consentimiento</span><i>Madrid / ES</i></footer>
         </aside>
@@ -169,9 +65,9 @@ const PATHS = [
   {
     id: "diagnostico",
     icon: <IconCal />,
-    title: "Conversación de encaje",
-    desc: "Para valorar una decisión o proyecto transversal y acordar el siguiente paso.",
-    meta: "Revisión inicial",
+    title: "Revisión de encaje",
+    desc: "Para valorar si MEDLA debe asumir la dirección del proyecto y qué información falta para definir el mandato.",
+    meta: "Contexto inicial",
   },
   {
     id: "propuesta",
@@ -287,22 +183,29 @@ const CONTEXT_PRESETS = {
     notas: "Punto de partida: la captura de datos genera errores, duplicados o trabajo manual antes de llegar al sistema y a la persona correctos.",
   },
   cuadernos: {
-    label: "Aplicar una guía de Cuadernos",
+    label: "Aplicar una nota de decisión",
     alcance: ["Aún no lo tengo claro"],
-    notas: "Punto de partida: quiero aplicar una guía de Cuadernos MEDLA a un caso concreto.",
+    notas: "Quiero aplicar una nota de decisión MEDLA a un proyecto concreto.",
+  },
+  notas: {
+    label: "Aplicar una nota de decisión",
+    alcance: ["Aún no lo tengo claro"],
+    notas: "Quiero aplicar una nota de decisión MEDLA a un proyecto concreto.",
   },
 };
 
 const requestParams = new URLSearchParams(window.location.search);
-const baseContext = CONTEXT_PRESETS[requestParams.get("context")] || null;
+const contextKey = requestParams.get("context") || "";
+const guideKey = requestParams.get("guide") || "";
+const baseContext = CONTEXT_PRESETS[contextKey] || null;
 const selectedContext = baseContext ? {
   ...baseContext,
-  notas: requestParams.get("guide") ? `${baseContext.notas}\nGuía de referencia: ${requestParams.get("guide")}.` : baseContext.notas,
+  notas: guideKey ? `${baseContext.notas} Nota de referencia: ${guideKey}.` : baseContext.notas,
 } : null;
 
 const ETAPA_OPTIONS = [
   { value: "Pre-constitución", label: "Emprendedor o proyecto en fase de constitución" },
-  { value: "Empresa emergente en ronda", label: "Empresa emergente en ronda de financiación" },
+  { value: "Empresa emergente en ronda", label: "Empresa emergente que prepara o está en una ronda de financiación" },
   { value: "Pyme en crecimiento", label: "Pyme en crecimiento" },
   { value: "Empresa establecida", label: "Empresa consolidada" },
   { value: "Grupo o holding", label: "Grupo empresarial o holding" },
@@ -328,9 +231,10 @@ function CtForm({ pathId }) {
     presupuestoIdx: 0,
     nombre: "",
     empresa: "",
+    cargo: "",
     email: "",
     telefono: "",
-    notas: selectedContext?.notas || "",
+    notas: "",
     website: "",
   }));
   const [sent, setSent] = useState(false);
@@ -363,7 +267,10 @@ function CtForm({ pathId }) {
   };
 
   const problemReady = data.notas.trim().length >= 12;
-  const contactReady = data.nombre.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim());
+  const contactReady = data.nombre.trim().length >= 2
+    && data.empresa.trim().length >= 2
+    && data.cargo.trim().length >= 2
+    && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim());
   const canAdvance =
     (step === 0 && problemReady) ||
     (step === 1 && contactReady) ||
@@ -372,7 +279,7 @@ function CtForm({ pathId }) {
   const selectedScopeLabels = data.alcance.map((value) => ALCANCE_OPTIONS.find((option) => option.value === value)?.label || value);
   const selectedStageLabel = ETAPA_OPTIONS.find((option) => option.value === data.etapa)?.label || "Sin indicar";
   const selectedBudget = PRESUPUESTO_LABELS[data.presupuestoIdx];
-  const issuePreview = data.notas.trim().replace(/\s+/g, " ") || "Aún no has descrito el bloqueo.";
+  const issuePreview = data.notas.trim().replace(/\s+/g, " ") || "Aún no has descrito el proyecto.";
 
   const submitToWebhook = async () => {
     if (!privacyAccepted) {
@@ -388,14 +295,18 @@ function CtForm({ pathId }) {
       tipo_contacto: pathId,
       nombre: data.nombre,
       empresa: data.empresa,
+      cargo: data.cargo,
       email: data.email,
       telefono: data.telefono,
       alcance,
       etapa_empresa: data.etapa || "Otro",
       rango_presupuesto: selectedBudget.value,
       notas: data.notas,
+      origen_contexto: contextKey,
+      origen_nota: guideKey,
+      pagina_origen: document.referrer || window.location.href,
       consentimiento_privacidad: true,
-      version_privacidad: "2026-08-28",
+      version_privacidad: "2026-09-04",
       website: data.website,
     };
     try {
@@ -426,35 +337,36 @@ function CtForm({ pathId }) {
     if (step !== totalSteps - 1 || sending) return;
     if (!problemReady) {
       setStep(0);
-      setSendError("Describe brevemente qué está bloqueado antes de enviar.");
+      setSendError("Describe brevemente qué debe decidirse o quedar funcionando antes de enviar.");
       return;
     }
     if (!contactReady) {
       setStep(1);
-      setSendError("Revisa el nombre y el correo electrónico antes de enviar.");
+      setSendError("Revisa el nombre, la empresa, tu responsabilidad y el correo electrónico antes de enviar.");
       return;
     }
     submitToWebhook();
   };
 
   const stepTitle = {
-    diagnostico: "Conversación de encaje",
+    diagnostico: "Revisión de encaje",
     propuesta: "Solicitud de propuesta",
     alianza: "Colaboración profesional",
-  }[pathId] || "Conversación inicial";
+  }[pathId] || "Revisión de encaje";
 
   const stepHints = [
-    "Qué está bloqueado",
+    "Proyecto y decisión",
     "Cómo respondemos",
     "Añadir contexto",
   ];
 
   const fallbackText = encodeURIComponent([
     `Hola, quiero contactar con MEDLA por: ${stepTitle.toLowerCase()}.`,
-    `Bloqueo: ${data.notas.trim()}`,
+    `Proyecto y decisión: ${data.notas.trim()}`,
     `Nombre: ${data.nombre.trim()}`,
     `Correo electrónico: ${data.email.trim()}`,
-    data.empresa.trim() ? `Empresa: ${data.empresa.trim()}` : "",
+    `Empresa: ${data.empresa.trim()}`,
+    `Responsabilidad: ${data.cargo.trim()}`,
     selectedScopeLabels.length ? `Áreas: ${selectedScopeLabels.join(", ")}` : "Áreas: por definir",
   ].filter(Boolean).join("\n\n"));
 
@@ -465,8 +377,8 @@ function CtForm({ pathId }) {
           <aside className="form-side">
             <div className="form-side-top">
               <span className="eyebrow">— {stepTitle}</span>
-              <h3>Empecemos por lo que está ocurriendo.</h3>
-              <p>Primero describe el bloqueo. Después indícanos cómo responderte. El resto del contexto es opcional.</p>
+              <h3>Empecemos por la decisión y el resultado esperado.</h3>
+              <p>Describe el objetivo y la consecuencia de no actuar. Después indícanos cómo responderte; el resto es opcional.</p>
 
               <div className="form-side-steps">
                 {stepHints.map((h, i) => (
@@ -486,7 +398,7 @@ function CtForm({ pathId }) {
                   <header><span>CONTEXTO / EN PREPARACIÓN</span><b>0{step + 1}</b></header>
                   <div className="form-live-brief__status"><i></i>{problemReady ? "Punto de partida descrito" : "Esperando el punto de partida"}</div>
                   <dl>
-                    <div className="form-live-brief__issue"><dt>Bloqueo</dt><dd>{issuePreview}</dd></div>
+                    <div className="form-live-brief__issue"><dt>Proyecto</dt><dd>{issuePreview}</dd></div>
                     <div><dt>Contacto</dt><dd>{data.nombre.trim() || "Sin completar"}</dd></div>
                     <div><dt>Áreas</dt><dd>{selectedScopeLabels.length ? selectedScopeLabels.join(" · ") : "Sin clasificar"}</dd></div>
                     <div><dt>Momento</dt><dd>{selectedStageLabel}</dd></div>
@@ -520,18 +432,18 @@ function CtForm({ pathId }) {
               <div className="form-step form-step--issue">
                 <div>
                   <div className="step-label">Paso 1 · {stepHints[0]}</div>
-                  <h4 id="contact-issue-question">¿Qué está bloqueado? <span aria-hidden="true">*</span><span className="sr-only"> Respuesta obligatoria.</span></h4>
-                  <p id="contact-issue-hint" className="form-step__hint">Explícalo como lo contarías en una conversación: qué ocurre, quién interviene y qué debería poder pasar después.</p>
+                  <h4 id="contact-issue-question">¿Qué debe decidirse o quedar funcionando? <span aria-hidden="true">*</span><span className="sr-only"> Respuesta obligatoria.</span></h4>
+                  <p id="contact-issue-hint" className="form-step__hint">Indica el objetivo, la consecuencia de no actuar, quién interviene y el plazo si ya existe.</p>
                 </div>
                 {selectedContext && (
                   <div className="brief-origin">
                     <span>Contexto conservado desde la página anterior</span>
                     <strong>{selectedContext.label}</strong>
-                    <small>Puedes modificar o sustituir el texto que hemos preparado.</small>
+                    <small>{selectedContext.notas}</small>
                   </div>
                 )}
                 <div className="field field--issue">
-                  <label htmlFor="contact-issue">Describe el punto de partida</label>
+                  <label htmlFor="contact-issue">Describe el proyecto</label>
                   <textarea
                     ref={questionRef}
                     id="contact-issue"
@@ -542,7 +454,7 @@ function CtForm({ pathId }) {
                     onChange={(event) => setField("notas", event.target.value)}
                     aria-labelledby="contact-issue-question"
                     aria-describedby="contact-issue-hint contact-issue-count"
-                    placeholder="Por ejemplo: la aprobación de nuevos proveedores depende de correos y no sabemos quién debe decidir cada excepción…"
+                    placeholder={selectedContext ? `Añade el contexto de tu caso. ${selectedContext.notas}` : "Por ejemplo: necesitamos decidir e implantar un nuevo proceso de alta de proveedores antes de noviembre; intervienen Compras, Legal y Sistemas…"}
                   />
                   <div className="field-meta" id="contact-issue-count"><span>{problemReady ? "Punto de partida listo" : "Escribe al menos una frase"}</span><span>{data.notas.length} / 3000</span></div>
                 </div>
@@ -554,7 +466,7 @@ function CtForm({ pathId }) {
                 <div>
                   <div className="step-label">Paso 2 · {stepHints[1]}</div>
                   <h4 ref={questionRef} tabIndex="-1">¿Cómo podemos responderte?</h4>
-                  <p className="form-step__hint">Nombre y correo son suficientes. Empresa y teléfono son opcionales.</p>
+                  <p className="form-step__hint">Indica quién lidera la conversación y desde qué empresa. El teléfono es opcional.</p>
                 </div>
                 <div className="fields-row">
                   <div className="field">
@@ -568,9 +480,15 @@ function CtForm({ pathId }) {
                 </div>
                 <div className="fields-row">
                   <div className="field">
-                    <label htmlFor="contact-company">Empresa <span>Opcional</span></label>
-                    <input id="contact-company" type="text" autoComplete="organization" value={data.empresa} onChange={(e) => setField("empresa", e.target.value)} placeholder="Nombre comercial" />
+                    <label htmlFor="contact-company">Empresa *</label>
+                    <input id="contact-company" type="text" required autoComplete="organization" value={data.empresa} onChange={(e) => setField("empresa", e.target.value)} placeholder="Nombre comercial" />
                   </div>
+                  <div className="field">
+                    <label htmlFor="contact-role">Cargo o responsabilidad *</label>
+                    <input id="contact-role" type="text" required autoComplete="organization-title" value={data.cargo} onChange={(e) => setField("cargo", e.target.value)} placeholder="Dirección, operaciones, legal…" />
+                  </div>
+                </div>
+                <div className="fields-row fields-row--single">
                   <div className="field">
                     <label htmlFor="contact-phone">Teléfono <span>Opcional</span></label>
                     <input id="contact-phone" type="tel" autoComplete="tel" value={data.telefono} onChange={(e) => setField("telefono", e.target.value)} placeholder="+34…" />
@@ -589,8 +507,8 @@ function CtForm({ pathId }) {
                 </div>
                 <div className="context-stack">
                   <fieldset className="context-block">
-                    <legend><span>01</span> Área o servicio</legend>
-                    <p>Selecciona las líneas que puedan estar relacionadas.</p>
+                    <legend><span>01</span> Área o capacidad</legend>
+                    <p>Selecciona las capacidades que puedan estar relacionadas.</p>
                     <div className="options-grid options-grid--compact">
                       {ALCANCE_OPTIONS.map((option) => (
                         <button
@@ -668,9 +586,9 @@ function CtForm({ pathId }) {
                   </svg>
                 </div>
                 <h3>Mensaje enviado, {data.nombre.split(" ")[0] || "gracias"}.</h3>
-                <p>Hemos recibido el contexto. En la primera respuesta indicaremos el encaje, la información pendiente y el siguiente paso.</p>
+                <p>Hemos recibido el contexto. En la primera respuesta indicaremos si el proyecto encaja, qué información falta y qué reunión conviene convocar.</p>
                 <div className="hero-ctas">
-                  <a href="servicios.html" className="btn btn-primary">Explorar servicios <span className="arr">→</span></a>
+                  <a href="servicios.html" className="btn btn-primary">Ver qué resolvemos <span className="arr">→</span></a>
                   <a href="index.html" className="btn btn-ghost">Volver al inicio</a>
                 </div>
               </div>
@@ -693,7 +611,7 @@ function CtForm({ pathId }) {
                       cursor: !sending && (step === totalSteps - 1 || canAdvance) ? "pointer" : "default"
                     }}
                   >
-                    {sending ? "Enviando…" : step === totalSteps - 1 ? "Enviar consulta" : "Continuar"} <span className="arr">→</span>
+                    {sending ? "Enviando…" : step === totalSteps - 1 ? "Enviar contexto" : "Continuar"} <span className="arr">→</span>
                   </button>
                 </div>
               </div>
@@ -798,19 +716,19 @@ function CtInfo() {
 const FAQS = [
   {
     q: "¿Cómo funciona la primera respuesta?",
-    a: "Una persona del equipo revisa la información enviada y responde con contexto, preguntas concretas y un siguiente paso.",
+    a: "Revisamos la información enviada y respondemos indicando si el proyecto encaja, qué información falta y qué reunión conviene convocar.",
   },
   {
     q: "¿Cómo se define el alcance?",
-    a: "Partimos del contexto enviado, hacemos las preguntas necesarias y delimitamos el trabajo, los responsables y el siguiente paso antes de comenzar.",
+    a: "Partimos del contexto enviado, hacemos las preguntas necesarias y delimitamos alcance, responsables y criterio de aceptación antes de comenzar.",
   },
   {
     q: "¿Trabajan con equipos fuera de España?",
-    a: "El trabajo puede coordinarse de forma remota. La disponibilidad y, cuando aplique, la jurisdicción y los responsables locales se confirman durante la revisión inicial.",
+    a: "El trabajo puede coordinarse de forma remota. La disponibilidad y, cuando aplique, la jurisdicción y los responsables locales se confirman durante la revisión de encaje.",
   },
   {
-    q: "¿Puedo contratar un solo servicio?",
-    a: "Sí. Cada servicio puede abordarse por separado. Cuando el proyecto cruza varias áreas, proponemos cómo coordinarlas y quién responde por cada parte.",
+    q: "¿Puedo empezar por un solo frente?",
+    a: "Activamos las capacidades que exige el mandato. Un frente puede abordarse de forma independiente cuando tiene alcance, responsable y criterio de aceptación propios; no trabajamos como bolsa de horas.",
   },
   {
     q: "¿Cómo se acuerdan las condiciones?",
@@ -864,7 +782,8 @@ function CtFAQ() {
 
 /* ─────────── App ─────────── */
 function ContactoApp() {
-  const [path, setPath] = useState("diagnostico");
+  const requestedPath = requestParams.get("path");
+  const [path, setPath] = useState(PATHS.some((item) => item.id === requestedPath) ? requestedPath : "diagnostico");
   return (
     <div className="contacto-page">
       <window.MedlaSiteHeader current="contact" />

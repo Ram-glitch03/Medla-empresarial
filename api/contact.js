@@ -1,7 +1,7 @@
 "use strict";
 
 const PROVIDER_ENDPOINT = process.env.HIGHLEVEL_WEBHOOK_URL;
-const PRIVACY_VERSION = "2026-08-28";
+const PRIVACY_VERSION = "2026-09-04";
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 5;
 const buckets = globalThis.__medlaContactBuckets || new Map();
@@ -87,11 +87,15 @@ module.exports = async function contactHandler(request, response) {
   const tipo = text(body.tipo_contacto, 30);
   const nombre = text(body.nombre, 120);
   const empresa = text(body.empresa, 160);
+  const cargo = text(body.cargo, 120);
   const email = text(body.email, 180).toLowerCase();
   const telefono = text(body.telefono, 40);
   const etapa = text(body.etapa_empresa, 80);
   const presupuesto = text(body.rango_presupuesto, 40);
   const notas = text(body.notas, 3000);
+  const origenContexto = text(body.origen_contexto, 80);
+  const origenNota = text(body.origen_nota, 180);
+  const paginaOrigen = text(body.pagina_origen, 500);
   const alcance = Array.isArray(body.alcance)
     ? [...new Set(body.alcance.map((item) => text(item, 100)).filter((item) => ALLOWED_SCOPES.has(item)))].slice(0, 8)
     : [];
@@ -99,6 +103,8 @@ module.exports = async function contactHandler(request, response) {
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
   const valid = ALLOWED_TYPES.has(tipo)
     && nombre.length >= 2
+    && empresa.length >= 2
+    && cargo.length >= 2
     && validEmail
     && ALLOWED_STAGES.has(etapa)
     && ALLOWED_BUDGETS.has(presupuesto)
@@ -112,12 +118,16 @@ module.exports = async function contactHandler(request, response) {
     tipo_contacto: tipo,
     nombre,
     empresa,
+    cargo,
     email,
     telefono,
     alcance: alcance.join(", "),
     etapa_empresa: etapa,
     rango_presupuesto: presupuesto,
     notas,
+    origen_contexto: origenContexto,
+    origen_nota: origenNota,
+    pagina_origen: paginaOrigen,
     consentimiento_privacidad: true,
     version_privacidad: PRIVACY_VERSION,
     fecha: new Date().toISOString(),

@@ -3,13 +3,13 @@ const { useEffect, useRef, useState } = React;
 const SPECIALTIES = {
   legal: {
     descriptor: "Asesoría legal empresarial",
-    eyebrow: "Decisiones con marco jurídico",
+    eyebrow: "Criterio jurídico conectado con la ejecución",
     accent: "#79d2c5",
     hero: {
-      before: "Asesoría legal para avanzar con ",
-      emphasis: "un marco claro.",
+      before: "Contratos, acuerdos y obligaciones ",
+      emphasis: "preparados para decidir y ejecutar.",
       after: "",
-      lead: "Revisamos contratos, acuerdos y obligaciones, explicamos los riesgos relevantes y dejamos preparado el siguiente paso.",
+      lead: "Ordenamos hechos, riesgos, responsables y documentos; dejamos preparada la aprobación, firma o actuación incluida en el encargo.",
       note: "El encargo y la jurisdicción aplicable se confirman antes de intervenir.",
     },
     context: "legal",
@@ -59,13 +59,13 @@ const SPECIALTIES = {
       title: "Primero se confirma el encargo. Después se aplica el criterio.",
       body: "La página describe un método de trabajo, no una respuesta jurídica para un caso concreto. El servicio se delimita por materia, documentación disponible y jurisdicción aplicable; cuando hace falta un especialista externo, se identifica antes de actuar.",
     },
-    cta: { title: "Cuéntanos qué necesitas revisar.", body: "Comparte el objetivo y los documentos disponibles. Te indicaremos qué información falta y cómo plantear el trabajo.", button: "Solicitar una primera revisión" },
+    cta: { title: "Plantea la decisión o relación contractual.", body: "Indica el objetivo, la jurisdicción y la documentación disponible. Confirmaremos el alcance y la información necesaria.", button: "Plantear este frente" },
   },
 
   ia: {
     descriptor: "Agentes de inteligencia artificial",
     eyebrow: "IA integrada en el trabajo",
-    accent: "#77a9bb",
+    accent: "#68bcb4",
     hero: {
       before: "Agentes de IA conectados a ",
       emphasis: "tus datos, herramientas y procesos.",
@@ -80,7 +80,7 @@ const SPECIALTIES = {
       code: "AGENTE / 01",
       core: "AGENTE",
       mark: "IA",
-      caption: "La utilidad aparece cuando contexto, herramientas y validación forman un mismo sistema.",
+      caption: "Fuentes, permisos, herramientas y validación se definen antes de poner el agente en operación.",
       nodes: [
         { label: "Fuentes", detail: "Documentos, bases y sistemas autorizados para responder con contexto." },
         { label: "Reglas", detail: "Instrucciones, límites y criterios de escalado definidos con el equipo." },
@@ -90,8 +90,8 @@ const SPECIALTIES = {
     },
     problem: {
       label: "Señales del problema",
-      headline: "Un chat que responde no basta. Tiene que entender el trabajo y saber cuándo detenerse.",
-      body: "El problema no suele ser el modelo: es el contexto incompleto, la falta de permisos o una acción sin dueño.",
+      headline: "Una respuesta correcta no basta si el agente carece de permisos, registro y escalado.",
+      body: "Definimos fuentes, acciones autorizadas, controles y responsable antes de implantarlo.",
       signals: [
         { title: "Conocimiento disperso", text: "Las respuestas dependen de buscar en carpetas, correos y personas distintas, sin una fuente acordada." },
         { title: "Instrucciones sin operación", text: "Hay pruebas aisladas, pero ninguna está conectada con responsables, herramientas o criterios de validación." },
@@ -120,7 +120,7 @@ const SPECIALTIES = {
       title: "La autonomía se diseña. No se presupone.",
       body: "Definimos qué información puede usar el agente, qué acciones puede iniciar y cuáles requieren validación. El equipo conserva acceso al registro, a las reglas y al procedimiento de escalado.",
     },
-    cta: { title: "Cuéntanos qué tarea quieres mejorar.", body: "Descríbenos qué recibe el equipo, qué resultado necesita y qué sistemas utiliza. Valoraremos si conviene un agente, una automatización o una solución más simple.", button: "Revisar el caso" },
+    cta: { title: "Cuéntanos qué tarea quieres mejorar.", body: "Descríbenos qué recibe el equipo, qué resultado necesita y qué sistemas utiliza. Valoraremos si conviene un agente, una automatización o una solución más simple.", button: "Plantear este frente" },
   },
 
   automatizacion: {
@@ -128,10 +128,10 @@ const SPECIALTIES = {
     eyebrow: "Flujos conectados y trazables",
     accent: "#79d2c5",
     hero: {
-      before: "Automatiza tareas y aprobaciones ",
-      emphasis: "sin perder el control.",
+      before: "Automatiza tareas y aprobaciones con ",
+      emphasis: "reglas, excepciones y responsables visibles.",
       after: "",
-      lead: "Conectamos herramientas, aplicamos reglas claras y dejamos cada excepción en manos de la persona adecuada.",
+      lead: "Conectamos las herramientas necesarias y registramos cada resultado, error y escalado.",
       note: "Automatizamos después de entender el proceso, no antes.",
     },
     context: "automatizacion",
@@ -151,8 +151,8 @@ const SPECIALTIES = {
     },
     problem: {
       label: "Señales del problema",
-      headline: "La fricción se acumula en los pasos que nadie considera un proceso.",
-      body: "Copiar datos, perseguir aprobaciones o reconstruir estados son síntomas de un flujo que necesita diseño.",
+      headline: "Los fallos aparecen en copias manuales, aprobaciones sin plazo y excepciones sin responsable.",
+      body: "Mapeamos esos puntos antes de definir reglas e integraciones.",
       signals: [
         { title: "Datos copiados entre herramientas", text: "La misma información se vuelve a escribir, cambia de formato y pierde contexto en cada traspaso." },
         { title: "Aprobaciones perseguidas a mano", text: "El equipo depende de mensajes y recordatorios para saber quién debe decidir y qué falta." },
@@ -181,13 +181,13 @@ const SPECIALTIES = {
       title: "Un paso automático sigue necesitando criterio y dueño.",
       body: "No ocultamos las excepciones ni dejamos reglas críticas enterradas en una integración. El proceso, sus permisos y el procedimiento de recuperación quedan documentados para el equipo.",
     },
-    cta: { title: "Muéstranos el proceso actual.", body: "Con una entrada, una salida y los principales bloqueos podemos localizar el primer tramo que merece automatizarse.", button: "Revisar el proceso" },
+    cta: { title: "Muéstranos el proceso actual.", body: "Con una entrada, una salida y los principales bloqueos podemos localizar el primer tramo que merece automatizarse.", button: "Plantear este frente" },
   },
 
   constitucion: {
     descriptor: "Constitución de sociedades",
     eyebrow: "Decisiones societarias de origen",
-    accent: "#b79b59",
+    accent: "#64b7ae",
     hero: {
       before: "Una estructura societaria pensada ",
       emphasis: "para operar y crecer.",
@@ -202,7 +202,7 @@ const SPECIALTIES = {
       code: "SOCIEDAD / 01",
       core: "ACUERDO",
       mark: "ACTA",
-      caption: "La sociedad nace de decisiones coordinadas, no de un formulario aislado.",
+      caption: "Antes de formalizar, se acuerdan aportaciones, gobierno, representación y pasos posteriores.",
       nodes: [
         { label: "Socios", detail: "Quién participa, qué aporta y qué decisiones necesita proteger." },
         { label: "Gobierno", detail: "Órganos, representación y reparto de responsabilidades." },
@@ -242,16 +242,16 @@ const SPECIALTIES = {
       title: "La estructura correcta depende del caso; la coordinación no.",
       body: "Confirmamos jurisdicción, participantes y actividad antes de definir el encargo. Los trámites, documentos y perfiles profesionales que intervienen pueden variar; se identifican expresamente en la propuesta de trabajo.",
     },
-    cta: { title: "Cuéntanos cómo será la sociedad.", body: "Indica quién participa, qué actividad se prevé y en qué jurisdicción se quiere constituir. Prepararemos las preguntas que conviene resolver primero.", button: "Preparar la constitución" },
+    cta: { title: "Cuéntanos cómo será la sociedad.", body: "Indica quién participa, qué actividad se prevé y en qué jurisdicción se quiere constituir. Prepararemos las preguntas que conviene resolver primero.", button: "Plantear este frente" },
   },
 
   digitalizacion: {
     descriptor: "Digitalización operativa",
-    eyebrow: "Sistemas para el trabajo real",
-    accent: "#77a9bb",
+    eyebrow: "Sistemas para la operación",
+    accent: "#68bcb4",
     hero: {
-      before: "Digitaliza la operación ",
-      emphasis: "sin trasladar el caos a otra herramienta.",
+      before: "Convierte procesos dispersos en ",
+      emphasis: "un sistema con estados, responsables y datos comunes.",
       after: "",
       lead: "Convertimos procesos repartidos entre hojas, correos y conocimiento informal en una solución conectada, documentada y mantenible.",
       note: "La tecnología se elige después de entender decisiones, usuarios y datos.",
@@ -273,8 +273,8 @@ const SPECIALTIES = {
     },
     problem: {
       label: "Señales del problema",
-      headline: "Digitalizar no es trasladar el desorden a una pantalla nueva.",
-      body: "El sistema debe reducir ambigüedad, conservar contexto y hacer visible quién necesita actuar.",
+      headline: "Un sistema nuevo no corrige por sí solo un proceso sin estados, responsables o datos comunes.",
+      body: "Definimos esos elementos antes de elegir o construir la herramienta.",
       signals: [
         { title: "La operación vive en archivos", text: "Estados, decisiones y datos se reparten entre hojas, mensajes y carpetas sin una fuente de referencia." },
         { title: "El proceso depende de una persona", text: "Solo alguien con experiencia sabe qué paso sigue, qué excepción importa o dónde buscar la información." },
@@ -284,7 +284,7 @@ const SPECIALTIES = {
     scope: [
       { name: "Descubrimiento", signal: "El proceso necesita una lectura común antes de hablar de plataformas.", work: "Seguimos casos reales, entrevistamos a responsables y trazamos decisiones, documentos, estados y excepciones.", outputs: ["Mapa de operación", "Inventario de datos", "Fricciones priorizadas"] },
       { name: "Arquitectura", signal: "Hay que decidir qué permanece, qué se conecta y qué conviene construir.", work: "Definimos componentes, flujos de información, permisos e integraciones con criterio de mantenimiento y propiedad.", outputs: ["Arquitectura objetivo", "Decisiones técnicas", "Plan por etapas"] },
-      { name: "Implantación", signal: "El sistema debe probarse con el trabajo real sin interrumpir la operación.", work: "Construimos por recorridos completos, validamos con usuarios y ajustamos reglas y pantallas sobre casos representativos.", outputs: ["Flujos funcionales", "Validación de usuarios", "Registro de incidencias"] },
+      { name: "Implantación", signal: "El sistema debe probarse dentro de la operación sin interrumpirla.", work: "Construimos por recorridos completos, validamos con usuarios y ajustamos reglas y pantallas sobre casos representativos.", outputs: ["Flujos funcionales", "Validación de usuarios", "Registro de incidencias"] },
       { name: "Transferencia", signal: "La solución necesita quedar entendida, documentada y gobernada.", work: "Entregamos repositorio, decisiones, manuales y responsabilidades; acordamos cómo se solicitan y aprueban cambios.", outputs: ["Documentación", "Responsables", "Criterios de evolución"] },
     ],
     deliverables: [
@@ -293,7 +293,7 @@ const SPECIALTIES = {
       { code: "DI-03", title: "Base para evolucionar", text: "El conocimiento necesario para operar y cambiar el sistema sin volver a depender de memoria informal.", contents: ["Repositorio y decisiones", "Manual de operación", "Gobierno de cambios"] },
     ],
     process: [
-      { phase: "Entender", text: "Observamos el trabajo real y hacemos explícitas decisiones, datos y excepciones.", check: "Proceso de referencia acordado" },
+      { phase: "Entender", text: "Observamos la operación actual y hacemos explícitas decisiones, datos y excepciones.", check: "Proceso de referencia acordado" },
       { phase: "Diseñar", text: "Definimos la arquitectura y priorizamos recorridos completos, no pantallas sueltas.", check: "Plan de implantación" },
       { phase: "Construir", text: "Desarrollamos, conectamos y probamos cada recorrido con sus usuarios.", check: "Sistema aceptado" },
       { phase: "Transferir", text: "Documentamos operación, propiedad y forma de evolucionar la solución.", check: "Equipo con control" },
@@ -303,13 +303,13 @@ const SPECIALTIES = {
       title: "La complejidad debe quedar explicada, no escondida.",
       body: "Documentamos decisiones, integraciones, permisos y procedimientos de operación. El objetivo es que el equipo entienda qué sostiene su sistema y pueda gobernar su evolución.",
     },
-    cta: { title: "Enséñanos cómo trabaja hoy el equipo.", body: "Revisaremos un caso real para identificar bloqueos, prioridades y el primer recorrido que merece diseño.", button: "Revisar la operación" },
+    cta: { title: "Enséñanos cómo trabaja hoy el equipo.", body: "Revisaremos un caso real para identificar bloqueos, prioridades y el primer recorrido que merece diseño.", button: "Plantear este frente" },
   },
 
   inversiones: {
     descriptor: "Inversión y financiación",
     eyebrow: "Decisiones antes del compromiso",
-    accent: "#b79b59",
+    accent: "#5fa9a4",
     hero: {
       before: "Evalúa una inversión con ",
       emphasis: "datos, escenarios y documentación ordenados.",
@@ -324,7 +324,7 @@ const SPECIALTIES = {
       code: "ESCENARIOS / 01",
       core: "DECISIÓN",
       mark: "◇",
-      caption: "Una decisión sólida separa hechos, supuestos, escenarios y condiciones de cierre.",
+      caption: "La decisión separa datos disponibles, hipótesis, escenarios y condiciones de cierre.",
       nodes: [
         { label: "Objetivo", detail: "Qué se quiere conseguir, con qué horizonte y bajo qué restricciones." },
         { label: "Supuestos", detail: "Qué datos se consideran hechos y qué hipótesis deben probarse." },
@@ -364,13 +364,13 @@ const SPECIALTIES = {
       title: "Estructura, escenarios y documentación. Nada de promesas de rentabilidad.",
       body: "Este servicio no comprende asesoramiento financiero regulado, recepción o transmisión de órdenes, intermediación, custodia ni recomendaciones individualizadas de compra o venta. Si el caso requiere perfiles autorizados, se identifica y coordina expresamente.",
     },
-    cta: { title: "Comparte la operación que quieres evaluar.", body: "Revisaremos el objetivo, la información disponible y los supuestos para delimitar qué análisis y documentación resultan útiles.", button: "Solicitar una primera revisión" },
+    cta: { title: "Comparte la operación que quieres evaluar.", body: "Revisaremos el objetivo, la información disponible y los supuestos para delimitar qué análisis y documentación resultan útiles.", button: "Plantear este frente" },
   },
 
   crecimiento: {
     descriptor: "Posicionamiento y captación",
     eyebrow: "Del mensaje al seguimiento comercial",
-    accent: "#bd845f",
+    accent: "#62aaa6",
     hero: {
       before: "Convierte posicionamiento y captación en ",
       emphasis: "oportunidades con seguimiento.",
@@ -385,7 +385,7 @@ const SPECIALTIES = {
       code: "RECORRIDO / 01",
       core: "OPORTUNIDAD",
       mark: "CRM",
-      caption: "Posicionamiento, captación y seguimiento necesitan compartir una misma promesa y un mismo registro.",
+      caption: "Cada oportunidad debe llegar al CRM con contexto, responsable y siguiente acción.",
       nodes: [
         { label: "Posición", detail: "A quién se habla, qué problema se resuelve y por qué resulta relevante." },
         { label: "Contenido", detail: "Piezas y secuencias que desarrollan la propuesta sin repetir eslóganes." },
@@ -425,16 +425,16 @@ const SPECIALTIES = {
       title: "La comunicación termina cuando el equipo sabe qué hacer con la respuesta.",
       body: "No separamos redes, página, formulario y CRM como encargos inconexos. Definimos qué contexto viaja entre ellos y quién asume la siguiente acción.",
     },
-    cta: { title: "Revisemos tu recorrido comercial.", body: "Comparte la oferta, los canales actuales y cómo realiza el equipo el seguimiento. Identificaremos dónde se pierden oportunidades o información.", button: "Revisar captación y CRM" },
+    cta: { title: "Revisemos tu recorrido comercial.", body: "Comparte la oferta, los canales actuales y cómo realiza el equipo el seguimiento. Identificaremos dónde se pierden oportunidades o información.", button: "Plantear este frente" },
   },
 
   jotform: {
     descriptor: "Jotform y flujos de datos",
     eyebrow: "Formularios conectados a operación",
-    accent: "#77a9bb",
+    accent: "#79d2c5",
     hero: {
       before: "Formularios que activan ",
-      emphasis: "el siguiente paso del proceso.",
+      emphasis: "el trabajo posterior.",
       after: "",
       lead: "Diseñamos formularios y portales sobre Jotform con validaciones, lógica, integraciones y seguimiento para que cada respuesta llegue al sistema y a la persona correctos.",
       note: "La herramienta es una pieza del sistema; el criterio de datos y la responsabilidad siguen perteneciendo al equipo.",
@@ -446,7 +446,7 @@ const SPECIALTIES = {
       code: "DATO / 01",
       core: "REGISTRO",
       mark: "{ }",
-      caption: "El valor aparece cuando cada respuesta llega validada al sistema y a la persona correctos.",
+      caption: "Cada respuesta se valida, se registra y llega al sistema y al responsable definidos.",
       nodes: [
         { label: "Captura", detail: "Preguntas, ayudas y secuencia ajustadas a la información que se necesita." },
         { label: "Validación", detail: "Formatos, condiciones y comprobaciones antes de aceptar el dato." },
@@ -456,8 +456,8 @@ const SPECIALTIES = {
     },
     problem: {
       label: "Señales del problema",
-      headline: "Recoger respuestas es fácil. Convertirlas en trabajo fiable exige diseño.",
-      body: "La calidad del formulario se mide por lo que ocurre después de enviar, no por la cantidad de campos.",
+      headline: "El formulario debe reducir correcciones y activar el trabajo posterior sin copias manuales.",
+      body: "Su calidad se mide por los datos utilizables y el recorrido que inicia.",
       signals: [
         { title: "Datos que no se pueden usar", text: "Las respuestas llegan incompletas, ambiguas o con formatos distintos y el equipo debe reconstruir el contexto." },
         { title: "Copias entre sistemas", text: "Cada envío acaba en una bandeja, una hoja o una tarea creada a mano, multiplicando errores y tiempos de espera." },
@@ -486,7 +486,7 @@ const SPECIALTIES = {
       title: "Jotform cuando encaja. Otra solución cuando el proceso lo exige.",
       body: "No presentamos la plataforma como respuesta automática a cualquier captura. Primero definimos datos, decisiones, permisos e integraciones; después confirmamos si Jotform es la pieza adecuada y hasta dónde llega la implantación.",
     },
-    cta: { title: "Cuéntanos qué debe ocurrir después del envío.", body: "Muéstranos qué se pregunta, dónde llega la información y quién debe continuar el trabajo. Localizaremos los cortes del recorrido.", button: "Revisar el formulario" },
+    cta: { title: "Cuéntanos qué debe ocurrir después del envío.", body: "Muéstranos qué se pregunta, dónde llega la información y quién debe continuar el trabajo. Localizaremos los cortes del recorrido.", button: "Plantear este frente" },
   },
 };
 
@@ -525,137 +525,19 @@ function useReveal() {
   }, []);
 }
 
-function Brand({ descriptor }) {
-  return (
-    <a className="sp-brand" href="index.html" aria-label="MEDLA, ir al inicio">
-      <img src="logo.png" alt="" width="500" height="500" />
-      <span>{descriptor}</span>
-    </a>
-  );
-}
-
-function Navigation({ descriptor, context }) {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const panelRef = useRef(null);
-  const toggleRef = useRef(null);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const panel = panelRef.current;
-    const main = document.getElementById("main-content");
-    const footer = document.querySelector("footer");
-    const priorOverflow = document.body.style.overflow;
-    if (main) main.inert = true;
-    if (footer) footer.inert = true;
-    document.body.style.overflow = "hidden";
-
-    const focusable = () => Array.from(panel?.querySelectorAll("a[href], button:not([disabled])") || []);
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setOpen(false);
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const items = focusable();
-      if (!items.length) return;
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    requestAnimationFrame(() => focusable()[0]?.focus());
-
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      if (main) main.inert = false;
-      if (footer) footer.inert = false;
-      document.body.style.overflow = priorOverflow;
-      toggleRef.current?.focus();
-    };
-  }, [open]);
-
-  const close = () => setOpen(false);
-
-  return (
-    <header className={`sp-nav${scrolled || open ? " is-scrolled" : ""}`}>
-      <div className="sp-shell sp-nav__inner">
-        <Brand descriptor={descriptor} />
-        <nav className="sp-nav__desktop" aria-label="Navegación principal">
-          <a href="servicios.html">Servicios</a>
-          <a href="#alcance">Alcance</a>
-          <a href="#proceso">Proceso</a>
-          <a className="sp-nav__cta" href={`contacto.html?context=${context}`}>Contacto <Arrow diagonal /></a>
-        </nav>
-        <button
-          ref={toggleRef}
-          className="sp-nav__toggle"
-          type="button"
-          aria-expanded={open}
-          aria-controls="sp-mobile-menu"
-          aria-label={open ? "Cerrar menú" : "Abrir menú"}
-          onClick={() => setOpen((value) => !value)}
-        >
-          <span />
-          <span />
-        </button>
-      </div>
-      <div
-        ref={panelRef}
-        id="sp-mobile-menu"
-        className={`sp-menu${open ? " is-open" : ""}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Menú principal"
-        aria-hidden={!open}
-        inert={open ? undefined : ""}
-      >
-        <div className="sp-menu__head">
-          <span>Navegación</span>
-          <button type="button" onClick={close} aria-label="Cerrar menú">Cerrar</button>
-        </div>
-        <nav aria-label="Navegación móvil">
-          <a href="index.html" onClick={close}><span>01</span>Inicio</a>
-          <a href="servicios.html" onClick={close}><span>02</span>Servicios</a>
-          <a href="#alcance" onClick={close}><span>03</span>Alcance</a>
-          <a href="#proceso" onClick={close}><span>04</span>Proceso</a>
-          <a href={`contacto.html?context=${context}`} onClick={close}><span>05</span>Contacto</a>
-        </nav>
-        <p>Madrid · España<br />Trabajo coordinado entre negocio, legal y tecnología.</p>
-      </div>
-    </header>
-  );
-}
-
-function SceneInstrument({ scene, active }) {
-  return (
-    <div className={`sp-instrument sp-instrument--${scene.mode}`} aria-hidden="true">
-      <div className="sp-instrument__segments">
-        {scene.nodes.map((node, index) => <i className={active === index ? "is-active" : ""} key={node.label}><span>{node.label}</span></i>)}
-      </div>
-      <strong>{scene.mark}</strong>
-      <small>{scene.core}</small>
-    </div>
-  );
-}
-
 function SystemScene({ scene }) {
   const [active, setActive] = useState(0);
+  const [running, setRunning] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const tabRefs = useRef([]);
+
+  useEffect(() => {
+    if (!running || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const timer = window.setTimeout(() => {
+      if (active >= scene.nodes.length - 1) setRunning(false);
+      else setActive((value) => value + 1);
+    }, 1800);
+    return () => window.clearTimeout(timer);
+  }, [active, running, scene.nodes.length]);
 
   const move = (event, index) => {
     let next = index;
@@ -666,6 +548,7 @@ function SystemScene({ scene }) {
     else return;
     event.preventDefault();
     setActive(next);
+    setRunning(false);
     tabRefs.current[next]?.focus();
   };
 
@@ -673,36 +556,33 @@ function SystemScene({ scene }) {
     <div className={`sp-scene sp-scene--${scene.mode}`} aria-label={`Diagrama interactivo: ${scene.caption}`}>
       <div className="sp-scene__topline">
         <span>{scene.code}</span>
-        <span><i aria-hidden="true" /> Mapa de trabajo</span>
+        <button type="button" onClick={() => { setActive(0); setRunning(!window.matchMedia("(prefers-reduced-motion: reduce)").matches); }}><i aria-hidden="true" /> {running ? "Secuencia en curso" : "Repetir secuencia"}</button>
       </div>
-      <div className="sp-scene__field">
-        <div className="sp-scene__visual">
-          <SceneInstrument scene={scene} active={active} />
-        </div>
-        <div className="sp-scene__nodes" role="tablist" aria-label="Componentes del sistema">
+      <div className="sp-scene__journey">
+        <div className="sp-scene__route" aria-hidden="true"><i style={{ "--progress": `${active / (scene.nodes.length - 1)}` }} /></div>
+        <div className="sp-scene__stages" role="tablist" aria-label="Secuencia de trabajo">
           {scene.nodes.map((node, index) => (
             <button
               key={node.label}
               ref={(element) => { tabRefs.current[index] = element; }}
               id={`scene-tab-${index}`}
-              className={active === index ? "is-active" : ""}
+              className={`${active === index ? "is-active" : ""}${active > index ? " is-complete" : ""}`}
               type="button"
               role="tab"
               aria-selected={active === index}
               aria-controls="scene-detail"
               tabIndex={active === index ? 0 : -1}
-              onClick={() => setActive(index)}
+              onClick={() => { setActive(index); setRunning(false); }}
               onKeyDown={(event) => move(event, index)}
             >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              {node.label}
+              <span>{String(index + 1).padStart(2, "0")}</span><i aria-hidden="true" /><b>{node.label}</b>
             </button>
           ))}
         </div>
       </div>
       <div id="scene-detail" className="sp-scene__detail" role="tabpanel" aria-labelledby={`scene-tab-${active}`}>
-        <span>{scene.nodes[active].label}</span>
-        <p>{scene.nodes[active].detail}</p>
+        <div><span>{String(active + 1).padStart(2, "0")} / {scene.nodes[active].label}</span><strong>{scene.mark}</strong></div>
+        <p key={scene.nodes[active].label}>{scene.nodes[active].detail}</p>
       </div>
       <p className="sp-scene__caption">{scene.caption}</p>
     </div>
@@ -719,7 +599,7 @@ function Hero({ config }) {
           <h1 id="page-title">{config.hero.before}<em>{config.hero.emphasis}</em>{config.hero.after}</h1>
           <p className="sp-hero__lead">{config.hero.lead}</p>
           <div className="sp-actions">
-            <a className="sp-button sp-button--signal" href={`contacto.html?context=${config.context}`}>Cuéntanos tu caso <Arrow /></a>
+            <a className="sp-button sp-button--signal" href={`contacto.html?context=${config.context}`}>Plantear este frente <Arrow /></a>
             <a className="sp-button sp-button--ghost" href="#alcance">{config.secondary} <Arrow /></a>
           </div>
           <p className="sp-hero__note"><span aria-hidden="true">◌</span>{config.hero.note}</p>
@@ -781,9 +661,9 @@ function Scope({ scope }) {
     <section id="alcance" className="sp-scope" aria-labelledby="scope-title">
       <div className="sp-shell">
         <div className="sp-scope__head" data-reveal>
-          <div className="sp-kicker sp-kicker--light"><span>03</span>Qué incluye el servicio</div>
-          <h2 id="scope-title">El trabajo se divide en frentes que pueden contratarse y revisarse por separado.</h2>
-          <p>Selecciona un bloque para ver qué problema resuelve, qué hacemos y qué entregamos.</p>
+          <div className="sp-kicker sp-kicker--light"><span>03</span>Alcance del encargo</div>
+          <h2 id="scope-title">El encargo se divide en frentes con alcance, responsable y criterio de aceptación propios.</h2>
+          <p>Selecciona un frente para ver la situación, el trabajo y el resultado esperado.</p>
         </div>
         <div className="sp-scope__workspace" data-reveal>
           <div className="sp-scope__tabs" role="tablist" aria-label="Frentes de trabajo">
@@ -886,9 +766,9 @@ function Process({ process }) {
     <section id="proceso" className="sp-process" aria-labelledby="process-title">
       <div className="sp-shell">
         <div className="sp-process__head" data-reveal>
-          <div className="sp-kicker"><span>05</span>Forma de trabajo</div>
-          <h2 id="process-title">Así pasamos de la revisión inicial a la entrega.</h2>
-          <p>Cada fase cierra una decisión antes de abrir la siguiente. Así evitamos que la complejidad quede oculta tras una lista de tareas.</p>
+          <div className="sp-kicker"><span>05</span>De la delimitación a la transferencia</div>
+          <h2 id="process-title">Cada fase cierra una decisión o entrega verificable antes de abrir la siguiente.</h2>
+          <p>La secuencia permite revisar avance, límites y responsabilidades sin esconder la complejidad tras una lista de tareas.</p>
         </div>
         <ol className="sp-process__steps">
           {process.map((step, index) => (
@@ -925,7 +805,7 @@ function ContactCTA({ cta, context }) {
     <section className="sp-contact" aria-labelledby="contact-title">
       <div className="sp-contact__orbit" aria-hidden="true"><i /><i /></div>
       <div className="sp-shell sp-contact__inner" data-reveal>
-        <div className="sp-kicker sp-kicker--light"><span>07</span>Primera conversación</div>
+        <div className="sp-kicker sp-kicker--light"><span>07</span>Revisión de encaje</div>
         <h2 id="contact-title">{cta.title}</h2>
         <p>{cta.body}</p>
         <a className="sp-button sp-button--signal" href={`contacto.html?context=${context}`}>{cta.button} <Arrow /></a>

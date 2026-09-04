@@ -18,7 +18,7 @@ El servidor local incluye la ruta `/api/contact`. Sin `HIGHLEVEL_WEBHOOK_URL` re
 
 ## Fuentes y archivos generados
 
-No edites directamente los bundles generados; cambia su fuente y ejecuta `npm run build`.
+No edites directamente los bundles generados; cambia su fuente y ejecuta `pnpm run build`.
 
 | Fuente | Salida publicada |
 | --- | --- |
@@ -28,7 +28,7 @@ No edites directamente los bundles generados; cambia su fuente y ejecuta `npm ru
 | `nosotros.jsx` | `nosotros.js` |
 | `blog.jsx` | `blog.js` |
 | `specialty.jsx` | `specialty.js` |
-| `home-premium.css` | `home-premium.min.css` |
+| `home-executive.css` | `home-executive.min.css` |
 | `specialty.css` | `specialty.min.css` |
 | `privacy-entry.css`, `privacy-styles.css` y `privacy-fixes.css` | `privacy.min.css` |
 
@@ -38,4 +38,4 @@ Los estilos `styles.css`, `services-styles.css`, `contacto-styles.css`, `nosotro
 
 Antes de desplegar, rota cualquier webhook que se hubiera versionado en revisiones anteriores y crea en Vercel la variable de entorno `HIGHLEVEL_WEBHOOK_URL` con la nueva URL privada. Usa `.env.example` como referencia y no subas valores reales al repositorio.
 
-Vercel sirve las páginas estáticas, aplica las redirecciones y cabeceras de `vercel.json`, y ejecuta `api/contact.js` como función del servidor. Las rutas principales son Inicio, Servicios, Nosotros, Cuadernos, Contacto, las ocho especialidades y Privacidad.
+Vercel sirve las páginas estáticas, aplica las redirecciones y cabeceras de `vercel.json`, y ejecuta `api/contact.js` como función del servidor. Las rutas principales son Inicio, Qué resolvemos, Cómo trabajamos, Notas de decisión, Contacto, las ocho especialidades y Privacidad.

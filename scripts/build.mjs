@@ -12,7 +12,7 @@ const javascript = [
 
 const styles = [
   { entryPoints: ["site-shell.css"], outfile: "site-shell.min.css" },
-  { entryPoints: ["home-premium.css"], outfile: "home-premium.min.css" },
+  { entryPoints: ["home-executive.css"], outfile: "home-executive.min.css" },
   { entryPoints: ["specialty.css"], outfile: "specialty.min.css" },
   { entryPoints: ["privacy-entry.css"], outfile: "privacy.min.css", bundle: true },
 ];

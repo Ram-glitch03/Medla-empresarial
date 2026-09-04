@@ -52,14 +52,18 @@ async function run() {
       tipo_contacto: "diagnostico",
       nombre: "Ana Pérez",
       empresa: "Empresa de prueba",
+      cargo: "Directora de operaciones",
       email: "ana@example.com",
       telefono: "+34 600 000 000",
       alcance: ["Digitalización de procesos", "IA aplicada"],
       etapa_empresa: "Pyme en crecimiento",
       rango_presupuesto: "25K – 50K",
       notas: "Necesitamos revisar un proceso.",
+      origen_contexto: "digitalizacion",
+      origen_nota: "automatizar-sin-arrastrar-caos",
+      pagina_origen: "https://www.medla-empresas.com/digitalizacion.html",
       consentimiento_privacidad: true,
-      version_privacidad: "2026-08-28",
+      version_privacidad: "2026-09-04",
       website: "",
     };
     const validResponse = response();
@@ -71,6 +75,11 @@ async function run() {
     assert.equal(providerCalls[0].url, process.env.HIGHLEVEL_WEBHOOK_URL);
     assert.equal(forwarded.alcance, "Digitalización de procesos, IA aplicada");
     assert.equal(forwarded.email, "ana@example.com");
+    assert.equal(forwarded.empresa, "Empresa de prueba");
+    assert.equal(forwarded.cargo, "Directora de operaciones");
+    assert.equal(forwarded.origen_contexto, "digitalizacion");
+    assert.equal(forwarded.origen_nota, "automatizar-sin-arrastrar-caos");
+    assert.equal(forwarded.pagina_origen, "https://www.medla-empresas.com/digitalizacion.html");
     assert.equal(Object.hasOwn(forwarded, "website"), false);
     assert.equal(Object.hasOwn(forwarded, "ip"), false);
     assert.match(forwarded.fecha, /^\d{4}-\d{2}-\d{2}T/);

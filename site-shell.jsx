@@ -2,16 +2,16 @@
 const { useEffect, useRef, useState } = React;
 
 const MEDLA_NAV = [
-  { id: "services", label: "Servicios", href: "servicios.html" },
+  { id: "services", label: "Qué resolvemos", href: "servicios.html" },
   { id: "about", label: "Cómo trabajamos", href: "nosotros.html" },
-  { id: "insights", label: "Cuadernos", href: "blog.html" },
+  { id: "insights", label: "Notas", href: "blog.html" },
 ];
 
 const MEDLA_MAP = [
   {
     number: "01",
-    title: "Operación y sistemas",
-    text: "Procesos más claros, menos tareas manuales y tecnología que encaja con el negocio.",
+    title: "Operaciones y sistemas",
+    text: "Procesos, datos y herramientas reunidos en una operación visible y mantenible.",
     links: [
       ["Digitalización", "digitalizacion.html"],
       ["Automatización", "automatizacion.html"],
@@ -21,8 +21,8 @@ const MEDLA_MAP = [
   },
   {
     number: "02",
-    title: "Legal y estructura",
-    text: "Estructura societaria, contratos y financiación coordinados para que el proyecto pueda avanzar.",
+    title: "Decisión y estructura",
+    text: "Contratos, gobierno y escenarios preparados para que dirección pueda comparar y aprobar.",
     links: [
       ["Asesoría legal", "asesoria-legal.html"],
       ["Constitución de sociedades", "constitucion.html"],
@@ -31,8 +31,8 @@ const MEDLA_MAP = [
   },
   {
     number: "03",
-    title: "Posicionamiento, captación y CRM",
-    text: "Mensaje, puntos de entrada, CRM y seguimiento conectados a un proceso comercial medible.",
+    title: "Crecimiento y CRM",
+    text: "Posicionamiento, captación y seguimiento conectados a una próxima acción comercial.",
     links: [
       ["Posicionamiento, captación y CRM", "redes-sociales.html"],
       ["Mapa de servicios", "servicios.html"],
@@ -41,11 +41,11 @@ const MEDLA_MAP = [
   },
   {
     number: "04",
-    title: "Conocer MEDLA",
-    text: "Cómo trabajamos, qué criterio aplicamos y qué conviene definir antes de empezar.",
+    title: "Preparar el proyecto",
+    text: "Método, notas prácticas y contexto necesario para iniciar una conversación útil.",
     links: [
-      ["Nuestro modelo", "nosotros.html"],
-      ["Cuadernos", "blog.html"],
+      ["Cómo trabajamos", "nosotros.html"],
+      ["Notas de decisión", "blog.html"],
       ["Privacidad", "privacidad.html"],
     ],
   },
@@ -53,7 +53,7 @@ const MEDLA_MAP = [
 
 const MEDLA_FOOTER_GROUPS = [
   {
-    title: "Operación y sistemas",
+    title: "Operaciones y sistemas",
     links: [
       ["Digitalización", "digitalizacion.html"],
       ["Automatización", "automatizacion.html"],
@@ -62,7 +62,7 @@ const MEDLA_FOOTER_GROUPS = [
     ],
   },
   {
-    title: "Legal y estructura",
+    title: "Decisión y estructura",
     links: [
       ["Asesoría legal", "asesoria-legal.html"],
       ["Constitución de sociedades", "constitucion.html"],
@@ -70,17 +70,11 @@ const MEDLA_FOOTER_GROUPS = [
     ],
   },
   {
-    title: "Posicionamiento, captación y CRM",
-    links: [
-      ["Posicionamiento, captación y CRM", "redes-sociales.html"],
-      ["Mapa de servicios", "servicios.html"],
-      ["Cuadernos", "blog.html"],
-    ],
-  },
-  {
     title: "MEDLA",
     links: [
+      ["Posicionamiento, captación y CRM", "redes-sociales.html"],
       ["Cómo trabajamos", "nosotros.html"],
+      ["Notas de decisión", "blog.html"],
       ["Plantear un proyecto", "contacto.html?path=diagnostico"],
       ["Privacidad", "privacidad.html"],
     ],
@@ -183,14 +177,14 @@ function MedlaSiteHeader({ current = "", context = "", ctaHref = "" }) {
       <div className="medla-site-map__panel" ref={panelRef}>
         <header className="medla-site-map__head">
           <a className="medla-site-brand" href="index.html" onClick={close} aria-label="MEDLA Empresas, inicio"><img src="logo.png" alt="" /><span>Consultoría<br />empresarial</span></a>
-          <div><span>MAPA / 04 RUTAS</span><button type="button" onClick={close}>Cerrar <ShellMenuIcon close /></button></div>
+          <div><span>MAPA / 04 PUNTOS DE ENTRADA</span><button type="button" onClick={close}>Cerrar <ShellMenuIcon close /></button></div>
         </header>
 
         <div className="medla-site-map__body">
           <section className="medla-site-map__intro">
-            <p>Mapa MEDLA</p>
-            <h2>Un punto de entrada.<br /><em>Todo lo necesario para avanzar.</em></h2>
-            <span>Elige el área que necesitas desbloquear. Si el problema cruza varias, coordinamos el trabajo desde un único plan.</span>
+            <p>Qué necesitas resolver</p>
+            <h2>Empieza por el proyecto.<br /><em>No por el servicio.</em></h2>
+            <span>Elige la situación más próxima. Activaremos únicamente las capacidades que el mandato exija, bajo un responsable y un plan común.</span>
             <a href={resolvedCta} onClick={close}>Plantear un proyecto <ShellArrow /></a>
           </section>
 
@@ -221,12 +215,12 @@ function MedlaSiteFooter({ current = "", context = "" }) {
       <div className="medla-site-footer__opening">
         <div className="medla-site-footer__identity">
           <a href="index.html" aria-label="MEDLA Empresas, inicio"><img src="logo.png" alt="" /></a>
-          <p>Dirección e implantación para proyectos que cruzan negocio, legal, operaciones y tecnología.</p>
+          <p>Dirección e implantación para proyectos donde la decisión depende de negocio, criterio jurídico y tecnología.</p>
         </div>
         <div className="medla-site-footer__conversation">
-          <span>Conversación de encaje</span>
-          <h2>¿Es un proyecto <em>para MEDLA?</em></h2>
-          <p>Cuéntanos la decisión, las áreas implicadas y qué debería quedar funcionando. Te indicaremos el encaje y el siguiente paso.</p>
+          <span>Revisión de encaje</span>
+          <h2>Valoremos quién debe dirigir <em>el proyecto.</em></h2>
+          <p>Describe la decisión, las áreas implicadas y qué debería quedar funcionando. Confirmaremos si encaja, qué información falta y qué reunión conviene convocar.</p>
           <a href={ctaHref}>Plantear un proyecto <ShellArrow /></a>
         </div>
       </div>
@@ -238,8 +232,8 @@ function MedlaSiteFooter({ current = "", context = "" }) {
         </section>)}
       </nav>
 
-      <div className="medla-site-footer__flow" aria-label="Método MEDLA: definir, coordinar, ejecutar y transferir">
-        {["Definir", "Coordinar", "Ejecutar", "Transferir"].map((label, index) => <React.Fragment key={label}>
+      <div className="medla-site-footer__flow" aria-label="Método MEDLA: encaje, mandato, implantación y transferencia">
+        {["Encaje", "Mandato", "Implantación", "Transferencia"].map((label, index) => <React.Fragment key={label}>
           <span><i />{label}</span>{index < 3 && <b />}
         </React.Fragment>)}
       </div>

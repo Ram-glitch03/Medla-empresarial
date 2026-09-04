@@ -381,6 +381,8 @@
 }
 .field textarea { resize: vertical; min-height: 110px; font-family: inherit; }
 .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fields-row--single { grid-template-columns: minmax(0, 1fr); }
+.fields-row--single .field { max-width: calc(50% - 8px); }
 
 .form-nav {
   display: flex;
@@ -766,6 +768,7 @@ input[type="range"]::-moz-range-thumb {
   .form-body { padding: 32px 24px; min-height: 0; }
   .options-grid { grid-template-columns: 1fr; }
   .fields-row { grid-template-columns: 1fr; }
+  .fields-row--single .field { max-width: none; }
   .field input, .field textarea, .field select { font-size: 16px; }
   .slider-note { grid-template-columns: 1fr; gap: 14px; }
   .info-grid { grid-template-columns: 1fr; }

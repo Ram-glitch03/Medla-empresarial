@@ -820,6 +820,39 @@ section[id] { scroll-margin-top: 90px; }
   [data-reveal] { opacity: 1; transform: none; }
 }
 
+/* Purposeful capability sequence: replaces the abstract orbital instrument in every specialty hero. */
+.sp-hero h1 em { color: color-mix(in srgb,var(--sp-signal) 88%,white 12%); }
+.sp-scene__topline button { display:inline-flex; align-items:center; gap:8px; padding:7px 0 7px 12px; border:0; color:rgba(255,255,255,.48); background:transparent; font:600 8px/1 var(--sp-body); letter-spacing:.14em; text-transform:uppercase; cursor:pointer; }
+.sp-scene__topline button i { width:6px; height:6px; border-radius:50%; background:var(--sp-signal); box-shadow:0 0 0 5px color-mix(in srgb,var(--sp-signal) 8%,transparent); animation:sp-pulse 2.2s ease-in-out infinite; }
+.sp-scene__journey { position:relative; overflow-x:auto; padding:56px 4px 42px; scrollbar-width:none; }
+.sp-scene__journey::-webkit-scrollbar { display:none; }
+.sp-scene__route { position:absolute; top:85px; right:6%; left:6%; min-width:460px; height:1px; overflow:hidden; background:rgba(255,255,255,.13); }
+.sp-scene__route > i { position:absolute; inset:0 auto 0 0; width:calc(var(--progress) * 100%); background:linear-gradient(90deg,var(--sp-signal),color-mix(in srgb,var(--sp-signal) 58%,white 12%)); transition:width .7s var(--sp-ease); }
+.sp-scene__route > i::after { position:absolute; right:-4px; top:-4px; width:9px; height:9px; border-radius:50%; background:var(--sp-signal); box-shadow:0 0 18px color-mix(in srgb,var(--sp-signal) 74%,transparent); content:""; }
+.sp-scene__stages { position:relative; z-index:1; min-width:520px; display:grid; grid-template-columns:repeat(4,1fr); }
+.sp-scene__stages button { min-height:112px; display:flex; flex-direction:column; align-items:center; gap:11px; padding:0 9px; border:0; color:rgba(255,255,255,.34); background:transparent; text-align:center; cursor:pointer; transition:color .3s ease,transform .4s var(--sp-ease); }
+.sp-scene__stages button > span { font-size:7px; letter-spacing:.14em; }
+.sp-scene__stages button > i { width:13px; height:13px; border:1px solid rgba(255,255,255,.25); border-radius:50%; background:var(--sp-ink); box-shadow:0 0 0 7px rgba(8,10,15,.82); transition:background .35s ease,border-color .35s ease,box-shadow .35s ease; }
+.sp-scene__stages button > b { max-width:13ch; font-size:9px; font-weight:550; line-height:1.35; }
+.sp-scene__stages button.is-active, .sp-scene__stages button.is-complete { color:rgba(255,255,255,.82); }
+.sp-scene__stages button.is-active { transform:translateY(-3px); }
+.sp-scene__stages button.is-active > i { border-color:var(--sp-signal); background:var(--sp-signal); box-shadow:0 0 0 7px color-mix(in srgb,var(--sp-signal) 8%,rgba(8,10,15,.9)),0 0 22px color-mix(in srgb,var(--sp-signal) 45%,transparent); }
+.sp-scene__stages button.is-complete > i { border-color:var(--sp-signal); background:color-mix(in srgb,var(--sp-signal) 35%,var(--sp-ink)); }
+.sp-scene__detail { min-height:154px; display:grid; grid-template-columns:140px 1fr; gap:35px; align-items:center; padding:27px 4px; }
+.sp-scene__detail > div { display:flex; flex-direction:column; gap:13px; }
+.sp-scene__detail > div span { color:var(--sp-signal); font-size:8px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; }
+.sp-scene__detail > div strong { color:#fff; font:500 34px/1 var(--sp-display); }
+.sp-scene__detail > p { margin:0; color:rgba(255,255,255,.65); font-size:12px; line-height:1.65; animation:sp-detail .45s var(--sp-ease); }
+.sp-scene__caption { padding-top:15px; border-top:1px solid rgba(255,255,255,.09); }
+@media (max-width:680px) {
+  .sp-scene__journey { margin-inline:-2px; padding-top:46px; }
+  .sp-scene__route { top:75px; }
+  .sp-scene__detail { grid-template-columns:90px 1fr; gap:20px; }
+  .sp-scene__detail > div strong { font-size:27px; }
+  .sp-scene__detail > p { font-size:11px; }
+}
+@media (prefers-reduced-motion:reduce) { .sp-scene__topline button i { animation:none; } }
+
 @media (max-width: 980px) and (orientation: landscape) and (max-height: 600px) {
   .sp-hero__layout {
     min-height: 100svh;
